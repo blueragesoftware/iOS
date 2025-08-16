@@ -1,0 +1,69 @@
+{
+  "originHash" : "199b6798580a14c6f21d275ab0d328d76495b8a8d01caf877c3d326dba2e077e",
+  "pins" : [
+    {
+      "identity" : "convex-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/get-convex/convex-swift",
+      "state" : {
+        "revision" : "a603bc850245f23ce3ce36b223ec7340981c2203",
+        "version" : "0.5.5"
+      }
+    },
+    {
+      "identity" : "factory",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Factory",
+      "state" : {
+        "revision" : "ccc898f21992ebc130bc04cc197460a5ae230bcf",
+        "version" : "2.5.3"
+      }
+    },
+    {
+      "identity" : "nuke",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke",
+      "state" : {
+        "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
+        "version" : "12.8.0"
+      }
+    },
+    {
+      "identity" : "pinlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/layoutBox/PinLayout",
+      "state" : {
+        "revision" : "72f5300042618340df21500f6c4ce71bb78b93e1",
+        "version" : "1.10.6"
+      }
+    },
+    {
+      "identity" : "posthog-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PostHog/posthog-ios",
+      "state" : {
+        "revision" : "912218721ca4c253cc0dddd863fd457c00f96e40",
+        "version" : "3.30.1"
+      }
+    },
+    {
+      "identity" : "sentry-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/sentry-cocoa",
+      "state" : {
+        "revision" : "3c2eee7773df58bdfb9e10e72d9a4be44253e0d9",
+        "version" : "8.55.0"
+      }
+    },
+    {
+      "identity" : "swiftui-shimmer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/markiv/SwiftUI-Shimmer",
+      "state" : {
+        "revision" : "0226e21f9bf355d40e07e5f5e1c33679d50e167f",
+        "version" : "1.5.1"
+      }
+    }
+  ],
+  "version" : 3
+}
