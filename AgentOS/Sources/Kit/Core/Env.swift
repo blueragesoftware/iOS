@@ -1,0 +1,56 @@
+import Foundation
+
+struct Env {
+    enum Error: Swift.Error {
+        case missingKey(String), invalidValue(Any, key: String)
+    }
+
+    static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
+        guard let object = Bundle.main.object(forInfoDictionaryKey:key) else {
+            throw Error.missingKey(key)
+        }
+
+        switch object {
+        case let value as T:
+            return value
+        case let string as String:
+            guard let value = T(string) else { fallthrough }
+            return value
+        default:
+            throw Error.invalidValue(object, key: key)
+        }
+    }
+
+    private(set) lazy var POSTHOG_API_KEY: String = {
+        do {
+            return try Self.value(for: "POSTHOG_API_KEY")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+    let POSTHOG_HOST: String = {
+        do {
+            return try Self.value(for: "POSTHOG_HOST")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+    let SENTRY_DSN: String = {
+        do {
+            return try Self.value(for: "SENTRY_DSN")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+    let CONVEX_DEPLOYMENT_URL: String = {
+        do {
+            return try Self.value(for: "CONVEX_DEPLOYMENT_URL")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+}

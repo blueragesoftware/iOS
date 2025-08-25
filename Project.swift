@@ -2,35 +2,6 @@ import ProjectDescription
 
 let projectVersion = "1.0.0"
 
-let scheme: Scheme = .scheme(
-    name: "AgentOS",
-    shared: true,
-    hidden: false,
-    buildAction: .buildAction(
-        targets: ["AgentOS"]
-    ),
-    testAction: nil,
-    runAction: .runAction(arguments:
-            .arguments(
-                environmentVariables: [
-                    "POSTHOG_API_KEY": .environmentVariable(value: "POSTHOG_API_KEY", isEnabled: true),
-                    "POSTHOG_HOST": .environmentVariable(value: "https://us.i.posthog.com", isEnabled: true),
-                    "SENTRY_DSN": .environmentVariable(value: "SENTRY_DSN", isEnabled: true)
-                ]
-            )
-    ),
-    archiveAction: .archiveAction(
-        configuration: "Production",
-        postActions: [
-            .executionAction(
-                scriptText: "cd \"${PROJECT_DIR}\"; agvtool bump"
-            )
-        ]
-    ),
-    profileAction: nil,
-    analyzeAction: nil
-)
-
 let project = Project(
     name: "AgentOS",
     targets: [
@@ -46,13 +17,17 @@ let project = Project(
                         "UIColorName": "",
                         "UIImageName": "",
                     ],
+                    "POSTHOG_API_KEY": "$(POSTHOG_API_KEY)",
+                    "POSTHOG_HOST": "$(POSTHOG_HOST)",
+                    "SENTRY_DSN": "$(SENTRY_DSN)",
+                    "CONVEX_DEPLOYMENT_URL": "$(CONVEX_DEPLOYMENT_URL)"
                 ]
             ),
             sources: ["AgentOS/Sources/**"],
             resources: ["AgentOS/Resources/**"],
             dependencies: [
                 .external(name: "ConvexMobile"),
-                .external(name: "Factory"),
+                .external(name: "FactoryKit"),
                 .external(name: "Nuke"),
                 .external(name: "PinLayout"),
                 .external(name: "PostHog"),
@@ -60,9 +35,12 @@ let project = Project(
                 .external(name: "Shimmer"),
             ],
             settings: .settings(
-                base: SettingsDictionary().currentProjectVersion(projectVersion)
+                base: SettingsDictionary().currentProjectVersion(projectVersion),
+                configurations: [
+                    .debug(name: "Debug", xcconfig: "./xcconfigs/Config.xcconfig"),
+                    .release(name: "Release", xcconfig: "./xcconfigs/Config.xcconfig")
+                ]
             )
         )
-    ],
-    schemes: [scheme]
+    ]
 )

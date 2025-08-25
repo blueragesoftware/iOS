@@ -1,14 +1,13 @@
 import SwiftUI
 import ConvexMobile
 
-public struct ContentView: View {
-    public init() {}
+struct ContentView: View {
 
-    public var body: some View {
+    var body: some View {
         Text("Hello, World!")
             .padding()
     }
-    
+
 }
 
 struct ContentView_Previews: PreviewProvider {

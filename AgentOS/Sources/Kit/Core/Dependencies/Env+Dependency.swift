@@ -1,12 +1,12 @@
 import Foundation
-import PostHog
+import ConvexMobile
 import FactoryKit
 
 extension Container {
 
-    var postHog: Factory<PostHogSDK> {
+    var env: Factory<Env> {
         self {
-            PostHogSDK.shared
+            Env()
         }.shared
     }
 
