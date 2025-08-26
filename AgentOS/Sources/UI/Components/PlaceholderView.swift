@@ -7,15 +7,15 @@ public struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
 
     let imageSystemName: String
 
-    let title: String
+    let title: LocalizedStringKey
 
-    let description: String
+    let description: LocalizedStringKey
 
     let buttonConfiguration: ButtonConfiguration?
 
     public init(imageSystemName: String,
-                title: String,
-                description: String,
+                title: LocalizedStringKey,
+                description: LocalizedStringKey,
                 action: @escaping () -> Void,
                 @ViewBuilder buttonLabel: @escaping () -> ButtonLabel) {
         self.imageSystemName = imageSystemName
@@ -60,8 +60,8 @@ public struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
 extension PlaceholderView where ButtonLabel == Never {
 
     public init(imageSystemName: String,
-                title: String,
-                description: String,
+                title: LocalizedStringKey,
+                description: LocalizedStringKey,
                 buttonConfiguration: ButtonConfiguration? = nil) {
         self.imageSystemName = imageSystemName
         self.title = title

@@ -8,11 +8,11 @@ struct EmptyAgentsListView: View {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
             PlaceholderView(imageSystemName: "eyes.inverse",
-                            title: "No Agents yet",
-                            description: "Time to create your first one") {
+                            title: "agents_list_empty_placeholder_title",
+                            description: "agents_list_empty_placeholder_description") {
 
             } buttonLabel: {
-                Text("Create Agent")
+                Text("agents_list_empty_action_button_title")
                     .foregroundStyle(UIColor.label.swiftUI)
                     .font(.system(size: 15, weight: .semibold))
                     .padding(.vertical, 8)

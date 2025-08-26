@@ -8,11 +8,11 @@ struct ErrorAgentsListView: View {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
             PlaceholderView(imageSystemName: "exclamationmark.circle",
-                            title: "An issue happened",
-                            description: "Try refreshing the page or come back later") {
+                            title: "agents_list_error_placeholder_title",
+                            description: "agents_list_error_placeholder_description") {
 
             } buttonLabel: {
-                Text("Refresh")
+                Text("agents_list_error_action_button_title")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(UIColor.label.swiftUI)
                     .padding(.vertical, 8)

@@ -1,7 +1,84 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "agent_list_open_button_title" : {
+    "agents_list_empty_action_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Agent"
+          }
+        }
+      }
+    },
+    "agents_list_empty_placeholder_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time to create your first one"
+          }
+        }
+      }
+    },
+    "agents_list_empty_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Agents yet"
+          }
+        }
+      }
+    },
+    "agents_list_error_action_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "agents_list_error_placeholder_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try refreshing the page or come back later"
+          }
+        }
+      }
+    },
+    "agents_list_error_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An issue happened"
+          }
+        }
+      }
+    },
+    "agents_list_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agents"
+          }
+        }
+      }
+    },
+    "agents_list_open_button_title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -12,10 +89,7 @@
         }
       }
     },
-    "Create Agent" : {
-
-    },
-    "Refresh" : {
+    "Hello, world!" : {
 
     }
   },

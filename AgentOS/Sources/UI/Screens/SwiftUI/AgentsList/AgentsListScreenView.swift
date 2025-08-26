@@ -20,7 +20,7 @@ struct AgentsListScreenView: View {
                 self.viewModel.load()
             }
             .background(UIColor.systemGroupedBackground.swiftUI)
-            .navigationTitle("Agents")
+            .navigationTitle("agents_list_navigation_title")
         }
     }
 

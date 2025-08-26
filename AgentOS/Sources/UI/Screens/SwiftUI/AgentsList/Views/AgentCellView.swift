@@ -29,7 +29,7 @@ struct AgentCellView: View {
                 Button {
                     self.onOpen()
                 } label: {
-                    Text("agent_list_open_button_title")
+                    Text("agents_list_open_button_title")
                         .foregroundStyle(UIColor.label.swiftUI)
                         .font(.system(size: 15, weight: .semibold))
                         .padding(.vertical, 6)
