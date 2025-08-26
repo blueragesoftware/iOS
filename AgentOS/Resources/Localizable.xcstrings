@@ -1,7 +1,21 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Hello, World!" : {
+    "agent_list_open_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        }
+      }
+    },
+    "Create Agent" : {
+
+    },
+    "Refresh" : {
 
     }
   },
