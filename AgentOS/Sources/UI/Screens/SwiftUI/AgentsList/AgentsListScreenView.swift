@@ -4,12 +4,14 @@ import OSLog
 struct AgentsListScreenView: View {
 
     @State private var viewModel = AgentsListScreenViewModel()
+    @State private var selectedAgent: Agent?
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    AgentsListView(state: self.viewModel.state)
+                    AgentsListView(state: self.viewModel.state,
+                                   selectedAgent: self.$selectedAgent)
                 }
             }
             .overlay(alignment: .bottom) {
@@ -18,10 +20,13 @@ struct AgentsListScreenView: View {
             .scrollIndicators(.hidden)
             .scrollDisabled(self.viewModel.state.isSkeleton || self.viewModel.state.isError)
             .onAppear() {
-                self.viewModel.load()
+                self.viewModel.connect()
             }
             .background(UIColor.systemGroupedBackground.swiftUI)
             .navigationTitle("agents_list_navigation_title")
+            .navigationDestination(item: self.$selectedAgent) { agent in
+                AgentScreenView(agent: agent)
+            }
         }
     }
 

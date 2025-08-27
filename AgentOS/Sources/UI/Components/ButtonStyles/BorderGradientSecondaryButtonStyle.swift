@@ -31,7 +31,6 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
             }
             .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
             .animation(self.animation, value: configuration.isPressed)
-            .fixedSize()
     }
 
 }

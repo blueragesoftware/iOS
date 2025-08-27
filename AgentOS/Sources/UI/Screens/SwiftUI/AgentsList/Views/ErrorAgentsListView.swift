@@ -12,7 +12,7 @@ struct ErrorAgentsListView: View {
                             description: "agents_list_error_placeholder_description") {
 
             } buttonLabel: {
-                Text("agents_list_error_action_button_title")
+                Text("common_refresh")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(UIColor.label.swiftUI)
                     .padding(.vertical, 8)

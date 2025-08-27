@@ -1,6 +1,31 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "About" : {
+
+    },
+    "agent_error_placeholder_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try refreshing the page or come back later"
+          }
+        }
+      }
+    },
+    "agent_error_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error loading agent"
+          }
+        }
+      }
+    },
     "agents_list_create_new_agent_button_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -41,17 +66,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Agents yet"
-          }
-        }
-      }
-    },
-    "agents_list_error_action_button_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh"
           }
         }
       }
@@ -100,7 +114,27 @@
         }
       }
     },
-    "Hello, world!" : {
+    "common_refresh" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "Executions" : {
+
+    },
+    "Run Agent" : {
+
+    },
+    "Steps" : {
+
+    },
+    "Tools" : {
 
     }
   },

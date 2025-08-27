@@ -1,7 +1,7 @@
 import Foundation
 import ConvexMobile
 
-struct Agent: Identifiable, Codable, Equatable {
+struct Agent: Identifiable, Codable, Equatable, Hashable {
 
     let id: String
 
@@ -15,7 +15,7 @@ struct Agent: Identifiable, Codable, Equatable {
 
     let tools: [String]
 
-    let steps: String
+    let steps: [String]
 
     let model: String
 

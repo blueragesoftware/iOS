@@ -1,9 +1,28 @@
 import SwiftUI
+import NukeUI
 
 struct AgentScreenView: View {
 
+    @State private var viewModel: AgentScreenViewModel
+
+    init(agent: Agent) {
+        self.viewModel = AgentScreenViewModel(agent: agent)
+    }
+
     var body: some View {
-        /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Hello, world!@*/Text("Hello, world!")/*@END_MENU_TOKEN@*/
+        Group {
+            switch self.viewModel.state {
+            case .loaded(let agent):
+                AgentLoadedView(agent: agent)
+            case .error:
+                AgentScreenErrorView {
+                    self.viewModel.connect()
+                }
+            }
+        }
+        .onAppear {
+            self.viewModel.connect()
+        }
     }
 
 }

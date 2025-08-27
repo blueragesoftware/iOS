@@ -3,9 +3,11 @@ import SwiftUI
 struct AgentsListView: View {
 
     private let state: AgentsListScreenViewModel.State
+    @Binding private var selectedAgent: Agent?
 
-    init(state: AgentsListScreenViewModel.State) {
+    init(state: AgentsListScreenViewModel.State, selectedAgent: Binding<Agent?>) {
         self.state = state
+        self._selectedAgent = selectedAgent
     }
 
     var body: some View {
@@ -14,7 +16,7 @@ struct AgentsListView: View {
             SkeletonAgentsListView()
                 .transition(.blurReplace)
         case .loaded(let agents):
-            LoadedAgentsListView(agents: agents)
+            LoadedAgentsListView(agents: agents, selectedAgent: self.$selectedAgent)
                 .transition(.blurReplace)
         case .empty:
             EmptyAgentsListView()

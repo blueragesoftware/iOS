@@ -1,4 +1,3 @@
-import SwiftUI
 import FactoryKit
 import ConvexMobile
 import OSLog
@@ -66,10 +65,10 @@ final class AgentsListScreenViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     @ObservationIgnored
-    private var hasLoaded = false
+    private var hasConnected = false
 
-    func load() {
-        if self.hasLoaded {
+    func connect() {
+        if self.hasConnected {
             return
         }
 
@@ -89,7 +88,7 @@ final class AgentsListScreenViewModel {
             }
             .store(in: &self.cancellables)
 
-        self.hasLoaded = true
+        self.hasConnected = true
     }
 
 
