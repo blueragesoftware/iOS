@@ -32,6 +32,15 @@ final class AgentsListScreenViewModel {
             }
         }
 
+        var isLoaded: Bool {
+            switch self {
+            case .loaded:
+                true
+            default:
+                false
+            }
+        }
+
         // MARK: - CustomStringConvertible
 
         var description: String {

@@ -1,6 +1,17 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "agents_list_create_new_agent_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create new Agent"
+          }
+        }
+      }
+    },
     "agents_list_empty_action_button_title" : {
       "extractionState" : "manual",
       "localizations" : {

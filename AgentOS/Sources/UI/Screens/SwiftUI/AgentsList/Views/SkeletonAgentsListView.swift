@@ -1,4 +1,5 @@
 import SwiftUI
+import Shimmer
 
 struct SkeletonAgentsListView: View {
 
@@ -8,6 +9,15 @@ struct SkeletonAgentsListView: View {
                 .padding(.bottom, 28)
                 .padding(.horizontal, 20)
         }
+        .shimmering(active: true, gradient: self.shimmerGradient)
+    }
+
+    private var shimmerGradient: Gradient {
+        Gradient(colors: [
+            UIColor.black.swiftUI.opacity(0.6),
+            UIColor.black.swiftUI,
+            UIColor.black.swiftUI.opacity(0.6)
+        ])
     }
 
 }

@@ -29,6 +29,7 @@ let project = Project(
                 .external(name: "ConvexMobile"),
                 .external(name: "FactoryKit"),
                 .external(name: "Nuke"),
+                .external(name: "NukeUI"),
                 .external(name: "PinLayout"),
                 .external(name: "PostHog"),
                 .external(name: "Sentry"),

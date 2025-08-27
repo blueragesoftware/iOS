@@ -1,6 +1,5 @@
 import SwiftUI
 import OSLog
-import Shimmer
 
 struct AgentsListScreenView: View {
 
@@ -11,8 +10,10 @@ struct AgentsListScreenView: View {
             ScrollView {
                 LazyVStack(spacing: 0) {
                     AgentsListView(state: self.viewModel.state)
-                        .shimmering(active: self.viewModel.state.isSkeleton, gradient: self.shimmerGradient)
                 }
+            }
+            .overlay(alignment: .bottom) {
+                self.createNewAgentButton
             }
             .scrollIndicators(.hidden)
             .scrollDisabled(self.viewModel.state.isSkeleton || self.viewModel.state.isError)
@@ -24,12 +25,20 @@ struct AgentsListScreenView: View {
         }
     }
 
-    private var shimmerGradient: Gradient {
-        Gradient(colors: [
-            UIColor.black.swiftUI.opacity(0.6),
-            UIColor.black.swiftUI,
-            UIColor.black.swiftUI.opacity(0.6)
-        ])
+    @ViewBuilder private var createNewAgentButton: some View {
+        if self.viewModel.state.isLoaded {
+            Button {
+
+            } label: {
+                Text("agents_list_create_new_agent_button_title")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(UIColor.systemBackground.swiftUI)
+                    .padding(.vertical, 15)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, 20)
+            .buttonStyle(.primaryButtonStyle)
+        }
     }
 
 }
