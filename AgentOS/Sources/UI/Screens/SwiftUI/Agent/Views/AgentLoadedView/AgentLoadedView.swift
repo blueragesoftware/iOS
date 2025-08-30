@@ -13,6 +13,8 @@ struct AgentLoadedView: View {
     @FocusState private var isFocused: Bool
     
     @FocusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex) private var focusedStepIndex: Int?
+    
+    @State private var isShowingToolsSelection = false
 
     private let agent: Agent
     
@@ -48,7 +50,7 @@ struct AgentLoadedView: View {
             }
             
             AgentLoadedToolsSectionView(viewModel: self.viewModel) {
-                // onAddTool callback if needed
+                self.isShowingToolsSelection = true
             }
 
             AgentLoadedStepsSectionView(viewModel: self.viewModel, isFocused: self.$isFocused)
@@ -62,6 +64,11 @@ struct AgentLoadedView: View {
         }
         .onChange(of: self.focusedStepIndex) { _, newFocusedIndex in
             self.viewModel.focusedStepIndex = newFocusedIndex
+        }
+        .sheet(isPresented: self.$isShowingToolsSelection) {
+            ToolsSelectionScreenView { selectedTool in
+                self.viewModel.addTool(selectedTool)
+            }
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .safeAreaPadding(.bottom, 52)

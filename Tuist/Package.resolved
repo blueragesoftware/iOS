@@ -1,6 +1,15 @@
 {
-  "originHash" : "199b6798580a14c6f21d275ab0d328d76495b8a8d01caf877c3d326dba2e077e",
+  "originHash" : "8b3486ce1b365afe4da64030fc6c7cd69c4f9e4972325b88a32063ee82902b2b",
   "pins" : [
+    {
+      "identity" : "clerk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/clerk/clerk-ios",
+      "state" : {
+        "revision" : "af6aef0ba17573fc48373d803a7aeebc33e7a787",
+        "version" : "0.66.1"
+      }
+    },
     {
       "identity" : "convex-swift",
       "kind" : "remoteSourceControl",
@@ -20,12 +29,39 @@
       }
     },
     {
+      "identity" : "get",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Get",
+      "state" : {
+        "revision" : "31249885da1052872e0ac91a2943f62567c0d96d",
+        "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
+        "version" : "8.5.0"
+      }
+    },
+    {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
+      }
+    },
+    {
+      "identity" : "phonenumberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/marmelroy/PhoneNumberKit",
+      "state" : {
+        "revision" : "8cba2258060e356d5fc4836d4ff8549faa2409dd",
+        "version" : "4.1.4"
       }
     },
     {
@@ -53,6 +89,33 @@
       "state" : {
         "revision" : "3c2eee7773df58bdfb9e10e72d9a4be44253e0d9",
         "version" : "8.55.0"
+      }
+    },
+    {
+      "identity" : "simplekeychain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/auth0/SimpleKeychain",
+      "state" : {
+        "revision" : "776c4a6db74d5c6c143974be91c383680d468630",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms",
+      "state" : {
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics.git",
+      "state" : {
+        "revision" : "bbadd4b853a33fd78c4ae977d17bb2af15eb3f2a",
+        "version" : "1.1.0"
       }
     },
     {

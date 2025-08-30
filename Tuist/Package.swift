@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/layoutBox/PinLayout", from: "1.10.6"),
         .package(url: "https://github.com/PostHog/posthog-ios", from: "3.30.1"),
         .package(url: "https://github.com/getsentry/sentry-cocoa", from: "8.55.0"),
-        .package(url: "https://github.com/markiv/SwiftUI-Shimmer", from: "1.5.1")
+        .package(url: "https://github.com/markiv/SwiftUI-Shimmer", from: "1.5.1"),
+        .package(url: "https://github.com/clerk/clerk-ios", from: "0.66.1")
     ]
 )

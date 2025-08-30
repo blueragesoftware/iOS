@@ -7,7 +7,7 @@ struct AgentOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AgentsListScreenView()
+            RootScreenView()
                 .accentColor(.primary)
         }
     }

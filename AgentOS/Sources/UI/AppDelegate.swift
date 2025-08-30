@@ -2,25 +2,34 @@ import UIKit
 import PostHog
 import FactoryKit
 import Sentry
+import Clerk
+import OSLog
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
 
     @Injected(\.postHog) private var postHog
 
+    @Injected(\.clerk) private var clerk
+
     @Injected(\.env) private var env
+
+    @Injected(\.authSession) private var authSession
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        self.setUpClerk()
+
         self.setUpSentry()
 
         self.setUpPostHog()
+
+        self.setUpAuthSession()
 
         return true
     }
 
     private func setUpSentry() {
         SentrySDK.start { options in
-            print("SENTRY_DSN: " + self.env.SENTRY_DSN)
             options.dsn = self.env.SENTRY_DSN
 
             options.sendDefaultPii = true
@@ -32,6 +41,18 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
 
+    private func setUpClerk() {
+        self.clerk.configure(publishableKey: self.env.CLERK_PUBLISHABLE_KEY)
+
+        Task {
+            do {
+                try await self.clerk.load()
+            } catch {
+                Logger.default.error("Error loading clerk: \(error.localizedDescription)")
+            }
+        }
+    }
+
     private func setUpPostHog() {
         let config = PostHogConfig(apiKey: self.env.POSTHOG_API_KEY, host: self.env.POSTHOG_HOST)
 
@@ -39,6 +60,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         config.captureApplicationLifecycleEvents = true
 
         self.postHog.setup(config)
+    }
+
+    private func setUpAuthSession() {
+        self.authSession.start()
     }
 
 }

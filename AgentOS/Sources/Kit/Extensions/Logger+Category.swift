@@ -9,4 +9,8 @@ extension Logger {
     
     static let agent = Logger(subsystem: Self.subsystem, category: "agent")
 
+    static let login = Logger(subsystem: Self.subsystem, category: "login")
+
+    static let `default` = Logger(subsystem: Self.subsystem, category: "default")
+
 }

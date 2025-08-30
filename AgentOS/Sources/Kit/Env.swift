@@ -1,12 +1,14 @@
 import Foundation
 
 struct Env {
+    
     enum Error: Swift.Error {
-        case missingKey(String), invalidValue(Any, key: String)
+        case missingKey(String)
+        case invalidValue(Any, key: String)
     }
 
     static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
-        guard let object = Bundle.main.object(forInfoDictionaryKey:key) else {
+        guard let object = Bundle.main.object(forInfoDictionaryKey: key) else {
             throw Error.missingKey(key)
         }
 
@@ -48,6 +50,14 @@ struct Env {
     let CONVEX_DEPLOYMENT_URL: String = {
         do {
             return try Self.value(for: "CONVEX_DEPLOYMENT_URL")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+    let CLERK_PUBLISHABLE_KEY: String = {
+        do {
+            return try Self.value(for: "CLERK_PUBLISHABLE_KEY")
         } catch {
             fatalError(error.localizedDescription)
         }

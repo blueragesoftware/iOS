@@ -64,6 +64,21 @@ final class AgentLoadedViewModel {
         self.notifyToolsChanged()
     }
     
+    func addTool(_ tool: Tool) {
+        // Remove the last empty item, add the new tool, then add a new empty item at the end
+        if let lastIndex = self.tools.indices.last,
+           case .empty = self.tools[lastIndex] {
+            self.tools[lastIndex] = .content(tool)
+            self.tools.append(.empty(id: UUID().uuidString))
+        } else {
+            // If for some reason there's no empty item at the end, just add the tool and an empty item
+            self.tools.append(.content(tool))
+            self.tools.append(.empty(id: UUID().uuidString))
+        }
+        
+        self.notifyToolsChanged()
+    }
+    
     func handleStepChange(at index: Int, newValue: String) {
         guard index < self.steps.count else { return }
         
