@@ -13,15 +13,21 @@ struct AgentScreenView: View {
         Group {
             switch self.viewModel.state {
             case .loaded(let agent):
-                AgentLoadedView(agent: agent)
+                AgentLoadedView(agent: agent, viewModel: self.viewModel)
             case .error:
                 AgentScreenErrorView {
                     self.viewModel.connect()
                 }
             }
         }
-        .onAppear {
+        .onFirstAppear {
             self.viewModel.connect()
+        }
+        .onDisappear {
+            self.viewModel.flush()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            self.viewModel.flush()
         }
     }
 

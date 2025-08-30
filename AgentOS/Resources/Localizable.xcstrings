@@ -4,6 +4,9 @@
     "About" : {
 
     },
+    "Add a Tool" : {
+
+    },
     "agent_error_placeholder_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -114,6 +117,9 @@
         }
       }
     },
+    "Claude Sonnet 4" : {
+
+    },
     "common_refresh" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -128,10 +134,16 @@
     "Executions" : {
 
     },
+    "GPT-5" : {
+
+    },
     "Run Agent" : {
 
     },
     "Steps" : {
+
+    },
+    "Swipe left to delete" : {
 
     },
     "Tools" : {

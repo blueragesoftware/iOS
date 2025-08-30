@@ -22,7 +22,6 @@ public struct PrimaryButtonStyle: ButtonStyle {
 
 }
 
-@available(iOS 15.0, *)
 public extension ButtonStyle where Self == PrimaryButtonStyle {
 
     static var primaryButtonStyle: PrimaryButtonStyle {

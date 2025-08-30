@@ -35,7 +35,6 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
 
 }
 
-@available(iOS 17.0, *)
 public extension ButtonStyle where Self == BorderGradientProminentButtonStyle {
 
     static var borderGradientProminentButtonStyle: BorderGradientProminentButtonStyle {

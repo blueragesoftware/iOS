@@ -8,14 +8,14 @@ import Combine
 final class AgentsListScreenViewModel {
 
     enum State: CustomStringConvertible {
-        case skeleton
+        case loading
         case loaded(agents: [Agent])
         case empty
         case error(Error)
 
-        var isSkeleton: Bool {
+        var isLoading: Bool {
             switch self {
-            case .skeleton:
+            case .loading:
                 true
             default:
                 false
@@ -44,8 +44,8 @@ final class AgentsListScreenViewModel {
 
         var description: String {
             switch self {
-            case .skeleton:
-                "Skeleton"
+            case .loading:
+                "Loading"
             case .loaded:
                 "Loaded"
             case .error:
@@ -56,7 +56,7 @@ final class AgentsListScreenViewModel {
         }
     }
 
-    private(set) var state: State = .skeleton
+    private(set) var state: State = .loading
 
     @ObservationIgnored
     @Injected(\.convex) private var convex
@@ -64,13 +64,8 @@ final class AgentsListScreenViewModel {
     @ObservationIgnored
     private var cancellables = Set<AnyCancellable>()
 
-    @ObservationIgnored
-    private var hasConnected = false
-
     func connect() {
-        if self.hasConnected {
-            return
-        }
+        self.state = .loading
 
         self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
             .removeDuplicates()
@@ -87,8 +82,10 @@ final class AgentsListScreenViewModel {
                 self?.state = state
             }
             .store(in: &self.cancellables)
+    }
 
-        self.hasConnected = true
+    func createNewAgent() async throws -> Agent {
+        return try await self.convex.mutation("agents:create")
     }
 
 

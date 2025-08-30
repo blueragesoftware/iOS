@@ -1,7 +1,15 @@
 import Foundation
 import ConvexMobile
 
-struct Agent: Identifiable, Codable, Equatable, Hashable {
+struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
+
+    struct Step: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
+
+        let id: String
+
+        let value: String
+
+    }
 
     let id: String
 
@@ -13,11 +21,11 @@ struct Agent: Identifiable, Codable, Equatable, Hashable {
 
     let goal: String
 
-    let tools: [String]
+    let tools: [Tool]
 
-    let steps: [String]
+    let steps: [Step]
 
-    let model: String
+    let modelId: String
 
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -27,7 +35,7 @@ struct Agent: Identifiable, Codable, Equatable, Hashable {
         case goal
         case tools
         case steps
-        case model
+        case modelId
     }
     
 }
