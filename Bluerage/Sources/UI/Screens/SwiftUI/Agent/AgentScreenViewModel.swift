@@ -2,13 +2,15 @@ import FactoryKit
 import ConvexMobile
 import OSLog
 import Combine
+import SwiftUI
 
 @Observable
 @MainActor
 final class AgentScreenViewModel {
 
     enum State {
-        case loaded(agent: Agent)
+        case loaded(agent: Agent, model: Model, tools: [Tool], availableModels: [Model])
+        case loading
         case error(Error)
     }
     
@@ -47,7 +49,7 @@ final class AgentScreenViewModel {
         case reset
     }
 
-    private(set) var state: State
+    private(set) var state: State = .loading
 
     @ObservationIgnored
     @Injected(\.convex) private var convex
@@ -64,9 +66,8 @@ final class AgentScreenViewModel {
     @ObservationIgnored
     private let agentId: String
 
-    init(agent: Agent) {
-        self.agentId = agent.id
-        self.state = .loaded(agent: agent)
+    init(agentId: String) {
+        self.agentId = agentId
 
         self.setupUpdatesQueue()
     }
@@ -82,17 +83,24 @@ final class AgentScreenViewModel {
     }
 
     func connect() {
-        self.convex.subscribe(to: "agents:getById", with: ["id": self.agentId], yielding: Agent.self)
-            .removeDuplicates()
-            .map { agent in
-                return State.loaded(agent: agent)
+        self.state = .loading
+
+        Publishers.CombineLatest(self.getAgentByIdWithModelAndToolsPublisher(agentId: self.agentId),
+                                 self.getAllModelsPublisher())
+            .map { response, models in
+                return State.loaded(agent: response.agent,
+                                    model: response.model,
+                                    tools: response.tools,
+                                    availableModels: models)
             }
             .catch { error in
                 return Just(.error(error))
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                self?.state = state
+                withAnimation {
+                    self?.state = state
+                }
             }
             .store(in: &self.cancellables)
     }
@@ -115,6 +123,20 @@ final class AgentScreenViewModel {
         )
 
         self.updateSubject.send(.merge(request))
+    }
+
+    private func getAgentByIdWithModelAndToolsPublisher(agentId: String) -> AnyPublisher<GetByIdWithModelAndToolsResponse, ClientError> {
+        return self.convex.subscribe(to: "agents:getByIdWithModelAndTools",
+                                     with: ["id": self.agentId],
+                                     yielding: GetByIdWithModelAndToolsResponse.self)
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
+    private func getAllModelsPublisher() -> AnyPublisher<[Model], ClientError> {
+        return self.convex.subscribe(to: "models:getAll", yielding: [Model].self)
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     private func setupUpdatesQueue() {

@@ -2,6 +2,7 @@ import Foundation
 import FactoryKit
 import ConvexMobile
 import Combine
+import SwiftUI
 
 @MainActor
 @Observable
@@ -24,7 +25,9 @@ final class RootScreenViewModel {
     func connect() {
         self.authSession.authStatePublisher
             .sink { [weak self] authState in
-                self?.authState = authState
+                withAnimation {
+                    self?.authState = authState
+                }
             }
             .store(in: &self.cancellables)
     }

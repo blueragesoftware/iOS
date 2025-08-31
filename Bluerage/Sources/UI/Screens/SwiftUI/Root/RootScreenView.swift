@@ -9,7 +9,7 @@ struct RootScreenView: View {
         Group {
             switch self.viewModel.authState {
             case .loading:
-                AuthLoadingScreenView()
+                LoadingView()
                     .transition(.blurReplace)
             case .error:
                 PlaceholderView.error {

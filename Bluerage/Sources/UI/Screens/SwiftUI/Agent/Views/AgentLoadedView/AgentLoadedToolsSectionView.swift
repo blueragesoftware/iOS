@@ -32,6 +32,8 @@ struct AgentLoadedToolsSectionView: View {
             }
         } header: {
             Text("Tools")
+        } footer: {
+            Text("Swipe left to delete")
         }
     }
 }

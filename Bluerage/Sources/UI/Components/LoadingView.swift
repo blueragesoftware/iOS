@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct AuthLoadingScreenView: View {
+struct LoadingView: View {
 
-    @State private var isPulsing = false
+    @State private var isPulsing = true
 
     var body: some View {
         Image("bluerage_loading_icon_164")

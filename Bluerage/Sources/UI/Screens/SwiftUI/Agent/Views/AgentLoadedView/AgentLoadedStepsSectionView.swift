@@ -32,7 +32,6 @@ struct AgentLoadedStepsSectionView: View {
                              ),
                              axis: .vertical)
                         .multilineTextAlignment(.leading)
-                        .textFieldStyle(.plain)
                         .focused(self.$isFocused)
                         .focusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex, index)
                     
@@ -55,6 +54,8 @@ struct AgentLoadedStepsSectionView: View {
             }
         } header: {
             Text("Steps")
+        } footer: {
+            Text("Swipe left to delete")
         }
     }
 

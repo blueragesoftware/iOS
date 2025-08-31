@@ -104,9 +104,6 @@
     "An error occurred while loading the available tools." : {
 
     },
-    "Claude Sonnet 4" : {
-
-    },
     "common_issue_happened" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -144,9 +141,6 @@
 
     },
     "Failed to Load Tools" : {
-
-    },
-    "GPT-5" : {
 
     },
     "If you have an idea what to place here - hit me up on " : {

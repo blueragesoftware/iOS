@@ -29,7 +29,7 @@ struct AgentsListScreenView: View {
             .background(UIColor.systemGroupedBackground.swiftUI)
             .navigationTitle("agents_list_navigation_title")
             .navigationDestination(item: self.$selectedAgent) { agent in
-                AgentScreenView(agent: agent)
+                AgentScreenView(agentId: agent.id)
             }
         }
     }

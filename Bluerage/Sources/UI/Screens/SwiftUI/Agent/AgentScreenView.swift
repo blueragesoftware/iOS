@@ -5,29 +5,41 @@ struct AgentScreenView: View {
 
     @State private var viewModel: AgentScreenViewModel
 
-    init(agent: Agent) {
-        self.viewModel = AgentScreenViewModel(agent: agent)
+    init(agentId: String) {
+        self.viewModel = AgentScreenViewModel(agentId: agentId)
     }
 
     var body: some View {
-        Group {
-            switch self.viewModel.state {
-            case .loaded(let agent):
-                AgentLoadedView(agent: agent, viewModel: self.viewModel)
-            case .error:
-                AgentScreenErrorView {
-                    self.viewModel.connect()
-                }
+        self.content
+            .onFirstAppear {
+                self.viewModel.connect()
             }
-        }
-        .onFirstAppear {
-            self.viewModel.connect()
-        }
-        .onDisappear {
-            self.viewModel.flush()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-            self.viewModel.flush()
+            .onDisappear {
+                self.viewModel.flush()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                self.viewModel.flush()
+            }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch self.viewModel.state {
+        case .loading:
+            LoadingView()
+                .transition(.blurReplace)
+        case .loaded(let agent, let model, let tools, let availableModels):
+            AgentLoadedView(agent: agent,
+                            model: model,
+                            tools: tools,
+                            availableModels: availableModels,
+                            viewModel: self.viewModel)
+            .transition(.blurReplace)
+        case .error:
+            PlaceholderView.error {
+                self.viewModel.connect()
+            }
+            .transition(.blurReplace)
         }
     }
 
