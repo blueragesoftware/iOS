@@ -79,28 +79,6 @@
         }
       }
     },
-    "agents_list_error_placeholder_description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Try refreshing the page or come back later"
-          }
-        }
-      }
-    },
-    "agents_list_error_placeholder_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An issue happened"
-          }
-        }
-      }
-    },
     "agents_list_navigation_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -129,6 +107,17 @@
     "Claude Sonnet 4" : {
 
     },
+    "common_issue_happened" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An issue happened"
+          }
+        }
+      }
+    },
     "common_refresh" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -136,6 +125,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "common_resolve_issue_suggest" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try refreshing the page or come back later"
           }
         }
       }

@@ -1,15 +1,13 @@
 import ProjectDescription
 
-let projectVersion = "1.0.0"
-
 let project = Project(
-    name: "AgentOS",
+    name: "Bluerage",
     targets: [
         .target(
-            name: "AgentOS",
+            name: "Bluerage",
             destinations: .iOS,
             product: .app,
-            bundleId: "com.ertembiyik.AgentOSS",
+            bundleId: bundleId(),
             deploymentTargets: .iOS("17.0"),
             infoPlist: .extendingDefault(
                 with: [
@@ -27,8 +25,8 @@ let project = Project(
                     "CLERK_PUBLISHABLE_KEY": "$(CLERK_PUBLISHABLE_KEY)",
                 ]
             ),
-            sources: ["AgentOS/Sources/**"],
-            resources: ["AgentOS/Resources/**"],
+            sources: ["Bluerage/Sources/**"],
+            resources: ["Bluerage/Resources/**"],
             entitlements: nil,
             dependencies: [
                 .external(name: "ConvexMobile"),
@@ -42,7 +40,7 @@ let project = Project(
                 .external(name: "Clerk")
             ],
             settings: .settings(
-                base: SettingsDictionary().currentProjectVersion(projectVersion),
+                base: SettingsDictionary().currentProjectVersion("1.0.0"),
                 configurations: [
                     .debug(
                         name: "Debug",
@@ -64,3 +62,10 @@ let project = Project(
     ]
 )
 
+func bundleId() -> String {
+    if case let .string(environmentAppName) = Environment.bundleId {
+        return environmentAppName
+    } else {
+        fatalError("Bundle id env param should be set")
+    }
+}

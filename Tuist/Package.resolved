@@ -1,22 +1,22 @@
 {
-  "originHash" : "8b3486ce1b365afe4da64030fc6c7cd69c4f9e4972325b88a32063ee82902b2b",
+  "originHash" : "5b8f7655769e324fd3320e6160386cd5652e324cf9bb13f4782f76c7a21fa1b5",
   "pins" : [
     {
       "identity" : "clerk-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/clerk/clerk-ios",
+      "location" : "https://github.com/blueragesoftware/clerk-ios",
       "state" : {
-        "revision" : "af6aef0ba17573fc48373d803a7aeebc33e7a787",
-        "version" : "0.66.1"
+        "branch" : "main",
+        "revision" : "1d07f7e352faad17f9728359bdee1976295fd7d7"
       }
     },
     {
       "identity" : "convex-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/get-convex/convex-swift",
+      "location" : "https://github.com/blueragesoftware/convex-swift",
       "state" : {
-        "revision" : "a603bc850245f23ce3ce36b223ec7340981c2203",
-        "version" : "0.5.5"
+        "branch" : "main",
+        "revision" : "3254ec4bc0a99b2d71abd41137b282eea3e7e87c"
       }
     },
     {

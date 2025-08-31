@@ -56,9 +56,7 @@ final class AuthSessionImpl: AuthSession {
             .store(in: &self.cancellables)
 
         Task {
-            for event in self.clerk.authEventEmitter.events {
 
-            }
         }
 
         Task {

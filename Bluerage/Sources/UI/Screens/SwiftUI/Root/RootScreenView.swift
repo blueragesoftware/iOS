@@ -12,8 +12,8 @@ struct RootScreenView: View {
                 AuthLoadingScreenView()
                     .transition(.blurReplace)
             case .error:
-                LoginScreenErrorView {
-
+                PlaceholderView.error {
+                    
                 }
                 .transition(.blurReplace)
             case .unauthenticated:
