@@ -1,23 +1,34 @@
 import SwiftUI
 import OSLog
+import PostHog
 
 struct AgentsListScreenView: View {
 
     @State private var viewModel = AgentsListScreenViewModel()
+    
     @State private var selectedAgent: Agent?
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 0) {
+                List {
                     AgentsListView(state: self.viewModel.state,
                                    selectedAgent: self.$selectedAgent) {
                         self.createNewAgent()
                     } refresh: {
                         self.viewModel.connect()
+                    } onDelete: { ids in
+                        Task {
+                            do {
+                                try await self.viewModel.removeAgents(with: ids)
+                            } catch {
+                                Logger.agentsList.error("Error removing agents: \(error.localizedDescription)")
+                            }
+                        }
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
                 }
-            }
+                .listStyle(.plain)
             .overlay(alignment: .bottom) {
                 self.createNewAgentButton
             }
@@ -31,6 +42,7 @@ struct AgentsListScreenView: View {
             .navigationDestination(item: self.$selectedAgent) { agent in
                 AgentScreenView(agentId: agent.id)
             }
+            .postHogScreenView()
         }
     }
 

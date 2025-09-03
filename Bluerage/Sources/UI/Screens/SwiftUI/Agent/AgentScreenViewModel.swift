@@ -19,7 +19,7 @@ final class AgentScreenViewModel {
         var description: String?
         var iconUrl: String?
         var goal: String?
-        var tools: [String]?
+        var tools: [Agent.Tool]?
         var steps: [Agent.Step]?
         var modelId: String?
 
@@ -55,7 +55,10 @@ final class AgentScreenViewModel {
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
-    private var cancellables = Set<AnyCancellable>()
+    private var connection: AnyCancellable?
+
+    @ObservationIgnored
+    private var updatesQueueCancellables = Set<AnyCancellable>()
 
     @ObservationIgnored
     private let updateSubject = PassthroughSubject<UpdateAction, Never>()
@@ -85,24 +88,59 @@ final class AgentScreenViewModel {
     func connect() {
         self.state = .loading
 
-        Publishers.CombineLatest(self.getAgentByIdWithModelAndToolsPublisher(agentId: self.agentId),
-                                 self.getAllModelsPublisher())
-            .map { response, models in
-                return State.loaded(agent: response.agent,
-                                    model: response.model,
-                                    tools: response.tools,
-                                    availableModels: models)
-            }
-            .catch { error in
-                return Just(.error(error))
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                withAnimation {
-                    self?.state = state
+        self.connection?.cancel()
+        self.connection = nil
+
+        typealias AgentData = (response: GetByIdWithModelResponse, tools: [Tool])
+
+        let agentWithResolvedTools: AnyPublisher<AgentData, ClientError> = self.getAgentByIdWithModelPublisher(agentId: self.agentId)
+            .pairwise()
+            .flatMap { previousResponse, newResponse in
+                let previousSlugs = previousResponse?.agent.tools.map(\.slug)
+                let newSlugs = newResponse.agent.tools.map(\.slug)
+
+                if newSlugs.isEmpty {
+                    return Future<AgentData, ClientError> { promise in
+                        promise(.success((newResponse, [])))
+                    }
+                    .eraseToAnyPublisher()
+                }
+
+                if newSlugs != previousSlugs {
+                    return self.getToolsBySlugsPublisher(slugs: newSlugs)
+                        .map { tools in
+                            return (newResponse, tools)
+                        }
+                        .eraseToAnyPublisher()
+                } else {
+                    // TODO: return cache to not trigger the new fetch
+                    return self.getToolsBySlugsPublisher(slugs: newSlugs)
+                        .map { tools in
+                            return (newResponse, tools)
+                        }
+                        .eraseToAnyPublisher()
                 }
             }
-            .store(in: &self.cancellables)
+            .eraseToAnyPublisher()
+
+        self.connection = Publishers.CombineLatest(agentWithResolvedTools,
+                                                   self.getAllModelsPublisher())
+        .map { (agentData, models) in
+            let (response, tools) = agentData
+            return State.loaded(agent: response.agent,
+                                model: response.model,
+                                tools: tools,
+                                availableModels: models)
+        }
+        .catch { error in
+            return Just(.error(error))
+        }
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] state in
+            withAnimation {
+                self?.state = state
+            }
+        }
     }
 
     func updateAgent(name: String? = nil,
@@ -117,7 +155,9 @@ final class AgentScreenViewModel {
             description: description,
             iconUrl: iconUrl,
             goal: goal,
-            tools: tools?.map(\.id),
+            tools: tools?.map { composioTool in
+                return Agent.Tool(slug: composioTool.slug, name: composioTool.name)
+            },
             steps: steps,
             modelId: modelId
         )
@@ -125,10 +165,20 @@ final class AgentScreenViewModel {
         self.updateSubject.send(.merge(request))
     }
 
-    private func getAgentByIdWithModelAndToolsPublisher(agentId: String) -> AnyPublisher<GetByIdWithModelAndToolsResponse, ClientError> {
-        return self.convex.subscribe(to: "agents:getByIdWithModelAndTools",
+    func run() {
+        Task {
+            do {
+                try await self.convex.action("executeAgent:executeWithId", with: ["agentId": self.agentId])
+            } catch {
+                Logger.agent.error("Error running agent: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func getAgentByIdWithModelPublisher(agentId: String) -> AnyPublisher<GetByIdWithModelResponse, ClientError> {
+        return self.convex.subscribe(to: "agents:getByIdWithModel",
                                      with: ["id": self.agentId],
-                                     yielding: GetByIdWithModelAndToolsResponse.self)
+                                     yielding: GetByIdWithModelResponse.self)
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
@@ -137,6 +187,19 @@ final class AgentScreenViewModel {
         return self.convex.subscribe(to: "models:getAll", yielding: [Model].self)
             .removeDuplicates()
             .eraseToAnyPublisher()
+    }
+
+    private func getToolsBySlugsPublisher(slugs: [String]) -> AnyPublisher<[Tool], ClientError> {
+        return Future { promise in
+            Task {
+                do {
+                    let tools: [Tool] = try await self.convex.action("tools:getToolsBySlugsForUser", with: ["slugs": slugs])
+                    promise(.success(tools))
+                } catch {
+                    promise(.failure(ClientError.ConvexError(data: error.localizedDescription)))
+                }
+            }
+        }.eraseToAnyPublisher()
     }
 
     private func setupUpdatesQueue() {
@@ -155,7 +218,7 @@ final class AgentScreenViewModel {
             .sink { [weak self] accumulatedRequest in
                 self?.currentAccumulatedSubject.send(accumulatedRequest)
             }
-            .store(in: &self.cancellables)
+            .store(in: &self.updatesQueueCancellables)
 
         self.currentAccumulatedSubject
             .debounce(for: .seconds(2), scheduler: DispatchQueue.main)
@@ -170,7 +233,7 @@ final class AgentScreenViewModel {
                     self.updateSubject.send(.reset)
                 }
             }
-            .store(in: &self.cancellables)
+            .store(in: &self.updatesQueueCancellables)
     }
     
     private func performUpdate(request: UpdateRequest) {

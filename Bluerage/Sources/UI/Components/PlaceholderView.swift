@@ -105,10 +105,12 @@ extension PlaceholderView where ButtonLabel == Never {
 
 extension PlaceholderView where ButtonLabel == AnyView {
 
-    static func error(action: @escaping () -> Void) -> some View {
+    static func error(title: LocalizedStringKey = "common_issue_happened",
+                      description: LocalizedStringKey = "common_resolve_issue_suggest",
+                      action: @escaping () -> Void) -> some View {
         PlaceholderView(imageName: "issue_placeholder_icon_100",
-                        title: "common_issue_happened",
-                        description: "common_resolve_issue_suggest") {
+                        title: title,
+                        description: description) {
             action()
         } buttonLabel: {
             AnyView(Text("common_refresh")

@@ -3,7 +3,9 @@ import OSLog
 
 extension Logger {
 
-    static let subsystem = ProcessInfo.processInfo.processName
+    private static let subsystem = ProcessInfo.processInfo.processName
+
+    static let `default` = Logger(subsystem: Self.subsystem, category: "default")
 
     static let agentsList = Logger(subsystem: Self.subsystem, category: "agentsList")
     
@@ -11,6 +13,6 @@ extension Logger {
 
     static let login = Logger(subsystem: Self.subsystem, category: "login")
 
-    static let `default` = Logger(subsystem: Self.subsystem, category: "default")
+    static let tools = Logger(subsystem: Self.subsystem, category: "tools")
 
 }

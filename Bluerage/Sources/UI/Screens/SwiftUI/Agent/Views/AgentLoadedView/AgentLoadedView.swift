@@ -34,18 +34,19 @@ struct AgentLoadedView: View {
         self.availableModels = availableModels
         self.screenViewModel = viewModel
         
-        self._name = State(initialValue: agent.name)
-        self._goal = State(initialValue: agent.goal)
-        self._model = State(initialValue: model)
-        self._viewModel = State(initialValue: AgentLoadedViewModel(
-            agent: agent,
-            onToolsChanged: { tools in
-                viewModel.updateAgent(tools: tools)
-            },
-            onStepsChanged: { steps in
-                viewModel.updateAgent(steps: steps)
-            }
-        ))
+        self.name = agent.name
+        self.goal = agent.goal
+        self.model = model
+        self.viewModel = AgentLoadedViewModel(agent: agent, tools: tools,
+                                              onToolsChanged: { tools in
+            viewModel.updateAgent(tools: tools)
+        },
+                                              onStepsChanged: { steps in
+            viewModel.updateAgent(steps: steps)
+        }, onRunAgent: {
+            viewModel.run()
+        }
+        )
     }
     
     var body: some View {
@@ -66,17 +67,21 @@ struct AgentLoadedView: View {
 
             AgentLoadedStepsSectionView(viewModel: self.viewModel, isFocused: self.$isFocused)
         }
+        .scrollIndicators(.hidden)
         .onChange(of: self.agent) { _, newAgent in
             self.name = newAgent.name
             self.goal = newAgent.goal
             
-            self.viewModel.updateFromAgent(newAgent)
+            self.viewModel.update(steps: newAgent.steps)
         }
+        .onChange(of: self.tools, { _, newTools in
+            self.viewModel.update(tools: newTools)
+        })
         .onChange(of: self.focusedStepIndex) { _, newFocusedIndex in
             self.viewModel.focusedStepIndex = newFocusedIndex
         }
         .sheet(isPresented: self.$isShowingToolsSelection) {
-            ToolsSelectionScreenView { selectedTool in
+            ToolsSelectionScreenView(agentToolsSlugSet: Set(self.tools.map(\.slug))) { selectedTool in
                 self.viewModel.addTool(selectedTool)
             }
         }
@@ -90,11 +95,11 @@ struct AgentLoadedView: View {
                 Spacer()
                 
                 AgentLoadedActionButtonsView(
-                    onExecutions: {
+                    onHistory: {
                         // Handle executions action
                     },
                     onRunAgent: {
-                        // Handle run agent action
+                        self.viewModel.onRunAgent()
                     }
                 )
             }

@@ -62,12 +62,15 @@ final class AgentsListScreenViewModel {
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
-    private var cancellables = Set<AnyCancellable>()
+    private var connection: AnyCancellable?
 
     func connect() {
         self.state = .loading
 
-        self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
+        self.connection?.cancel()
+        self.connection = nil
+
+        self.connection = self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
             .removeDuplicates()
             .map { agents in
                 return State.loaded(agents: agents)
@@ -81,12 +84,14 @@ final class AgentsListScreenViewModel {
             .sink { [weak self] state in
                 self?.state = state
             }
-            .store(in: &self.cancellables)
     }
 
     func createNewAgent() async throws -> Agent {
         return try await self.convex.mutation("agents:create")
     }
 
+    func removeAgents(with ids: [String]) async throws {
+        try await self.convex.mutation("agents:removeByIds", with: ["id": ids])
+    }
 
 }

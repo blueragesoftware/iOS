@@ -1,5 +1,6 @@
 import SwiftUI
 import FactoryKit
+import PostHog
 
 struct RootScreenView: View {
 

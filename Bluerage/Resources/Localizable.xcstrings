@@ -101,9 +101,6 @@
         }
       }
     },
-    "An error occurred while loading the available tools." : {
-
-    },
     "common_issue_happened" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -137,19 +134,16 @@
         }
       }
     },
-    "Executions" : {
+    "Disconnected Tools" : {
 
     },
-    "Failed to Load Tools" : {
+    "History" : {
 
     },
     "If you have an idea what to place here - hit me up on " : {
 
     },
-    "Loading tools..." : {
-
-    },
-    "No Tools Available" : {
+    "Ready to Connect Tools" : {
 
     },
     "Run Agent" : {
@@ -159,9 +153,6 @@
 
     },
     "Swipe left to delete" : {
-
-    },
-    "There are currently no tools available to add to your agent." : {
 
     },
     "Tools" : {

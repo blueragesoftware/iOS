@@ -10,14 +10,18 @@ struct AgentsListView: View {
 
     private let refresh: () -> Void
 
+    private let onDelete: ([String]) -> Void
+
     init(state: AgentsListScreenViewModel.State,
          selectedAgent: Binding<Agent?>,
          createNewAgent: @escaping () -> Void,
-         refresh: @escaping () -> Void) {
+         refresh: @escaping () -> Void,
+         onDelete: @escaping ([String]) -> Void) {
         self.state = state
         self._selectedAgent = selectedAgent
         self.createNewAgent = createNewAgent
         self.refresh = refresh
+        self.onDelete = onDelete
     }
 
     var body: some View {
@@ -26,7 +30,11 @@ struct AgentsListView: View {
             SkeletonAgentsListView()
                 .transition(.blurReplace)
         case .loaded(let agents):
-            LoadedAgentsListView(agents: agents, selectedAgent: self.$selectedAgent)
+            LoadedAgentsListView(agents: agents,
+                                 selectedAgent: self.$selectedAgent,
+                                 onDelete: { ids in
+                self.onDelete(ids)
+            })
                 .transition(.blurReplace)
         case .empty:
             EmptyAgentsListView() {

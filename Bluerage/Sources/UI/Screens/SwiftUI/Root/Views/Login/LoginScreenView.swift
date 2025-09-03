@@ -1,6 +1,7 @@
 import SwiftUI
 import AuthenticationServices
 import OSLog
+import PostHog
 
 struct LoginScreenView: View {
 
@@ -53,6 +54,7 @@ struct LoginScreenView: View {
             .padding(.top, 12)
             .padding(.bottom, 36)
         }
+        .postHogScreenView()
     }
 
 }

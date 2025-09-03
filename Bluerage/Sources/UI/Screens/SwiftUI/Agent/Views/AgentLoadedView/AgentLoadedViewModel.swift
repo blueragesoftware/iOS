@@ -18,60 +18,44 @@ final class AgentLoadedViewModel {
     }
 
     @ObservationIgnored
+    let onRunAgent: () -> Void
+
+    @ObservationIgnored
     private let onToolsChanged: ([Tool]) -> Void
 
     @ObservationIgnored
     private let onStepsChanged: ([Agent.Step]) -> Void
-    
+
     init(agent: Agent,
+         tools: [Tool],
          onToolsChanged: @escaping ([Tool]) -> Void,
-         onStepsChanged: @escaping ([Agent.Step]) -> Void) {
+         onStepsChanged: @escaping ([Agent.Step]) -> Void,
+         onRunAgent: @escaping () -> Void) {
         self.onToolsChanged = onToolsChanged
         self.onStepsChanged = onStepsChanged
-        self.updateFromAgent(agent)
+        self.onRunAgent = onRunAgent
+        self.update(steps: agent.steps)
+        self.update(tools: tools)
     }
     
-    func updateFromAgent(_ agent: Agent) {
-        var toolsList: [EditableToolItem] = agent.tools.map { .content($0) }
-        toolsList.append(.empty(id: UUID().uuidString))
-        self.tools = toolsList
-        
-        var stepsList: [EditableStepItem] = agent.steps.map { .content($0) }
+    func update(steps: [Agent.Step]) {
+        var stepsList: [EditableStepItem] = steps.map { .content($0) }
         stepsList.append(.empty(id: UUID().uuidString))
         self.steps = stepsList
     }
-    
-    func handleToolChange(at index: Int, newValue: String) {
-        guard index < self.tools.count else { return }
-        
-        let currentToolItem = self.tools[index]
-        
-        if newValue.isEmpty {
-            if self.isLastItem(index: index, in: self.tools) {
-                return
-            } else {
-                self.tools.remove(at: index)
-            }
-        } else {
-            let toolId = currentToolItem.id
-            self.tools[index] = .content(Tool(id: toolId, name: newValue))
-            
-            if self.isLastItem(index: index, in: self.tools) {
-                self.tools.append(.empty(id: UUID().uuidString))
-            }
-        }
-        
-        self.notifyToolsChanged()
+
+    func update(tools: [Tool]) {
+        var toolsList: [EditableToolItem] = tools.map { .content($0) }
+        toolsList.append(.empty(id: UUID().uuidString))
+        self.tools = toolsList
     }
-    
+
     func addTool(_ tool: Tool) {
-        // Remove the last empty item, add the new tool, then add a new empty item at the end
         if let lastIndex = self.tools.indices.last,
            case .empty = self.tools[lastIndex] {
             self.tools[lastIndex] = .content(tool)
             self.tools.append(.empty(id: UUID().uuidString))
         } else {
-            // If for some reason there's no empty item at the end, just add the tool and an empty item
             self.tools.append(.content(tool))
             self.tools.append(.empty(id: UUID().uuidString))
         }

@@ -1,11 +1,15 @@
 import SwiftUI
 import NukeUI
+import PostHog
 
 struct AgentScreenView: View {
+
+    private let agentId: String
 
     @State private var viewModel: AgentScreenViewModel
 
     init(agentId: String) {
+        self.agentId = agentId
         self.viewModel = AgentScreenViewModel(agentId: agentId)
     }
 
@@ -20,6 +24,7 @@ struct AgentScreenView: View {
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
                 self.viewModel.flush()
             }
+            .postHogScreenView(nil, ["agentId": self.agentId])
     }
 
     @ViewBuilder

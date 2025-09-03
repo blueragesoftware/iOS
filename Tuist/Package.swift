@@ -22,6 +22,8 @@ let package = Package(
         .package(url: "https://github.com/PostHog/posthog-ios", from: "3.30.1"),
         .package(url: "https://github.com/getsentry/sentry-cocoa", from: "8.55.0"),
         .package(url: "https://github.com/markiv/SwiftUI-Shimmer", from: "1.5.1"),
-        .package(url: "https://github.com/blueragesoftware/clerk-ios", branch: "main")
+        .package(url: "https://github.com/blueragesoftware/clerk-ios", branch: "main"),
+        .package(url: "https://github.com/SVGKit/SVGKit", from: "3.0.0"),
+        .package(url: "https://github.com/mattmassicotte/Queue", from: "0.2.01")
     ]
 )

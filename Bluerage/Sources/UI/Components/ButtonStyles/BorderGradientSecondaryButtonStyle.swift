@@ -13,9 +13,9 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(UIColor.systemBackground.swiftUI)
             .background {
                 Capsule()
+                    .fill(UIColor.systemGray5.swiftUI)
                     .strokeBorder(
                         LinearGradient(
                             colors: [
@@ -27,7 +27,6 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
                         ).opacity(0.24),
                         lineWidth: 1
                     )
-                    .fill(UIColor.secondarySystemFill.swiftUI)
             }
             .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
             .animation(self.animation, value: configuration.isPressed)

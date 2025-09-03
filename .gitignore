@@ -71,3 +71,4 @@ Tuist/.build
 
 ## xcconfigs
 xcconfigs/Config.xcconfig
+.sentryclirc

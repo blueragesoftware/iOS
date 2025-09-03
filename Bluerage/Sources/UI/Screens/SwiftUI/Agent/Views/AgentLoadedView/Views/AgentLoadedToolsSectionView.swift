@@ -16,7 +16,8 @@ struct AgentLoadedToolsSectionView: View {
             ForEach(Array(zip(self.viewModel.tools.indices, self.viewModel.tools)), id: \.1.id) { index, toolItem in
                 switch toolItem {
                 case .content(let tool):
-                    Text(tool.name)
+                    ToolCellView(tool: tool)
+                        .selectionDisabled()
                 case .empty:
                     Button {
                         self.onAddTool()

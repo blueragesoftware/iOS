@@ -11,6 +11,18 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
 
     }
 
+    struct Tool: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
+
+        var id: String {
+            return self.slug
+        }
+
+        let slug: String
+
+        let name: String
+
+    }
+
     let id: String
 
     let name: String

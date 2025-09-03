@@ -1,5 +1,5 @@
 {
-  "originHash" : "5b8f7655769e324fd3320e6160386cd5652e324cf9bb13f4782f76c7a21fa1b5",
+  "originHash" : "4e227dd31ff118cca77f3d55036279d642646132a9b19b68b54a8d5fa10a1094",
   "pins" : [
     {
       "identity" : "clerk-ios",
@@ -8,6 +8,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "1d07f7e352faad17f9728359bdee1976295fd7d7"
+      }
+    },
+    {
+      "identity" : "cocoalumberjack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
+      "state" : {
+        "revision" : "a9ed4b6f9bdedce7d77046f43adfb8ce1fd54114",
+        "version" : "3.9.0"
       }
     },
     {
@@ -83,6 +92,15 @@
       }
     },
     {
+      "identity" : "queue",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/Queue",
+      "state" : {
+        "revision" : "9f941ae35f146ccadd2689b9ab8d5aebb1f5d584",
+        "version" : "0.2.1"
+      }
+    },
+    {
       "identity" : "sentry-cocoa",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa",
@@ -101,12 +119,30 @@
       }
     },
     {
+      "identity" : "svgkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SVGKit/SVGKit",
+      "state" : {
+        "revision" : "58152b9f7c85eab239160b36ffdfd364aa43d666",
+        "version" : "3.0.0"
+      }
+    },
+    {
       "identity" : "swift-algorithms",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-algorithms",
       "state" : {
         "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
         "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log",
+      "state" : {
+        "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
+        "version" : "1.6.4"
       }
     },
     {

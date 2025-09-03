@@ -4,6 +4,7 @@ import FactoryKit
 import Sentry
 import Clerk
 import OSLog
+import Nuke
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
 
@@ -24,6 +25,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         self.setUpPostHog()
 
         self.setUpAuthSession()
+
+        self.setUpNuke()
 
         return true
     }
@@ -64,6 +67,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     private func setUpAuthSession() {
         self.authSession.start()
+    }
+
+    private func setUpNuke() {
+        ImageDecoders.registerSVGDecoder()
     }
 
 }

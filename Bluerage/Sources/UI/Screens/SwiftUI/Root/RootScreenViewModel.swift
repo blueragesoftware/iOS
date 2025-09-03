@@ -20,16 +20,20 @@ final class RootScreenViewModel {
     }
 
     @ObservationIgnored
-    private var cancellables = Set<AnyCancellable>()
+    private var connection: AnyCancellable?
 
     func connect() {
-        self.authSession.authStatePublisher
+        self.authState = .loading
+
+        self.connection?.cancel()
+        self.connection = nil
+
+        self.connection = self.authSession.authStatePublisher
             .sink { [weak self] authState in
                 withAnimation {
                     self?.authState = authState
                 }
             }
-            .store(in: &self.cancellables)
     }
 
 }
