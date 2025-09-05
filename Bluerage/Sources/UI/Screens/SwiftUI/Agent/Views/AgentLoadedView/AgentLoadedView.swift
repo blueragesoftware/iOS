@@ -15,6 +15,8 @@ struct AgentLoadedView: View {
     @FocusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex) private var focusedStepIndex: Int?
     
     @State private var isShowingToolsSelection = false
+    
+    @State private var isNavigatingToExecutions = false
 
     private let agent: Agent
 
@@ -45,8 +47,7 @@ struct AgentLoadedView: View {
             viewModel.updateAgent(steps: steps)
         }, onRunAgent: {
             viewModel.run()
-        }
-        )
+        })
     }
     
     var body: some View {
@@ -95,15 +96,19 @@ struct AgentLoadedView: View {
                 Spacer()
                 
                 AgentLoadedActionButtonsView(
-                    onHistory: {
-                        // Handle executions action
+                    onExecutions: {
+                        self.isNavigatingToExecutions = true
                     },
                     onRunAgent: {
+                        self.isNavigatingToExecutions = true
                         self.viewModel.onRunAgent()
                     }
                 )
             }
             .ignoresSafeArea(.keyboard)
+        }
+        .navigationDestination(isPresented: self.$isNavigatingToExecutions) {
+            ExecutionsListScreenView(agentId: self.agent.id)
         }
     }
 }

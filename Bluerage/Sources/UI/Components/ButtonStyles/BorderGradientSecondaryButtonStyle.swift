@@ -19,8 +19,8 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
                     .strokeBorder(
                         LinearGradient(
                             colors: [
-                                UIColor.white.swiftUI.opacity(0.64),
-                                UIColor.white.swiftUI.opacity(0.24)
+                                .white.opacity(0.64),
+                                .white.opacity(0.24)
                             ],
                             startPoint: .leading,
                             endPoint: .trailing

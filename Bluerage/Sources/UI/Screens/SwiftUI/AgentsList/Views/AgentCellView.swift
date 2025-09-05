@@ -3,6 +3,8 @@ import NukeUI
 
 struct AgentCellView: View {
 
+    private static let iconSize: CGFloat = 60
+
     private let agent: Agent
 
     private let onOpen: () -> Void
@@ -24,9 +26,9 @@ struct AgentCellView: View {
                         UIColor.quaternarySystemFill.swiftUI
                     }
                 }
-                .processors([.resize(height: AgentListSizeProvider.iconSize), .circle()])
+                .processors([.resize(height: Self.iconSize), .circle()])
                 .clipShape(Circle())
-                .frame(width: AgentListSizeProvider.iconSize, height: AgentListSizeProvider.iconSize)
+                .frame(width: Self.iconSize, height: Self.iconSize)
                 .fixedSize()
                 .padding(.trailing, 16)
                 
@@ -35,28 +37,18 @@ struct AgentCellView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .multilineTextAlignment(.leading)
                         .lineLimit(1)
-                        .foregroundStyle(UIColor.label.swiftUI)
+                        .foregroundStyle(.primary)
 
                     Text(self.agent.description)
                         .font(.system(size: 13, weight: .regular))
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
-                        .foregroundStyle(UIColor.tertiaryLabel.swiftUI)
+                        .foregroundStyle(.tertiary)
                 }
 
                 Spacer()
 
-                Button {
-                    self.onOpen()
-                } label: {
-                    Text("agents_list_open_button_title")
-                        .foregroundStyle(UIColor.label.swiftUI)
-                        .font(.system(size: 15, weight: .semibold))
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 18)
-                        .fixedSize()
-                }
-                .buttonStyle(.borderGradientProminentButtonStyle)
+                OpenButton(onOpen: self.onOpen)
             }
         }
     }

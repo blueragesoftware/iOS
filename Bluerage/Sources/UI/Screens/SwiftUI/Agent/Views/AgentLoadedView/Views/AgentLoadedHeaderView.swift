@@ -2,7 +2,9 @@ import SwiftUI
 import NukeUI
 
 struct AgentLoadedHeaderView: View {
-    
+
+    private static let iconSize: CGFloat = 120
+
     private let iconUrl: String
 
     init(iconUrl: String) {
@@ -20,11 +22,10 @@ struct AgentLoadedHeaderView: View {
                     UIColor.quaternarySystemFill.swiftUI
                 }
             }
-            .processors([.resize(height: AgentSizeProvider.iconSize), .circle()])
+            .processors([.resize(height: Self.iconSize), .circle()])
             .clipShape(Circle())
-            .frame(width: AgentSizeProvider.iconSize, height: AgentSizeProvider.iconSize)
+            .frame(width: Self.iconSize, height: Self.iconSize)
             .fixedSize()
-            .padding(.trailing, 16)
             .frame(maxWidth: .infinity, alignment: .center)
         }
     }

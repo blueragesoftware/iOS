@@ -46,7 +46,7 @@ struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
                 case .systemName(let name):
                     Image(systemName: name)
                         .resizable()
-                        .foregroundStyle(UIColor.label.swiftUI)
+                        .foregroundStyle(.primary)
                 case .named(let name):
                     Image(name)
                         .resizable()
@@ -56,13 +56,13 @@ struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
 
             Text(self.title)
                 .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(UIColor.label.swiftUI)
+                .foregroundStyle(.primary)
                 .padding(.top, 16)
 
             Text(self.description)
                 .font(.system(size: 17, weight: .regular))
                 .multilineTextAlignment(.center)
-                .foregroundStyle(UIColor.tertiaryLabel.swiftUI)
+                .foregroundStyle(.tertiary)
                 .padding(.top, 8)
 
             if let buttonConfiguration {
@@ -115,7 +115,7 @@ extension PlaceholderView where ButtonLabel == AnyView {
         } buttonLabel: {
             AnyView(Text("common_refresh")
                 .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(UIColor.label.swiftUI)
+                .foregroundStyle(.primary)
                 .padding(.vertical, 8)
                 .padding(.horizontal, 20)
                 .fixedSize())

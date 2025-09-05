@@ -17,7 +17,7 @@ struct LoginScreenView: View {
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
                 .font(.custom("InstrumentSerif-Regular", size: 60))
-                .foregroundStyle(UIColor.label.swiftUI)
+                .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 62)
 

@@ -7,35 +7,48 @@ import Combine
 @MainActor
 final class AgentsListScreenViewModel {
 
-    enum State: CustomStringConvertible {
+    enum State: CustomStringConvertible, Equatable {
+
+        static func == (lhs: State, rhs: State) -> Bool {
+            return lhs.isError && rhs.isError
+            || lhs.isLoading && rhs.isLoading
+            || lhs.isLoaded && rhs.isLoaded
+            || lhs.isEmpty && rhs.isEmpty
+        }
+
         case loading
         case loaded(agents: [Agent])
         case empty
         case error(Error)
 
         var isLoading: Bool {
-            switch self {
-            case .loading:
+            if case .loading = self {
                 true
-            default:
+            } else {
                 false
             }
         }
 
         var isError: Bool {
-            switch self {
-            case .error:
+            if case .error = self {
                 true
-            default:
+            } else {
                 false
             }
         }
 
         var isLoaded: Bool {
-            switch self {
-            case .loaded:
+            if case .loaded = self {
                 true
-            default:
+            } else {
+                false
+            }
+        }
+
+        var isEmpty: Bool {
+            if case .empty = self {
+                true
+            } else {
                 false
             }
         }
@@ -70,13 +83,16 @@ final class AgentsListScreenViewModel {
         self.connection?.cancel()
         self.connection = nil
 
-        self.connection = self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
+        self.connection = self.convex.subscribe(to: "agents:getAll",
+                                                yielding: [Agent].self)
             .removeDuplicates()
             .map { agents in
+                if agents.isEmpty {
+                    return State.empty
+                }
+
                 return State.loaded(agents: agents)
             }
-            .replaceEmpty(with: .empty)
-            .replaceNil(with: .empty)
             .catch { error in
                 return Just(.error(error))
             }

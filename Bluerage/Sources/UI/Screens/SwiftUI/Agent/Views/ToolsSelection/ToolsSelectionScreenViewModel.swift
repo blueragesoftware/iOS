@@ -43,7 +43,7 @@ final class ToolsSelectionScreenViewModel {
 
         Task {
             do {
-                let tools: [Tool] = try await self.convex.action("tools:getAllTools")
+                let tools: [Tool] = try await self.convex.action("tools:getAll")
 
                 let nonUsedTools = tools.filter { tool in
                     return !self.agentToolsSlugSet.contains(tool.slug)
@@ -75,7 +75,7 @@ final class ToolsSelectionScreenViewModel {
 
     func connectTool(with authConfigId: String) async throws  {
         do {
-            let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectToolWithAuthConfigId", with: ["authConfigId": authConfigId])
+            let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
 
             guard let url = URL(string: connectionResult.redirectUrl) else {
                 return

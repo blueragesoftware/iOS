@@ -168,7 +168,7 @@ final class AgentScreenViewModel {
     func run() {
         Task {
             do {
-                try await self.convex.action("executeAgent:executeWithId", with: ["agentId": self.agentId])
+                try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agentId])
             } catch {
                 Logger.agent.error("Error running agent: \(error.localizedDescription)")
             }
@@ -193,7 +193,7 @@ final class AgentScreenViewModel {
         return Future { promise in
             Task {
                 do {
-                    let tools: [Tool] = try await self.convex.action("tools:getToolsBySlugsForUser", with: ["slugs": slugs])
+                    let tools: [Tool] = try await self.convex.action("tools:getBySlugsForUser", with: ["slugs": slugs])
                     promise(.success(tools))
                 } catch {
                     promise(.failure(ClientError.ConvexError(data: error.localizedDescription)))

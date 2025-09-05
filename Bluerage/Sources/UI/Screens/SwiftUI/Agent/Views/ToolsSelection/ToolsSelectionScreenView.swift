@@ -54,7 +54,7 @@ struct ToolsSelectionScreenView: View {
                 }
             )
         case .empty:
-            PlaceholderView(imageSystemName: "wrench.and.screwdriver",
+            PlaceholderView(imageName: "tools_placeholder_100",
                             title: "No Tools Available",
                             description: "There are currently no tools available to add to your agent")
         case .error:
@@ -62,7 +62,7 @@ struct ToolsSelectionScreenView: View {
                 self.viewModel.load()
             }
         case .allToolsUsed:
-            PlaceholderView(imageSystemName: "wrench.and.screwdriver",
+            PlaceholderView(imageName: "tools_placeholder_100",
                             title: "All tools connected",
                             description: "Your agent is peaked with all available tools")
         }

@@ -4,20 +4,38 @@ import Shimmer
 struct SkeletonAgentsListView: View {
 
     var body: some View {
-        ForEach(0...4, id: \.self) { _ in
-            SkeletonAgentCellView()
-                .padding(.bottom, 28)
-                .padding(.horizontal, 20)
-        }
-        .shimmering(active: true, gradient: self.shimmerGradient)
-    }
+        VStack(spacing: 28) {
+            ForEach(0...4, id: \.self) { _ in
+                HStack(spacing: 0) {
+                    Circle()
+                        .foregroundStyle(UIColor.quaternarySystemFill.swiftUI)
+                        .frame(width: 60, height: 60)
+                        .padding(.trailing, 16)
 
-    private var shimmerGradient: Gradient {
-        Gradient(colors: [
-            UIColor.black.swiftUI.opacity(0.6),
-            UIColor.black.swiftUI,
-            UIColor.black.swiftUI.opacity(0.6)
-        ])
+                    VStack(alignment: .leading, spacing: 6) {
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundStyle(UIColor.systemFill.swiftUI)
+                            .frame(width: 100, height: 13)
+
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundStyle(UIColor.quaternarySystemFill.swiftUI)
+                            .frame(width: 120, height: 10)
+                    }
+
+                    Spacer()
+
+                    Capsule()
+                        .foregroundStyle(UIColor.quaternarySystemFill.swiftUI)
+                        .frame(width: 75, height: 32)
+                }
+                .padding(.horizontal, 20)
+            }
+            .shimmering(active: true,
+                        gradient: ShimmerGradientProvider.shimmerGradient)
+
+            Spacer()
+        }
+
     }
 
 }

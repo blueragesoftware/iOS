@@ -59,7 +59,7 @@ fi
                 .external(name: "Shimmer"),
                 .external(name: "Clerk"),
                 .external(name: "SVGKit"),
-                .external(name: "Queue")
+                .external(name: "MarkdownUI")
             ],
             settings: .settings(
                 base: SettingsDictionary()

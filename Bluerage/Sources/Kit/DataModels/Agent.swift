@@ -3,6 +3,17 @@ import ConvexMobile
 
 struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
 
+    private enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name
+        case description
+        case iconUrl
+        case goal
+        case tools
+        case steps
+        case modelId
+    }
+
     struct Step: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
 
         let id: String
@@ -38,16 +49,5 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
     let steps: [Step]
 
     let modelId: String
-
-    enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case name
-        case description
-        case iconUrl
-        case goal
-        case tools
-        case steps
-        case modelId
-    }
     
 }

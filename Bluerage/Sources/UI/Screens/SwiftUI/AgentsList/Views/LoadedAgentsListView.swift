@@ -20,21 +20,28 @@ struct LoadedAgentsListView: View {
     }
 
     var body: some View {
-        ForEach(self.agents) { agent in
-            AgentCellView(agent: agent) {
-                self.hapticManager.triggerSelectionFeedback()
-                self.selectedAgent = agent
+        List {
+            ForEach(self.agents) { agent in
+                AgentCellView(agent: agent) {
+                    self.hapticManager.triggerSelectionFeedback()
+                    self.selectedAgent = agent
+                }
+                .padding(.bottom, 28)
+                .padding(.horizontal, 20)
             }
-            .padding(.bottom, 28)
-            .padding(.horizontal, 20)
-        }
-        .onDelete { offsets in
-            let idsToDelete = offsets.compactMap { offset in
-                return self.agents[safeIndex: offset]?.id
-            }
+            .onDelete { offsets in
+                let idsToDelete = offsets.compactMap { offset in
+                    return self.agents[safeIndex: offset]?.id
+                }
 
-            self.onDelete(idsToDelete)
+                self.onDelete(idsToDelete)
+            }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
         }
+        .listStyle(.plain)
+        .scrollIndicators(.hidden)
     }
 
 }

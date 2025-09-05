@@ -2,23 +2,23 @@ import SwiftUI
 
 struct AgentLoadedActionButtonsView: View {
     
-    private let onHistory: () -> Void
+    private let onExecutions: () -> Void
 
     private let onRunAgent: () -> Void
 
-    init(onHistory: @escaping () -> Void, onRunAgent: @escaping () -> Void) {
-        self.onHistory = onHistory
+    init(onExecutions: @escaping () -> Void, onRunAgent: @escaping () -> Void) {
+        self.onExecutions = onExecutions
         self.onRunAgent = onRunAgent
     }
 
     var body: some View {
         HStack(spacing: 10) {
             Button {
-                self.onHistory()
+                self.onExecutions()
             } label: {
-                Text("History")
+                Text("Executions")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.label.swiftUI)
+                    .foregroundStyle(.primary)
                     .padding(.vertical, 15)
                     .frame(maxWidth: .infinity)
             }
@@ -29,7 +29,7 @@ struct AgentLoadedActionButtonsView: View {
             } label: {
                 Text("Run Agent")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.systemBackground.swiftUI)
+                    .foregroundStyle(.background)
                     .padding(.vertical, 15)
                     .frame(maxWidth: .infinity)
             }

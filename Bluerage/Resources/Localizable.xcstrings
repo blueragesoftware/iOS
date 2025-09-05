@@ -4,6 +4,9 @@
     "[X](https://x.com/ertembiyik)!" : {
 
     },
+    "# %@" : {
+
+    },
     "A Home for Agents" : {
 
     },
@@ -90,17 +93,6 @@
         }
       }
     },
-    "agents_list_open_button_title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open"
-          }
-        }
-      }
-    },
     "common_issue_happened" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -108,6 +100,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "An issue happened"
+          }
+        }
+      }
+    },
+    "common_open" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
           }
         }
       }
@@ -137,13 +140,16 @@
     "Disconnected Tools" : {
 
     },
-    "History" : {
+    "Executions" : {
 
     },
     "If you have an idea what to place here - hit me up on " : {
 
     },
     "Ready to Connect Tools" : {
+
+    },
+    "Result" : {
 
     },
     "Run Agent" : {

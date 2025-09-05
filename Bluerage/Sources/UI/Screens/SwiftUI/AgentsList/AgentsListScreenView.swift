@@ -5,48 +5,62 @@ import PostHog
 struct AgentsListScreenView: View {
 
     @State private var viewModel = AgentsListScreenViewModel()
-    
+
     @State private var selectedAgent: Agent?
 
     var body: some View {
         NavigationStack {
-                List {
-                    AgentsListView(state: self.viewModel.state,
-                                   selectedAgent: self.$selectedAgent) {
-                        self.createNewAgent()
-                    } refresh: {
-                        self.viewModel.connect()
-                    } onDelete: { ids in
-                        Task {
-                            do {
-                                try await self.viewModel.removeAgents(with: ids)
-                            } catch {
-                                Logger.agentsList.error("Error removing agents: \(error.localizedDescription)")
-                            }
-                        }
-                    }
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets())
+            self.content
+                .safeAreaInset(edge: .bottom) {
+                    self.createNewAgentButton
                 }
-                .listStyle(.plain)
-            .overlay(alignment: .bottom) {
-                self.createNewAgentButton
-            }
-            .scrollIndicators(.hidden)
-            .scrollDisabled(self.viewModel.state.isLoading || self.viewModel.state.isError)
-            .onFirstAppear {
-                self.viewModel.connect()
-            }
-            .background(UIColor.systemGroupedBackground.swiftUI)
-            .navigationTitle("agents_list_navigation_title")
-            .navigationDestination(item: self.$selectedAgent) { agent in
-                AgentScreenView(agentId: agent.id)
-            }
-            .postHogScreenView()
+                .scrollDisabled(self.viewModel.state.isLoading || self.viewModel.state.isError)
+                .onFirstAppear {
+                    self.viewModel.connect()
+                }
+                .background(UIColor.systemGroupedBackground.swiftUI)
+                .navigationTitle("agents_list_navigation_title")
+                .navigationDestination(item: self.$selectedAgent) { agent in
+                    AgentScreenView(agentId: agent.id)
+                }
+                .postHogScreenView()
         }
     }
 
-    @ViewBuilder private var createNewAgentButton: some View {
+    @ViewBuilder
+    private var content: some View {
+        switch self.viewModel.state {
+        case .loading:
+            SkeletonAgentsListView()
+                .transition(.blurReplace)
+        case .loaded(let agents):
+            LoadedAgentsListView(agents: agents,
+                                 selectedAgent: self.$selectedAgent,
+                                 onDelete: { ids in
+                Task {
+                    do {
+                        try await self.viewModel.removeAgents(with: ids)
+                    } catch {
+                        Logger.agentsList.error("Error removing agents: \(error.localizedDescription)")
+                    }
+                }
+            })
+                .transition(.blurReplace)
+        case .empty:
+            EmptyAgentsListView {
+                self.createNewAgent()
+            }
+                .transition(.blurReplace)
+        case .error:
+            ErrorAgentsListView {
+                self.viewModel.connect()
+            }
+                .transition(.blurReplace)
+        }
+    }
+
+    @ViewBuilder
+    private var createNewAgentButton: some View {
         if self.viewModel.state.isLoaded {
             Button {
                 self.createNewAgent()
