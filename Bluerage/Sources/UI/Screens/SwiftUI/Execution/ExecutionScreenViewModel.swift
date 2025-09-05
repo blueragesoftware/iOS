@@ -38,6 +38,7 @@ final class ExecutionScreenViewModel {
         self.connection = self.convex.subscribe(to: "executionTasks:getById",
                                                 with: ["id": self.taskId],
                                                 yielding: ExecutionTask.self)
+        .removeDuplicates()
         .map { task in
             return State.loaded(task: task)
         }

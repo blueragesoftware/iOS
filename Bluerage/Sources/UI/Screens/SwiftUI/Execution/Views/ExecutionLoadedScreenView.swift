@@ -16,8 +16,8 @@ struct ExecutionLoadedScreenView: View {
             ExecutionLoadedHeaderView(state: self.task.state, index: self.index)
 
             Section {
-                LabeledContent("Name", value: "# \(self.index)")
-                LabeledContent("Status", value: "\(self.task.state.title)")
+                LabeledContent("execution_name_field_title", value: "# \(self.index)")
+                LabeledContent("execution_status_field_title", value: "\(self.task.state.title)")
             }
 
             ExecutionLoadedContentView(state: self.task.state)
