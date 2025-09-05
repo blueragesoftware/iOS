@@ -55,7 +55,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("Ready to Connect Tools")
+                    Text("Ready to Connect")
                 }
             }
 
@@ -69,7 +69,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("Disconnected Tools")
+                    Text("Disconnected")
                 }
             }
         }

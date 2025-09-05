@@ -1,22 +1,21 @@
 import SwiftUI
 import FactoryKit
+import NavigatorUI
 
 struct LoadedAgentsListView: View {
 
     private let agents: [Agent]
 
-    @Binding private var selectedAgent: Agent?
+    private let onRemove: ([String]) -> Void
 
-    private let onDelete: ([String]) -> Void
+    @Environment(\.navigator) private var navigator
 
     @Injected(\.hapticManager) private var hapticManager
 
     init(agents: [Agent],
-         selectedAgent: Binding<Agent?>,
-         onDelete: @escaping ([String]) -> Void) {
+         onRemove: @escaping ([String]) -> Void) {
         self.agents = agents
-        self._selectedAgent = selectedAgent
-        self.onDelete = onDelete
+        self.onRemove = onRemove
     }
 
     var body: some View {
@@ -24,17 +23,19 @@ struct LoadedAgentsListView: View {
             ForEach(self.agents) { agent in
                 AgentCellView(agent: agent) {
                     self.hapticManager.triggerSelectionFeedback()
-                    self.selectedAgent = agent
+                    self.navigator.navigate(to: AgentListDestinations.agent(agent))
                 }
                 .padding(.bottom, 28)
                 .padding(.horizontal, 20)
             }
             .onDelete { offsets in
-                let idsToDelete = offsets.compactMap { offset in
-                    return self.agents[safeIndex: offset]?.id
+                let agents = self.agents
+
+                let idsToRemove = offsets.compactMap { offset in
+                    return agents[safeIndex: offset]?.id
                 }
 
-                self.onDelete(idsToDelete)
+                self.onRemove(idsToRemove)
             }
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets())

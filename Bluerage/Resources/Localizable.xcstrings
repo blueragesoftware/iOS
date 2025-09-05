@@ -1,13 +1,13 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    " " : {
+
+    },
     "[X](https://x.com/ertembiyik)!" : {
 
     },
     "# %@" : {
-
-    },
-    "A Home for Agents" : {
 
     },
     "About" : {
@@ -93,6 +93,28 @@
         }
       }
     },
+    "common_empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty"
+          }
+        }
+      }
+    },
+    "common_error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
+    },
     "common_issue_happened" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -100,6 +122,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "An issue happened"
+          }
+        }
+      }
+    },
+    "common_loaded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loaded"
+          }
+        }
+      }
+    },
+    "common_loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading"
+          }
+        }
+      }
+    },
+    "common_ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }
@@ -137,16 +192,35 @@
         }
       }
     },
-    "Disconnected Tools" : {
+    "Disconnected" : {
 
     },
     "Executions" : {
 
     },
-    "If you have an idea what to place here - hit me up on " : {
-
+    "login_image_suggestion_prompt" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If you have an idea what to place here - hit me up on"
+          }
+        }
+      }
     },
-    "Ready to Connect Tools" : {
+    "login_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Home for Agents"
+          }
+        }
+      }
+    },
+    "Ready to Connect" : {
 
     },
     "Result" : {

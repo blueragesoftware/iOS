@@ -3,7 +3,7 @@ import SwiftUI
 @MainActor
 @Observable
 final class AgentLoadedViewModel {
-    
+
     private(set) var tools: [EditableToolItem] = []
 
     private(set) var steps: [EditableStepItem] = []
@@ -18,6 +18,9 @@ final class AgentLoadedViewModel {
     }
 
     @ObservationIgnored
+    let onUpdateAgent: (AgentUpdateParams) -> Void
+
+    @ObservationIgnored
     let onRunAgent: () -> Void
 
     @ObservationIgnored
@@ -28,9 +31,11 @@ final class AgentLoadedViewModel {
 
     init(agent: Agent,
          tools: [Tool],
+         onUpdateAgent: @escaping (AgentUpdateParams) -> Void,
          onToolsChanged: @escaping ([Tool]) -> Void,
          onStepsChanged: @escaping ([Agent.Step]) -> Void,
          onRunAgent: @escaping () -> Void) {
+        self.onUpdateAgent = onUpdateAgent
         self.onToolsChanged = onToolsChanged
         self.onStepsChanged = onStepsChanged
         self.onRunAgent = onRunAgent
@@ -125,13 +130,19 @@ final class AgentLoadedViewModel {
         }
     }
     
-    func deleteTools(at offsets: IndexSet) {
-        self.tools.remove(atOffsets: offsets)
+    func removeTools(with ids: [String]) {
+        self.tools = self.tools.filter { tool in
+            ids.contains(tool.id)
+        }
+
         self.notifyToolsChanged()
     }
     
-    func deleteSteps(at offsets: IndexSet) {
-        self.steps.remove(atOffsets: offsets)
+    func removeSteps(with ids: [String]) {
+        self.steps = self.steps.filter { step in
+            ids.contains(step.id)
+        }
+
         self.notifyStepsChanged()
     }
     

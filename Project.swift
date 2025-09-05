@@ -58,13 +58,13 @@ fi
                 .external(name: "Sentry"),
                 .external(name: "Shimmer"),
                 .external(name: "Clerk"),
-                .external(name: "SVGKit"),
-                .external(name: "MarkdownUI")
+                .external(name: "MarkdownUI"),
+                .external(name: "SVGView"),
+                .external(name: "NavigatorUI")
             ],
             settings: .settings(
                 base: SettingsDictionary()
-                    .currentProjectVersion("1.0.0")
-                    .otherLinkerFlags(["-ObjC"]),
+                    .currentProjectVersion("1.0.0"),
                 configurations: [
                     .debug(
                         name: "Debug",

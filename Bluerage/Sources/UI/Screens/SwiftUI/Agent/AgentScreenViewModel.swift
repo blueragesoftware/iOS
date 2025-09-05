@@ -14,7 +14,7 @@ final class AgentScreenViewModel {
         case error(Error)
     }
     
-    private struct UpdateRequest: Equatable {
+    private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
         var name: String?
         var description: String?
         var iconUrl: String?
@@ -113,7 +113,7 @@ final class AgentScreenViewModel {
                         }
                         .eraseToAnyPublisher()
                 } else {
-                    // TODO: return cache to not trigger the new fetch
+                    // TODO: return cache to not trigger the new fetch or do polling + convex as source of truth for Tools
                     return self.getToolsBySlugsPublisher(slugs: newSlugs)
                         .map { tools in
                             return (newResponse, tools)
@@ -155,8 +155,8 @@ final class AgentScreenViewModel {
             description: description,
             iconUrl: iconUrl,
             goal: goal,
-            tools: tools?.map { composioTool in
-                return Agent.Tool(slug: composioTool.slug, name: composioTool.name)
+            tools: tools?.map { tool in
+                return Agent.Tool(slug: tool.slug, name: tool.name)
             },
             steps: steps,
             modelId: modelId
@@ -170,7 +170,7 @@ final class AgentScreenViewModel {
             do {
                 try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agentId])
             } catch {
-                Logger.agent.error("Error running agent: \(error.localizedDescription)")
+                Logger.agent.error("Error running agent: \(error.localizedDescription, privacy: .public)")
             }
         }
     }
@@ -214,6 +214,7 @@ final class AgentScreenViewModel {
                     return UpdateRequest()
                 }
             }
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] accumulatedRequest in
                 self?.currentAccumulatedSubject.send(accumulatedRequest)
@@ -254,9 +255,10 @@ final class AgentScreenViewModel {
         Task {
             do {
                 try await self.convex.mutation("agents:update", with: args)
-                Logger.agent.info("Agent updated successfully with \(args.count - 1) fields")
+
+                Logger.agent.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
             } catch {
-                Logger.agent.error("Failed to update agent: \(error.localizedDescription)")
+                Logger.agent.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
             }
         }
     }

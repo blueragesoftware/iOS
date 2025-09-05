@@ -36,6 +36,8 @@ final class AuthSessionImpl: AuthSession {
     }
 
     func start() {
+        self.authState = .loading
+
         self.convex.authState
             .map { convexState in
                 switch convexState {
@@ -56,13 +58,8 @@ final class AuthSessionImpl: AuthSession {
             .store(in: &self.cancellables)
 
         Task {
-
-        }
-
-        Task {
             try await self.convex.loginFromCache()
         }
     }
 
-    
 }

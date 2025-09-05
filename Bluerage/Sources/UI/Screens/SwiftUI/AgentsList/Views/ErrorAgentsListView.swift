@@ -3,10 +3,10 @@ import FactoryKit
 
 struct ErrorAgentsListView: View {
 
-    private let refresh: () -> Void
+    private let onRefresh: () -> Void
 
-    init(refresh: @escaping () -> Void) {
-        self.refresh = refresh
+    init(onRefresh: @escaping () -> Void) {
+        self.onRefresh = onRefresh
     }
 
     var body: some View {
@@ -14,7 +14,7 @@ struct ErrorAgentsListView: View {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
             PlaceholderView.error {
-                self.refresh()
+                self.onRefresh()
             }
         }
     }

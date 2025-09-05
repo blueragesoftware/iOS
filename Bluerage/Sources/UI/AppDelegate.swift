@@ -51,7 +51,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             do {
                 try await self.clerk.load()
             } catch {
-                Logger.default.error("Error loading clerk: \(error.localizedDescription)")
+                Logger.default.error("Error loading clerk: \(error.localizedDescription, privacy: .public)")
             }
         }
     }

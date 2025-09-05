@@ -66,8 +66,8 @@ final class ToolsSelectionScreenViewModel {
                     self.state = .loaded(activeTools: activeTools, inactiveTools: inactiveTools)
                 }
             } catch {
-                Logger.tools.error("Error loading tools: \(error.localizedDescription)")
-                
+                Logger.tools.error("Error loading tools: \(error.localizedDescription, privacy: .public)")
+
                 self.state = .error(error)
             }
         }
@@ -83,7 +83,7 @@ final class ToolsSelectionScreenViewModel {
 
             self.authUrlConfig = AuthUrlConfig(id: authConfigId, url: url)
         } catch {
-            Logger.tools.error("Error connecting tool: \(error.localizedDescription)")
+            Logger.tools.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
 
             throw error
         }

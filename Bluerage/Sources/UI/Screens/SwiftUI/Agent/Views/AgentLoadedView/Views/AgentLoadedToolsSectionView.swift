@@ -2,25 +2,30 @@ import SwiftUI
 
 struct AgentLoadedToolsSectionView: View {
     
-    private let viewModel: AgentLoadedViewModel
+    private let tools: [EditableToolItem]
 
-    private let onAddTool: () -> Void
+    private let onRemove: ([String]) -> Void
 
-    init(viewModel: AgentLoadedViewModel, onAddTool: @escaping () -> Void) {
-        self.viewModel = viewModel
-        self.onAddTool = onAddTool
+    private let onAdd: () -> Void
+
+    init(tools: [EditableToolItem],
+         onRemove: @escaping ([String]) -> Void,
+         onAdd: @escaping () -> Void) {
+        self.tools = tools
+        self.onRemove = onRemove
+        self.onAdd = onAdd
     }
 
     var body: some View {
         Section {
-            ForEach(Array(zip(self.viewModel.tools.indices, self.viewModel.tools)), id: \.1.id) { index, toolItem in
+            ForEach(Array(zip(self.tools.indices, self.tools)), id: \.1.id) { index, toolItem in
                 switch toolItem {
                 case .content(let tool):
                     ToolCellView(tool: tool)
                         .selectionDisabled()
                 case .empty:
                     Button {
-                        self.onAddTool()
+                        self.onAdd()
                     } label: {
                         Text("Add a Tool")
                             .foregroundStyle(.link)
@@ -29,7 +34,13 @@ struct AgentLoadedToolsSectionView: View {
                 }
             }
             .onDelete { offsets in
-                self.viewModel.deleteTools(at: offsets)
+                let tools = self.tools
+
+                let idsToRemove = offsets.compactMap { offset in
+                    return tools[safeIndex: offset]?.id
+                }
+
+                self.onRemove(idsToRemove)
             }
         } header: {
             Text("Tools")

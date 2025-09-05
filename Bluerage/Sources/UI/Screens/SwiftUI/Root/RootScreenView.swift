@@ -14,7 +14,7 @@ struct RootScreenView: View {
                     .transition(.blurReplace)
             case .error:
                 PlaceholderView.error {
-                    
+                    self.viewModel.reconnect()
                 }
                 .transition(.blurReplace)
             case .unauthenticated:
@@ -29,6 +29,5 @@ struct RootScreenView: View {
             self.viewModel.connect()
         }
     }
-
 
 }

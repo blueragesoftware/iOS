@@ -23,8 +23,6 @@ final class RootScreenViewModel {
     private var connection: AnyCancellable?
 
     func connect() {
-        self.authState = .loading
-
         self.connection?.cancel()
         self.connection = nil
 
@@ -34,6 +32,12 @@ final class RootScreenViewModel {
                     self?.authState = authState
                 }
             }
+    }
+
+    func reconnect() {
+        self.authSession.start()
+
+        self.connect()
     }
 
 }

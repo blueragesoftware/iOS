@@ -1,5 +1,5 @@
 {
-  "originHash" : "9b345c35092ce01f4a562ad19a89f269691377e77525f5799b2d9612b5b2b7da",
+  "originHash" : "d5f823dfb9c903aa7fcc4216b3063bb001fc90b7dddce761602048bcec4c5d1f",
   "pins" : [
     {
       "identity" : "clerk-ios",
@@ -8,15 +8,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "1d07f7e352faad17f9728359bdee1976295fd7d7"
-      }
-    },
-    {
-      "identity" : "cocoalumberjack",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
-      "state" : {
-        "revision" : "a9ed4b6f9bdedce7d77046f43adfb8ce1fd54114",
-        "version" : "3.9.0"
       }
     },
     {
@@ -53,6 +44,15 @@
       "state" : {
         "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
         "version" : "8.5.0"
+      }
+    },
+    {
+      "identity" : "navigator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hmlongco/Navigator",
+      "state" : {
+        "revision" : "cdf1194c3ff07bc74c45aeaa623c462699e408d7",
+        "version" : "1.1.1"
       }
     },
     {
@@ -119,12 +119,12 @@
       }
     },
     {
-      "identity" : "svgkit",
+      "identity" : "svgview",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SVGKit/SVGKit",
+      "location" : "https://github.com/exyte/SVGView",
       "state" : {
-        "revision" : "58152b9f7c85eab239160b36ffdfd364aa43d666",
-        "version" : "3.0.0"
+        "revision" : "6465962facdd25cb96eaebc35603afa2f15d2c0d",
+        "version" : "1.0.6"
       }
     },
     {
@@ -143,15 +143,6 @@
       "state" : {
         "revision" : "b022b08312decdc46585e0b3440d97f6f22ef703",
         "version" : "0.6.0"
-      }
-    },
-    {
-      "identity" : "swift-log",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-log",
-      "state" : {
-        "revision" : "ce592ae52f982c847a4efc0dd881cc9eb32d29f2",
-        "version" : "1.6.4"
       }
     },
     {

@@ -1,5 +1,4 @@
 import SwiftUI
-import FactoryKit
 
 struct EmptyAgentsListView: View {
 

@@ -1,6 +1,7 @@
 import SwiftUI
 import NukeUI
 import Nuke
+import SVGView
 
 struct ToolCellView<TrailingAccessory: View>: View {
 
@@ -33,7 +34,7 @@ struct ToolCellView<TrailingAccessory: View>: View {
                         let isSVG = (try? state.result?.get().request.url?.absoluteString.hasSuffix(".svg")) ?? false
 
                         if isSVG, let data = state.imageContainer?.data {
-                            SVGImage(data: data, size: CGSize(width: self.imageSize, height: self.imageSize))
+                            SVGView(data: data)
                         } else if let image = state.image {
                             image.resizable().aspectRatio(contentMode: .fit)
                         } else {

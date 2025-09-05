@@ -23,7 +23,8 @@ let package = Package(
         .package(url: "https://github.com/getsentry/sentry-cocoa", from: "8.55.0"),
         .package(url: "https://github.com/markiv/SwiftUI-Shimmer", from: "1.5.1"),
         .package(url: "https://github.com/blueragesoftware/clerk-ios", branch: "main"),
-        .package(url: "https://github.com/SVGKit/SVGKit", from: "3.0.0"),
-        .package(url: "https://github.com/gonzalezreal/swift-markdown-ui.git", from: "2.4.1")
+        .package(url: "https://github.com/exyte/SVGView", from: "1.0.6"),
+        .package(url: "https://github.com/gonzalezreal/swift-markdown-ui.git", from: "2.4.1"),
+        .package(url: "https://github.com/hmlongco/Navigator", from: "1.1.1")
     ]
 )

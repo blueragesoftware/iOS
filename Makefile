@@ -14,7 +14,7 @@ install-swiftlint:
 install-precommit:
 	@echo "Installing pre-commit hooks..."
 	@if ! command -v pre-commit &> /dev/null; then \
-		pip install pre-commit; \
+		pipx install pre-commit; \
 	else \
 		echo "pre-commit is already installed"; \
 	fi

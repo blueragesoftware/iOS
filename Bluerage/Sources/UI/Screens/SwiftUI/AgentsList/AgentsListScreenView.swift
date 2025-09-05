@@ -1,49 +1,48 @@
 import SwiftUI
 import OSLog
 import PostHog
+import NavigatorUI
+import FactoryKit
+
 
 struct AgentsListScreenView: View {
 
     @State private var viewModel = AgentsListScreenViewModel()
 
-    @State private var selectedAgent: Agent?
+    @Environment(\.navigator) private var navigator
+
+    @Injected(\.hapticManager) private var hapticManager
 
     var body: some View {
-        NavigationStack {
+        ManagedNavigationStack {
             self.content
                 .safeAreaInset(edge: .bottom) {
                     self.createNewAgentButton
                 }
-                .scrollDisabled(self.viewModel.state.isLoading || self.viewModel.state.isError)
+                .scrollDisabled(self.viewModel.state.main.isLoading || self.viewModel.state.main.isError)
                 .onFirstAppear {
                     self.viewModel.connect()
                 }
-                .background(UIColor.systemGroupedBackground.swiftUI)
                 .navigationTitle("agents_list_navigation_title")
-                .navigationDestination(item: self.$selectedAgent) { agent in
-                    AgentScreenView(agentId: agent.id)
-                }
-                .postHogScreenView()
+                .navigationDestination(AgentListDestinations.self)
         }
+        .background(UIColor.systemGroupedBackground.swiftUI)
+        .errorAlert(error: self.viewModel.state.alertError)  {
+            self.viewModel.resetAlertError()
+        }
+        .postHogScreenView()
     }
 
     @ViewBuilder
     private var content: some View {
-        switch self.viewModel.state {
+        switch self.viewModel.state.main {
         case .loading:
             SkeletonAgentsListView()
                 .transition(.blurReplace)
         case .loaded(let agents):
             LoadedAgentsListView(agents: agents,
-                                 selectedAgent: self.$selectedAgent,
-                                 onDelete: { ids in
-                Task {
-                    do {
-                        try await self.viewModel.removeAgents(with: ids)
-                    } catch {
-                        Logger.agentsList.error("Error removing agents: \(error.localizedDescription)")
-                    }
-                }
+                                 onRemove: { ids in
+                self.removeAgents(with: ids)
             })
                 .transition(.blurReplace)
         case .empty:
@@ -61,7 +60,7 @@ struct AgentsListScreenView: View {
 
     @ViewBuilder
     private var createNewAgentButton: some View {
-        if self.viewModel.state.isLoaded {
+        if self.viewModel.state.main.isLoaded {
             Button {
                 self.createNewAgent()
             } label: {
@@ -78,10 +77,28 @@ struct AgentsListScreenView: View {
 
     private func createNewAgent() {
         Task {
+            self.hapticManager.triggerSelectionFeedback()
+
             do {
-                self.selectedAgent = try await self.viewModel.createNewAgent()
+                let agent = try await self.viewModel.createNewAgent()
+
+                self.navigator.navigate(to: AgentListDestinations.agent(agent))
             } catch {
-                Logger.agentsList.error("Error creating new agent: \(error.localizedDescription)")
+                Logger.agentsList.error("Error creating new agent: \(error.localizedDescription, privacy: .public)")
+
+                self.viewModel.showErrorAlert(with: error)
+            }
+        }
+    }
+
+    private func removeAgents(with ids: [String]) {
+        Task {
+            do {
+                try await self.viewModel.removeAgents(with: ids)
+            } catch {
+                Logger.agentsList.error("Error removing agents: \(error.localizedDescription, privacy: .public)")
+
+                self.viewModel.showErrorAlert(with: error)
             }
         }
     }

@@ -23,8 +23,6 @@ struct AgentLoadedView: View {
     private let tools: [Tool]
 
     private let availableModels: [Model]
-
-    private let screenViewModel: AgentScreenViewModel
     
     init(agent: Agent,
          model: Model,
@@ -34,19 +32,21 @@ struct AgentLoadedView: View {
         self.agent = agent
         self.tools = tools
         self.availableModels = availableModels
-        self.screenViewModel = viewModel
         
         self.name = agent.name
         self.goal = agent.goal
         self.model = model
         self.viewModel = AgentLoadedViewModel(agent: agent, tools: tools,
-                                              onToolsChanged: { tools in
-            viewModel.updateAgent(tools: tools)
+                                              onUpdateAgent: { [weak viewModel] (name, goal, modelId) in
+            viewModel?.updateAgent(name: name, goal: goal, modelId: modelId)
         },
-                                              onStepsChanged: { steps in
-            viewModel.updateAgent(steps: steps)
-        }, onRunAgent: {
-            viewModel.run()
+                                              onToolsChanged: { [weak viewModel] tools in
+            viewModel?.updateAgent(tools: tools)
+        },
+                                              onStepsChanged: { [weak viewModel] steps in
+            viewModel?.updateAgent(steps: steps)
+        }, onRunAgent: { [weak viewModel] in
+            viewModel?.run()
         })
     }
     
@@ -57,17 +57,19 @@ struct AgentLoadedView: View {
             AgentLoadedAboutSectionView(name: self.$name,
                                         goal: self.$goal,
                                         model: self.$model,
-                                        availableModels: self.availableModels,
-                                        isFocused: self.$isFocused) { name, goal, modelId in
-                self.screenViewModel.updateAgent(name: name, goal: goal, modelId: modelId)
+                                        availableModels: self.availableModels) { update in
+                self.viewModel.onUpdateAgent(update)
             }
             
             AgentLoadedToolsSectionView(viewModel: self.viewModel) {
+                self.viewModel.deleteTools(at: <#T##IndexSet#>)
+            } onAdd: {
                 self.isShowingToolsSelection = true
             }
 
             AgentLoadedStepsSectionView(viewModel: self.viewModel, isFocused: self.$isFocused)
         }
+        .focused(self.$isFocused)
         .scrollIndicators(.hidden)
         .onChange(of: self.agent) { _, newAgent in
             self.name = newAgent.name

@@ -32,7 +32,6 @@ struct AgentLoadedStepsSectionView: View {
                              ),
                              axis: .vertical)
                         .multilineTextAlignment(.leading)
-                        .focused(self.$isFocused)
                         .focusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex, index)
                     
                     Spacer()

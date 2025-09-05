@@ -14,6 +14,7 @@ struct ExecutionLoadedContentView: View {
                 Text(error)
             case .success(let result):
                 Markdown(result)
+                    .textSelection(.enabled)
             }
         } header: {
             Text("Result")

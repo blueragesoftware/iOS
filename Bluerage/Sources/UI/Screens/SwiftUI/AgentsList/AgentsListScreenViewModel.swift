@@ -3,73 +3,83 @@ import ConvexMobile
 import OSLog
 import Combine
 
-@Observable
 @MainActor
+@Observable
 final class AgentsListScreenViewModel {
 
-    enum State: CustomStringConvertible, Equatable {
+    struct State {
 
-        static func == (lhs: State, rhs: State) -> Bool {
-            return lhs.isError && rhs.isError
-            || lhs.isLoading && rhs.isLoading
-            || lhs.isLoaded && rhs.isLoaded
-            || lhs.isEmpty && rhs.isEmpty
-        }
+        enum Main: Equatable {
 
-        case loading
-        case loaded(agents: [Agent])
-        case empty
-        case error(Error)
+            // MARK: - Equatable
 
-        var isLoading: Bool {
-            if case .loading = self {
-                true
-            } else {
-                false
+            static func == (lhs: Main, rhs: Main) -> Bool {
+                return lhs.isError && rhs.isError
+                || lhs.isLoading && rhs.isLoading
+                || lhs.isLoaded && rhs.isLoaded
+                || lhs.isEmpty && rhs.isEmpty
+            }
+
+            // MARK: - Properties
+
+            case loading
+            case loaded(agents: [Agent])
+            case empty
+            case error(Error)
+
+            var isLoading: Bool {
+                if case .loading = self {
+                    true
+                } else {
+                    false
+                }
+            }
+
+            var isError: Bool {
+                if case .error = self {
+                    true
+                } else {
+                    false
+                }
+            }
+
+            var isLoaded: Bool {
+                if case .loaded = self {
+                    true
+                } else {
+                    false
+                }
+            }
+
+            var isEmpty: Bool {
+                if case .empty = self {
+                    true
+                } else {
+                    false
+                }
+            }
+
+            var title: String {
+                switch self {
+                case .loading:
+                    "common_loading".localized
+                case .loaded:
+                    "common_loaded".localized
+                case .error:
+                    "common_error".localized
+                case .empty:
+                    "common_empty".localized
+                }
             }
         }
 
-        var isError: Bool {
-            if case .error = self {
-                true
-            } else {
-                false
-            }
-        }
+        var main: Main
 
-        var isLoaded: Bool {
-            if case .loaded = self {
-                true
-            } else {
-                false
-            }
-        }
+        var alertError: Error?
 
-        var isEmpty: Bool {
-            if case .empty = self {
-                true
-            } else {
-                false
-            }
-        }
-
-        // MARK: - CustomStringConvertible
-
-        var description: String {
-            switch self {
-            case .loading:
-                "Loading"
-            case .loaded:
-                "Loaded"
-            case .error:
-                "Error"
-            case .empty:
-                "Empty"
-            }
-        }
     }
 
-    private(set) var state: State = .loading
+    private(set) var state: State = State(main: .loading)
 
     @ObservationIgnored
     @Injected(\.convex) private var convex
@@ -78,27 +88,26 @@ final class AgentsListScreenViewModel {
     private var connection: AnyCancellable?
 
     func connect() {
-        self.state = .loading
+        self.state.main = .loading
 
         self.connection?.cancel()
         self.connection = nil
 
-        self.connection = self.convex.subscribe(to: "agents:getAll",
-                                                yielding: [Agent].self)
+        self.connection = self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
             .removeDuplicates()
             .map { agents in
                 if agents.isEmpty {
-                    return State.empty
+                    return State.Main.empty
                 }
 
-                return State.loaded(agents: agents)
+                return State.Main.loaded(agents: agents)
             }
             .catch { error in
-                return Just(.error(error))
+                return Just(State.Main.error(error))
             }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in
-                self?.state = state
+            .sink { [weak self] main in
+                self?.state.main = main
             }
     }
 
@@ -108,6 +117,14 @@ final class AgentsListScreenViewModel {
 
     func removeAgents(with ids: [String]) async throws {
         try await self.convex.mutation("agents:removeByIds", with: ["id": ids])
+    }
+
+    func showErrorAlert(with error: Error) {
+        self.state.alertError = error
+    }
+
+    func resetAlertError() {
+        self.state.alertError = nil
     }
 
 }

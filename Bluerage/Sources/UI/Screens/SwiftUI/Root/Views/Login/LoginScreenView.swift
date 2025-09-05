@@ -13,7 +13,7 @@ struct LoginScreenView: View {
 
     var body: some View {
         VStack {
-            Text("A Home for Agents")
+            Text("login_title")
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
                 .font(.custom("InstrumentSerif-Regular", size: 60))
@@ -23,7 +23,7 @@ struct LoginScreenView: View {
 
             Spacer()
 
-            (Text("If you have an idea what to place here - hit me up on ") + Text("[X](https://x.com/ertembiyik)!").underline())
+            (Text("login_image_suggestion_prompt") + Text(" ") + Text("[X](https://x.com/ertembiyik)!").underline())
                 .font(.system(size: 16))
                 .multilineTextAlignment(.center)
                 .padding()
@@ -38,7 +38,9 @@ struct LoginScreenView: View {
                 case .success(let authorization):
                     self.viewModel.handle(authorization: authorization)
                 case .failure(let error):
-                    Logger.login.error("Sign in failed: \(error.localizedDescription)") 
+                    self.viewModel.error = error
+
+                    Logger.login.error("Sign in failed: \(error.localizedDescription, privacy: .public)")
                 }
             }
             .id(self.signInAppleButtonId)
@@ -54,6 +56,7 @@ struct LoginScreenView: View {
             .padding(.top, 12)
             .padding(.bottom, 36)
         }
+        .errorAlert(error: self.$viewModel.error)
         .postHogScreenView()
     }
 
