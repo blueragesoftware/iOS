@@ -1,6 +1,7 @@
 import SwiftUI
 import NukeUI
 import PostHog
+import NavigatorUI
 
 struct AgentScreenView: View {
 
@@ -18,13 +19,8 @@ struct AgentScreenView: View {
             .onFirstAppear {
                 self.viewModel.connect()
             }
-            .onDisappear {
-                self.viewModel.flush()
-            }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                self.viewModel.flush()
-            }
-            .postHogScreenView(nil, ["agentId": self.agentId])
+            .navigationDestination(AgentDestinations.self)
+            .postHogScreenView("AgentScreenView", ["agentId": self.agentId])
     }
 
     @ViewBuilder
@@ -33,13 +29,9 @@ struct AgentScreenView: View {
         case .loading:
             LoadingView()
                 .transition(.blurReplace)
-        case .loaded(let agent, let model, let tools, let availableModels):
-            AgentLoadedView(agent: agent,
-                            model: model,
-                            tools: tools,
-                            availableModels: availableModels,
-                            viewModel: self.viewModel)
-            .transition(.blurReplace)
+        case .loaded(let loadedViewModel):
+            AgentLoadedView(viewModel: loadedViewModel)
+                .transition(.blurReplace)
         case .error:
             PlaceholderView.error {
                 self.viewModel.connect()

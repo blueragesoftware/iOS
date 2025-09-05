@@ -1,6 +1,7 @@
 import Foundation
 
 enum EditableItem<Content: Identifiable>: Identifiable, Equatable where Content: Equatable, Content.ID == String {
+
     case content(Content)
     case empty(id: String)
 

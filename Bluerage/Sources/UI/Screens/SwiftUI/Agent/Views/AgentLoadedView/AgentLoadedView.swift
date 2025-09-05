@@ -1,92 +1,79 @@
 import SwiftUI
+import NavigatorUI
 
 struct AgentLoadedView: View {
-    
+
+    @State private var viewModel: AgentLoadedViewModel
+
     @State private var name: String
-    
+
     @State private var goal: String
 
     @State private var model: Model
 
-    @State private var viewModel: AgentLoadedViewModel
-
     @FocusState private var isFocused: Bool
-    
+
     @FocusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex) private var focusedStepIndex: Int?
-    
-    @State private var isShowingToolsSelection = false
-    
-    @State private var isNavigatingToExecutions = false
 
-    private let agent: Agent
+    @Environment(\.navigator) private var navigator
 
-    private let tools: [Tool]
+    init(viewModel: AgentLoadedViewModel) {
+        self._viewModel = State(wrappedValue: viewModel)
 
-    private let availableModels: [Model]
-    
-    init(agent: Agent,
-         model: Model,
-         tools: [Tool],
-         availableModels: [Model],
-         viewModel: AgentScreenViewModel) {
-        self.agent = agent
-        self.tools = tools
-        self.availableModels = availableModels
-        
-        self.name = agent.name
-        self.goal = agent.goal
-        self.model = model
-        self.viewModel = AgentLoadedViewModel(agent: agent, tools: tools,
-                                              onUpdateAgent: { [weak viewModel] (name, goal, modelId) in
-            viewModel?.updateAgent(name: name, goal: goal, modelId: modelId)
-        },
-                                              onToolsChanged: { [weak viewModel] tools in
-            viewModel?.updateAgent(tools: tools)
-        },
-                                              onStepsChanged: { [weak viewModel] steps in
-            viewModel?.updateAgent(steps: steps)
-        }, onRunAgent: { [weak viewModel] in
-            viewModel?.run()
-        })
+        self._name = State(wrappedValue: viewModel.agent.name)
+        self._goal = State(wrappedValue: viewModel.agent.goal)
+        self._model = State(wrappedValue: viewModel.model)
     }
-    
+
     var body: some View {
         Form {
-            AgentLoadedHeaderView(iconUrl: self.agent.iconUrl)
-            
+            AgentLoadedHeaderView(iconUrl: self.viewModel.agent.iconUrl)
+
             AgentLoadedAboutSectionView(name: self.$name,
                                         goal: self.$goal,
                                         model: self.$model,
-                                        availableModels: self.availableModels) { update in
-                self.viewModel.onUpdateAgent(update)
-            }
-            
-            AgentLoadedToolsSectionView(viewModel: self.viewModel) {
-                self.viewModel.deleteTools(at: <#T##IndexSet#>)
-            } onAdd: {
-                self.isShowingToolsSelection = true
-            }
+                                        availableModels: self.viewModel.availableModels,
+                                        isFocused: self.$isFocused,
+                                        onUpdate: { params in
+                self.viewModel.updateAgentHeader(params: params)
+            })
 
-            AgentLoadedStepsSectionView(viewModel: self.viewModel, isFocused: self.$isFocused)
+            AgentLoadedToolsSectionView(tools: self.viewModel.editableTools,
+                                        onRemove: { offsets in
+                self.viewModel.removeTools(at: offsets)
+            },
+                                        onAdd: {
+                let slugs = self.viewModel.editableTools.compactMap { editableTool in
+                    if case .content(let tool) = editableTool {
+                        return tool.slug
+                    }
+
+                    return nil
+                }
+
+                let slugsSet = Set(slugs)
+
+                self.navigator.navigate(to: AgentDestinations.toolsSelection(
+                    agentToolsSlugSet: slugsSet,
+                    handler: self.viewModel.addTool)
+                )
+            })
+
+            AgentLoadedStepsSectionView(steps: self.viewModel.editableSteps,
+                                        isFocused: self.$isFocused,
+                                        onStepChange: { index, value in
+                self.viewModel.handleStepChange(at: index, newValue: value)
+            },
+                                        onMove: { from, to in
+                self.viewModel.moveSteps(from: from, to: to)
+            },
+                                        onRemove: { offsets in
+                self.viewModel.removeSteps(at: offsets)
+            })
         }
-        .focused(self.$isFocused)
         .scrollIndicators(.hidden)
-        .onChange(of: self.agent) { _, newAgent in
-            self.name = newAgent.name
-            self.goal = newAgent.goal
-            
-            self.viewModel.update(steps: newAgent.steps)
-        }
-        .onChange(of: self.tools, { _, newTools in
-            self.viewModel.update(tools: newTools)
-        })
         .onChange(of: self.focusedStepIndex) { _, newFocusedIndex in
             self.viewModel.focusedStepIndex = newFocusedIndex
-        }
-        .sheet(isPresented: self.$isShowingToolsSelection) {
-            ToolsSelectionScreenView(agentToolsSlugSet: Set(self.tools.map(\.slug))) { selectedTool in
-                self.viewModel.addTool(selectedTool)
-            }
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .safeAreaPadding(.bottom, 52)
@@ -96,21 +83,31 @@ struct AgentLoadedView: View {
         .overlay {
             VStack(spacing: 0) {
                 Spacer()
-                
+
                 AgentLoadedActionButtonsView(
                     onExecutions: {
-                        self.isNavigatingToExecutions = true
+                        self.navigator.navigate(to: AgentDestinations.executionsList(
+                            agentId: self.viewModel.agent.id)
+                        )
                     },
                     onRunAgent: {
-                        self.isNavigatingToExecutions = true
-                        self.viewModel.onRunAgent()
+                        self.navigator.navigate(to: AgentDestinations.executionsList(
+                            agentId: self.viewModel.agent.id)
+                        )
+
+                        self.viewModel.run()
                     }
                 )
             }
             .ignoresSafeArea(.keyboard)
         }
-        .navigationDestination(isPresented: self.$isNavigatingToExecutions) {
-            ExecutionsListScreenView(agentId: self.agent.id)
+        .errorAlert(error: self.$viewModel.alertError)
+        .onDisappear {
+            self.viewModel.flush()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            self.viewModel.flush()
         }
     }
+
 }

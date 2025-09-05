@@ -57,7 +57,7 @@ struct LoginScreenView: View {
             .padding(.bottom, 36)
         }
         .errorAlert(error: self.$viewModel.error)
-        .postHogScreenView()
+        .postHogScreenView("LoginScreenView")
     }
 
 }

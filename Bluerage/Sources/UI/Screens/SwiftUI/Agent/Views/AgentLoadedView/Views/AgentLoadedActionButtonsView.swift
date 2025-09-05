@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AgentLoadedActionButtonsView: View {
-    
+
     private let onExecutions: () -> Void
 
     private let onRunAgent: () -> Void
@@ -16,18 +16,18 @@ struct AgentLoadedActionButtonsView: View {
             Button {
                 self.onExecutions()
             } label: {
-                Text("Executions")
+                Text("agent_executions_button_title")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.primary)
                     .padding(.vertical, 15)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderGradientProminentButtonStyle)
-            
+
             Button {
                 self.onRunAgent()
             } label: {
-                Text("Run Agent")
+                Text("agent_run_button_title")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.background)
                     .padding(.vertical, 15)

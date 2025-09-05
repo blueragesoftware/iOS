@@ -10,11 +10,27 @@
     "# %@" : {
 
     },
-    "About" : {
-
+    "agent_about_section_header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        }
+      }
     },
-    "Add a Tool" : {
-
+    "agent_add_a_tool_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a Tool"
+          }
+        }
+      }
     },
     "agent_error_placeholder_description" : {
       "extractionState" : "manual",
@@ -34,6 +50,116 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error loading agent"
+          }
+        }
+      }
+    },
+    "agent_executions_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Executions"
+          }
+        }
+      }
+    },
+    "agent_goal_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Goal"
+          }
+        }
+      }
+    },
+    "agent_model_picker_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Model"
+          }
+        }
+      }
+    },
+    "agent_name_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "agent_new_step_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a Step"
+          }
+        }
+      }
+    },
+    "agent_run_button_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run Agent"
+          }
+        }
+      }
+    },
+    "agent_section_footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swipe left to delete"
+          }
+        }
+      }
+    },
+    "agent_step_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step"
+          }
+        }
+      }
+    },
+    "agent_steps_section_header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steps"
+          }
+        }
+      }
+    },
+    "agent_tools_section_header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tools"
           }
         }
       }
@@ -195,9 +321,6 @@
     "Disconnected" : {
 
     },
-    "Executions" : {
-
-    },
     "login_image_suggestion_prompt" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -224,18 +347,6 @@
 
     },
     "Result" : {
-
-    },
-    "Run Agent" : {
-
-    },
-    "Steps" : {
-
-    },
-    "Swipe left to delete" : {
-
-    },
-    "Tools" : {
 
     }
   },

@@ -4,52 +4,19 @@ import OSLog
 import Combine
 import SwiftUI
 
-@Observable
 @MainActor
+@Observable
 final class AgentScreenViewModel {
 
     enum State {
-        case loaded(agent: Agent, model: Model, tools: [Tool], availableModels: [Model])
         case loading
+        case loaded(AgentLoadedViewModel)
         case error(Error)
-    }
-    
-    private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
-        var name: String?
-        var description: String?
-        var iconUrl: String?
-        var goal: String?
-        var tools: [Agent.Tool]?
-        var steps: [Agent.Step]?
-        var modelId: String?
-
-        var hasUpdates: Bool {
-            return self.name != nil
-            || self.description != nil
-            || self.iconUrl != nil
-            || self.goal != nil
-            || self.tools != nil
-            || self.steps != nil
-            || self.modelId != nil
-        }
-
-        mutating func merge(with other: UpdateRequest) {
-            if let otherName = other.name { self.name = otherName }
-            if let otherDescription = other.description { self.description = otherDescription }
-            if let otherIconUrl = other.iconUrl { self.iconUrl = otherIconUrl }
-            if let otherGoal = other.goal { self.goal = otherGoal }
-            if let otherTools = other.tools { self.tools = otherTools }
-            if let otherSteps = other.steps { self.steps = otherSteps }
-            if let otherModelId = other.modelId { self.modelId = otherModelId }
-        }
-    }
-
-    private enum UpdateAction {
-        case merge(UpdateRequest)
-        case reset
     }
 
     private(set) var state: State = .loading
+
+    let agentId: String
 
     @ObservationIgnored
     @Injected(\.convex) private var convex
@@ -57,32 +24,8 @@ final class AgentScreenViewModel {
     @ObservationIgnored
     private var connection: AnyCancellable?
 
-    @ObservationIgnored
-    private var updatesQueueCancellables = Set<AnyCancellable>()
-
-    @ObservationIgnored
-    private let updateSubject = PassthroughSubject<UpdateAction, Never>()
-    
-    @ObservationIgnored
-    private let currentAccumulatedSubject = CurrentValueSubject<UpdateRequest, Never>(UpdateRequest())
-
-    @ObservationIgnored
-    private let agentId: String
-
     init(agentId: String) {
         self.agentId = agentId
-
-        self.setupUpdatesQueue()
-    }
-
-    func flush() {
-        let currentRequest = self.currentAccumulatedSubject.value
-
-        self.updateSubject.send(.reset)
-
-        if currentRequest.hasUpdates {
-            self.performUpdate(request: currentRequest)
-        }
     }
 
     func connect() {
@@ -125,55 +68,41 @@ final class AgentScreenViewModel {
 
         self.connection = Publishers.CombineLatest(agentWithResolvedTools,
                                                    self.getAllModelsPublisher())
-        .map { (agentData, models) in
-            let (response, tools) = agentData
-            return State.loaded(agent: response.agent,
-                                model: response.model,
-                                tools: tools,
-                                availableModels: models)
-        }
-        .catch { error in
-            return Just(.error(error))
-        }
         .receive(on: DispatchQueue.main)
-        .sink { [weak self] state in
-            withAnimation {
-                self?.state = state
-            }
-        }
-    }
+        .sink(
+            receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
 
-    func updateAgent(name: String? = nil,
-                     description: String? = nil,
-                     iconUrl: String? = nil,
-                     goal: String? = nil,
-                     tools: [Tool]? = nil,
-                     steps: [Agent.Step]? = nil,
-                     modelId: String? = nil) {
-        let request = UpdateRequest(
-            name: name,
-            description: description,
-            iconUrl: iconUrl,
-            goal: goal,
-            tools: tools?.map { tool in
-                return Agent.Tool(slug: tool.slug, name: tool.name)
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    withAnimation {
+                        self.state = .error(error)
+                    }
+                }
             },
-            steps: steps,
-            modelId: modelId
-        )
+            receiveValue: { [weak self] (agentData, models) in
+                guard let self = self else {
+                    return
+                }
 
-        self.updateSubject.send(.merge(request))
-    }
+                let (response, tools) = agentData
 
-    func run() {
-        Task {
-            do {
-                try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agentId])
-            } catch {
-                Logger.agent.error("Error running agent: \(error.localizedDescription, privacy: .public)")
+                let loadedViewModel = AgentLoadedViewModel(agentId: self.agentId,
+                                                           agent: response.agent,
+                                                           model: response.model,
+                                                           tools: tools,
+                                                           availableModels: models)
+
+                withAnimation {
+                    self.state = .loaded(loadedViewModel)
+                }
             }
-        }
+        )
     }
+
+    // MARK: - Private Methods
 
     private func getAgentByIdWithModelPublisher(agentId: String) -> AnyPublisher<GetByIdWithModelResponse, ClientError> {
         return self.convex.subscribe(to: "agents:getByIdWithModel",
@@ -201,66 +130,4 @@ final class AgentScreenViewModel {
             }
         }.eraseToAnyPublisher()
     }
-
-    private func setupUpdatesQueue() {
-        self.updateSubject
-            .scan(UpdateRequest()) { accumulated, action in
-                switch action {
-                case .merge(let new):
-                    var merged = accumulated
-                    merged.merge(with: new)
-                    return merged
-                case .reset:
-                    return UpdateRequest()
-                }
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] accumulatedRequest in
-                self?.currentAccumulatedSubject.send(accumulatedRequest)
-            }
-            .store(in: &self.updatesQueueCancellables)
-
-        self.currentAccumulatedSubject
-            .debounce(for: .seconds(2), scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .sink { [weak self] mergedRequest in
-                guard let self = self else {
-                    return
-                }
-
-                if mergedRequest.hasUpdates {
-                    self.performUpdate(request: mergedRequest)
-                    self.updateSubject.send(.reset)
-                }
-            }
-            .store(in: &self.updatesQueueCancellables)
-    }
-    
-    private func performUpdate(request: UpdateRequest) {
-        var args: [String: any ConvexEncodable] = ["id": self.agentId]
-
-        if let name = request.name { args["name"] = name }
-        if let description = request.description { args["description"] = description }
-        if let iconUrl = request.iconUrl { args["iconUrl"] = iconUrl }
-        if let goal = request.goal { args["goal"] = goal }
-        if let tools = request.tools { args["tools"] = tools }
-        if let steps = request.steps { args["steps"] = steps }
-        if let modelId = request.modelId { args["modelId"] = modelId }
-        
-        guard args.count > 1 else {
-            return
-        }
-
-        Task {
-            do {
-                try await self.convex.mutation("agents:update", with: args)
-
-                Logger.agent.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
-            } catch {
-                Logger.agent.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
-            }
-        }
-    }
-
 }

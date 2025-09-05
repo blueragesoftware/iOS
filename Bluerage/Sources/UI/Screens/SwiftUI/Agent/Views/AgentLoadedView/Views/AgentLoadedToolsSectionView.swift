@@ -1,15 +1,15 @@
 import SwiftUI
 
 struct AgentLoadedToolsSectionView: View {
-    
+
     private let tools: [EditableToolItem]
 
-    private let onRemove: ([String]) -> Void
+    private let onRemove: (IndexSet) -> Void
 
     private let onAdd: () -> Void
 
     init(tools: [EditableToolItem],
-         onRemove: @escaping ([String]) -> Void,
+         onRemove: @escaping (IndexSet) -> Void,
          onAdd: @escaping () -> Void) {
         self.tools = tools
         self.onRemove = onRemove
@@ -18,7 +18,7 @@ struct AgentLoadedToolsSectionView: View {
 
     var body: some View {
         Section {
-            ForEach(Array(zip(self.tools.indices, self.tools)), id: \.1.id) { index, toolItem in
+            ForEach(Array(zip(self.tools.indices, self.tools)), id: \.1.id) { _, toolItem in
                 switch toolItem {
                 case .content(let tool):
                     ToolCellView(tool: tool)
@@ -27,25 +27,20 @@ struct AgentLoadedToolsSectionView: View {
                     Button {
                         self.onAdd()
                     } label: {
-                        Text("Add a Tool")
+                        Text("agent_add_a_tool_button_title")
                             .foregroundStyle(.link)
                     }
                     .deleteDisabled(true)
                 }
             }
             .onDelete { offsets in
-                let tools = self.tools
-
-                let idsToRemove = offsets.compactMap { offset in
-                    return tools[safeIndex: offset]?.id
-                }
-
-                self.onRemove(idsToRemove)
+                self.onRemove(offsets)
             }
         } header: {
-            Text("Tools")
+            Text("agent_tools_section_header")
         } footer: {
-            Text("Swipe left to delete")
+            Text("agent_section_footer")
         }
     }
+
 }

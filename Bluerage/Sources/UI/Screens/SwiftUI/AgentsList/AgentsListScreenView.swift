@@ -4,7 +4,6 @@ import PostHog
 import NavigatorUI
 import FactoryKit
 
-
 struct AgentsListScreenView: View {
 
     @State private var viewModel = AgentsListScreenViewModel()
@@ -27,10 +26,10 @@ struct AgentsListScreenView: View {
                 .navigationDestination(AgentListDestinations.self)
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
-        .errorAlert(error: self.viewModel.state.alertError)  {
+        .errorAlert(error: self.viewModel.state.alertError) {
             self.viewModel.resetAlertError()
         }
-        .postHogScreenView()
+        .postHogScreenView("AgentsListScreenView")
     }
 
     @ViewBuilder
