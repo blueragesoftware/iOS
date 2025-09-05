@@ -35,7 +35,7 @@ final class ClerkAuthProvider: AuthProvider {
     func logout() async throws {
         try await self.clerk.signOut()
     }
-    
+
     func loginFromCache() async throws -> AuthInfo {
         let user = await self.clerk.user
 
@@ -45,17 +45,15 @@ final class ClerkAuthProvider: AuthProvider {
 
         throw Error.unauthorized
     }
-    
+
     func extractIdToken(from authResult: AuthInfo) -> String {
         return authResult.jwt
     }
-
 
     func login(with loginParams: AppleLoginParams) async throws -> AuthInfo {
         try await SignIn.authenticateWithIdToken(provider: .apple, idToken: loginParams.idToken)
 
         return try await self.loginFromCache()
     }
-
 
 }

@@ -31,7 +31,7 @@ struct AgentCellView: View {
                 .frame(width: Self.iconSize, height: Self.iconSize)
                 .fixedSize()
                 .padding(.trailing, 16)
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text(self.agent.name)
                         .font(.system(size: 16, weight: .semibold))

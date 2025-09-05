@@ -8,7 +8,7 @@ struct ToolCellView<TrailingAccessory: View>: View {
     private let imageSize: CGFloat = 20
 
     private let tool: Tool
-    
+
     private let onTap: ((Tool) -> Void)?
 
     @ViewBuilder

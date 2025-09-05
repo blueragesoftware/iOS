@@ -16,5 +16,5 @@ struct Model: Identifiable, Codable, Equatable, Hashable {
     let provider: String
 
     let modelId: String
-    
+
 }

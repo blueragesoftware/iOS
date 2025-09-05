@@ -1,18 +1,18 @@
 import SwiftUI
 
 struct ToolsSelectionScreenView: View {
-    
+
     @State private var viewModel: ToolsSelectionScreenViewModel
 
     @Environment(\.dismiss) private var dismiss
-    
+
     private let onToolSelected: (Tool) -> Void
 
     init(agentToolsSlugSet: Set<String>, onToolSelected: @escaping (Tool) -> Void) {
         self.viewModel = ToolsSelectionScreenViewModel(agentToolsSlugSet: agentToolsSlugSet)
         self.onToolSelected = onToolSelected
     }
-    
+
     var body: some View {
         NavigationView {
             self.content

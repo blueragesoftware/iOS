@@ -49,5 +49,5 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
     let steps: [Step]
 
     let modelId: String
-    
+
 }

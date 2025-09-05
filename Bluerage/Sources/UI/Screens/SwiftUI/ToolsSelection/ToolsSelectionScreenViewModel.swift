@@ -7,7 +7,7 @@ import OSLog
 @MainActor
 @Observable
 final class ToolsSelectionScreenViewModel {
-    
+
     enum State {
         case loading
         case loaded(activeTools: [Tool], inactiveTools: [Tool])
@@ -51,18 +51,18 @@ final class ToolsSelectionScreenViewModel {
 
                 if tools.isEmpty {
                     Logger.tools.warning("Received empty tools")
-                    
+
                     self.state = .empty
                 } else if nonUsedTools.isEmpty {
                     self.state = .allToolsUsed
                 } else {
                     var activeTools = [Tool]()
                     var inactiveTools = [Tool]()
-                    
+
                     for tool in nonUsedTools {
                         tool.status == .active ? activeTools.append(tool) : inactiveTools.append(tool)
                     }
-                    
+
                     self.state = .loaded(activeTools: activeTools, inactiveTools: inactiveTools)
                 }
             } catch {
@@ -73,7 +73,7 @@ final class ToolsSelectionScreenViewModel {
         }
     }
 
-    func connectTool(with authConfigId: String) async throws  {
+    func connectTool(with authConfigId: String) async throws {
         do {
             let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
 

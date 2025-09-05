@@ -25,4 +25,3 @@ struct ExecutionLoadedScreenView: View {
     }
 
 }
-

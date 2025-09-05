@@ -11,7 +11,7 @@ struct EmptyAgentsListView: View {
     var body: some View {
         ZStack {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
-            
+
             PlaceholderView(imageName: "empty_placeholder_icon_100",
                             title: "agents_list_empty_placeholder_title",
                             description: "agents_list_empty_placeholder_description") {

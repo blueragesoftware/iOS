@@ -13,7 +13,7 @@ struct AgentLoadedHeaderView: View {
 
     var body: some View {
         Section {
-            
+
         } header: {
             LazyImage(url: URL(string: self.iconUrl)) { state in
                 if let image = state.image {
@@ -29,5 +29,5 @@ struct AgentLoadedHeaderView: View {
             .frame(maxWidth: .infinity, alignment: .center)
         }
     }
-    
+
 }

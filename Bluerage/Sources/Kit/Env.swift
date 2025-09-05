@@ -1,7 +1,7 @@
 import Foundation
 
 struct Env {
-    
+
     enum Error: Swift.Error {
         case missingKey(String)
         case invalidValue(Any, key: String)
