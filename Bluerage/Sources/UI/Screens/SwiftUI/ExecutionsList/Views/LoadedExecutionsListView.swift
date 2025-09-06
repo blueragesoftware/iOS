@@ -7,7 +7,7 @@ struct LoadedExecutionsListView: View {
     private let tasks: [ExecutionTask]
 
     @Environment(\.navigator) private var navigator
-    
+
     @Injected(\.hapticManager) private var hapticManager
 
     init(tasks: [ExecutionTask]) {
@@ -35,7 +35,7 @@ struct LoadedExecutionsListView: View {
 
     private func open(task: ExecutionTask, index: Int) {
         self.hapticManager.triggerSelectionFeedback()
-        
+
         self.navigator.navigate(to: ExecutionsListDestinations.execution(taskId: task.id, index: index))
     }
 
