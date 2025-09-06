@@ -23,10 +23,10 @@ struct LoginScreenView: View {
 
             Spacer()
 
-            (Text("login_image_suggestion_prompt") + Text(" ") + Text("[X](https://x.com/ertembiyik)!").underline())
-                .font(.system(size: 16))
-                .multilineTextAlignment(.center)
-                .padding()
+            Image("welcome_illustartion")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 393, height: 420)
 
             Spacer()
 
