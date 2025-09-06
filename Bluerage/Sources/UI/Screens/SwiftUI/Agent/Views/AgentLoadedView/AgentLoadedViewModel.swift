@@ -336,6 +336,7 @@ final class AgentLoadedViewModel {
                 Logger.agent.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
             } catch {
                 Logger.agent.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
+
                 self.alertError = error
             }
         }

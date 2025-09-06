@@ -1,10 +1,13 @@
 import SwiftUI
+import NavigatorUI
+import OSLog
 
 struct ToolsSelectionScreenView: View {
 
     @State private var viewModel: ToolsSelectionScreenViewModel
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.navigator) private var navigator
 
     private let onToolSelected: (Tool) -> Void
 
@@ -14,10 +17,11 @@ struct ToolsSelectionScreenView: View {
     }
 
     var body: some View {
-        NavigationView {
+        ManagedNavigationStack {
             self.content
                 .navigationTitle("tools_selection_navigation_title")
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationDestination(ToolsSelectionDestinations.self)
         }
         .onAppear {
             self.viewModel.load()
@@ -27,17 +31,14 @@ struct ToolsSelectionScreenView: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
-        .sheet(item: self.$viewModel.authUrlConfig,
-               onDismiss: {
-            self.viewModel.load()
-        }) { config in
-            SafariView(url: config.url)
+        .errorAlert(error: self.viewModel.state.alertError) {
+            self.viewModel.resetAlertError()
         }
     }
 
     @ViewBuilder
     private var content: some View {
-        switch self.viewModel.state {
+        switch self.viewModel.state.main {
         case .loading:
             ProgressView()
         case .loaded(let activeTools, let inactiveTools):
@@ -50,9 +51,18 @@ struct ToolsSelectionScreenView: View {
                 }, onInactiveToolSelected: { inactiveTool in
                     Task {
                         do {
-                            try await self.viewModel.connectTool(with: inactiveTool.authConfigId)
+                            let redirectUrl = try await self.viewModel.connectTool(with: inactiveTool.authConfigId)
+
+                            self.navigator.navigate(to: ToolsSelectionDestinations.authWebView(
+                                url: redirectUrl,
+                                callback: Callback { [weak viewModel] _ in
+                                    viewModel?.load()
+                                }
+                            ))
                         } catch {
-                            self.viewModel.state
+                            Logger.tools.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
+
+                            self.viewModel.showErrorAlert(with: error)
                         }
                     }
                 }

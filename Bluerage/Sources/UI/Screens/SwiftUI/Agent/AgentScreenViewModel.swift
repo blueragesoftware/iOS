@@ -68,38 +68,30 @@ final class AgentScreenViewModel {
 
         self.connection = Publishers.CombineLatest(agentWithResolvedTools,
                                                    self.getAllModelsPublisher())
+        .map { (agentData, models) in
+            let (response, tools) = agentData
+
+            let loadedViewModel = AgentLoadedViewModel(agentId: response.agent.id,
+                                                       agent: response.agent,
+                                                       model: response.model,
+                                                       tools: tools,
+                                                       availableModels: models)
+
+            return State.loaded(loadedViewModel)
+        }
+        .catch { error in
+            return Just(State.error(error))
+        }
         .receive(on: DispatchQueue.main)
-        .sink(
-            receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    withAnimation {
-                        self.state = .error(error)
-                    }
-                }
-            },
-            receiveValue: { [weak self] (agentData, models) in
-                guard let self = self else {
-                    return
-                }
-
-                let (response, tools) = agentData
-
-                let loadedViewModel = AgentLoadedViewModel(agentId: self.agentId,
-                                                           agent: response.agent,
-                                                           model: response.model,
-                                                           tools: tools,
-                                                           availableModels: models)
-
-                withAnimation {
-                    self.state = .loaded(loadedViewModel)
-                }
+        .sink { [weak self] state in
+            guard let self = self else {
+                return
             }
-        )
+
+            withAnimation {
+                self.state = state
+            }
+        }
     }
 
     // MARK: - Private Methods
@@ -130,4 +122,5 @@ final class AgentScreenViewModel {
             }
         }.eraseToAnyPublisher()
     }
+
 }

@@ -3,30 +3,29 @@ import SwiftUI
 import FactoryKit
 import ConvexMobile
 import OSLog
+import NavigatorUI
 
 @MainActor
 @Observable
 final class ToolsSelectionScreenViewModel {
 
-    enum State {
-        case loading
-        case loaded(activeTools: [Tool], inactiveTools: [Tool])
-        case empty
-        case error(Error)
-        case allToolsUsed
+    struct State {
+
+        enum Main {
+            case loading
+            case loaded(activeTools: [Tool], inactiveTools: [Tool])
+            case empty
+            case error(Error)
+            case allToolsUsed
+        }
+
+        var main: Main
+
+        var alertError: Error?
+
     }
 
-    struct AuthUrlConfig: Identifiable {
-
-        let id: String
-
-        let url: URL
-
-    }
-
-    var authUrlConfig: AuthUrlConfig?
-
-    private(set) var state: State = .loading
+    private(set) var state: State = State(main: .loading, alertError: nil)
 
     @ObservationIgnored
     private let agentToolsSlugSet: Set<String>
@@ -39,7 +38,7 @@ final class ToolsSelectionScreenViewModel {
     }
 
     func load() {
-        self.state = .loading
+        self.state.main = .loading
 
         Task {
             do {
@@ -52,9 +51,11 @@ final class ToolsSelectionScreenViewModel {
                 if tools.isEmpty {
                     Logger.tools.warning("Received empty tools")
 
-                    self.state = .empty
+                    self.state.main = .empty
                 } else if nonUsedTools.isEmpty {
-                    self.state = .allToolsUsed
+                    Logger.tools.info("Received all tools are used")
+
+                    self.state.main = .allToolsUsed
                 } else {
                     var activeTools = [Tool]()
                     var inactiveTools = [Tool]()
@@ -63,30 +64,32 @@ final class ToolsSelectionScreenViewModel {
                         tool.status == .active ? activeTools.append(tool) : inactiveTools.append(tool)
                     }
 
-                    self.state = .loaded(activeTools: activeTools, inactiveTools: inactiveTools)
+                    self.state.main = .loaded(activeTools: activeTools, inactiveTools: inactiveTools)
                 }
             } catch {
                 Logger.tools.error("Error loading tools: \(error.localizedDescription, privacy: .public)")
 
-                self.state = .error(error)
+                self.state.main = .error(error)
             }
         }
     }
 
-    func connectTool(with authConfigId: String) async throws {
-        do {
-            let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+    func connectTool(with authConfigId: String) async throws -> URL {
+        let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
 
-            guard let url = URL(string: connectionResult.redirectUrl) else {
-                return
-            }
-
-            self.authUrlConfig = AuthUrlConfig(id: authConfigId, url: url)
-        } catch {
-            Logger.tools.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
-
-            throw error
+        guard let url = URL(string: connectionResult.redirectUrl) else {
+            throw URLError(.badURL)
         }
+
+        return url
+    }
+
+    func showErrorAlert(with error: Error) {
+        self.state.alertError = error
+    }
+
+    func resetAlertError() {
+        self.state.alertError = nil
     }
 
 }

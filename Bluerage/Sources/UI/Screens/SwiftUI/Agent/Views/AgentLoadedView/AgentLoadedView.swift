@@ -55,7 +55,9 @@ struct AgentLoadedView: View {
 
                 self.navigator.navigate(to: AgentDestinations.toolsSelection(
                     agentToolsSlugSet: slugsSet,
-                    handler: self.viewModel.addTool)
+                    callback: Callback { [weak viewModel] tool in
+                        viewModel?.addTool(tool)
+                    })
                 )
             })
 
