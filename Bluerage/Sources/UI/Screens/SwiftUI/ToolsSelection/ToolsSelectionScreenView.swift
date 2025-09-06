@@ -16,7 +16,7 @@ struct ToolsSelectionScreenView: View {
     var body: some View {
         NavigationView {
             self.content
-                .navigationTitle("Select a Tool")
+                .navigationTitle("tools_selection_navigation_title")
                 .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
@@ -49,22 +49,26 @@ struct ToolsSelectionScreenView: View {
                     self.dismiss()
                 }, onInactiveToolSelected: { inactiveTool in
                     Task {
-                        try await self.viewModel.connectTool(with: inactiveTool.authConfigId)
+                        do {
+                            try await self.viewModel.connectTool(with: inactiveTool.authConfigId)
+                        } catch {
+                            self.viewModel.state
+                        }
                     }
                 }
             )
         case .empty:
             PlaceholderView(imageName: "tools_placeholder_100",
-                            title: "No Tools Available",
-                            description: "There are currently no tools available to add to your agent")
+                            title: "tools_selection_empty_placeholder_title",
+                            description: "tools_selection_empty_placeholder_description")
         case .error:
-            PlaceholderView.error(title: "Failed to Load Tools") {
+            PlaceholderView.error(title: "tools_selection_error_placeholder_title") {
                 self.viewModel.load()
             }
         case .allToolsUsed:
             PlaceholderView(imageName: "tools_placeholder_100",
                             title: "All tools connected",
-                            description: "Your agent is peaked with all available tools")
+                            description: "tools_selection_all_tools_connected_placeholder_placeholder")
         }
     }
 }

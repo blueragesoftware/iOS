@@ -1,15 +1,15 @@
 import SwiftUI
 import OSLog
+import NavigatorUI
 
 struct ExecutionsListScreenView: View {
 
     @State private var viewModel: ExecutionsListScreenViewModel
 
-    @State private var selectedTaskInfo: ExecutionTaskInfo?
+    @Environment(\.navigator) private var navigator
 
-    init(agentId: String, selectedTaskInfo: ExecutionTaskInfo? = nil) {
+    init(agentId: String) {
         self.viewModel = ExecutionsListScreenViewModel(agentId: agentId)
-        self.selectedTaskInfo = selectedTaskInfo
     }
 
     var body: some View {
@@ -19,11 +19,9 @@ struct ExecutionsListScreenView: View {
                 self.viewModel.connect()
             }
             .background(UIColor.systemGroupedBackground.swiftUI)
-            .navigationTitle("Executions")
+            .navigationTitle("executions_list_title")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(item: self.$selectedTaskInfo) { info in
-                ExecutionScreenView(taskId: info.task.id, index: info.index)
-            }
+            .navigationDestination(ExecutionsListDestinations.self)
     }
 
     @ViewBuilder
@@ -33,8 +31,7 @@ struct ExecutionsListScreenView: View {
             SkeletonExecutionsListView()
                 .transition(.blurReplace)
         case .loaded(let tasks):
-            LoadedExecutionsListView(tasks: tasks,
-                                     selectedTaskInfo: self.$selectedTaskInfo)
+            LoadedExecutionsListView(tasks: tasks)
             .transition(.blurReplace)
         case .empty:
             EmptyExecutionsListView()

@@ -7,8 +7,8 @@ struct EmptyExecutionsListView: View {
             Spacer()
 
             PlaceholderView(imageName: "empty_placeholder_icon_100",
-                            title: "No Executions Yet",
-                            description: "Run the agent to see execution history here")
+                            title: "execution_empty_placeholder_title",
+                            description: "execution_empty_placeholder_description")
 
             Spacer()
         }

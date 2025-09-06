@@ -16,10 +16,16 @@ struct ToolsSelectionLoadedView: View {
                 ProgressView()
             case .active:
                 Image(systemName: "plus")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.primary)
             case .failed, .expired:
                 Image(systemName: "exclamationmark.triangle.fill")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.red)
             case .inactive:
                 Image(systemName: "link.badge.plus")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.primary)
             }
         }
 
@@ -55,7 +61,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("Ready to Connect")
+                    Text("tools_selection_ready_to_connect_section_header")
                 }
             }
 
@@ -69,7 +75,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("Disconnected")
+                    Text("tools_selection_disconnected_section_header")
                 }
             }
         }

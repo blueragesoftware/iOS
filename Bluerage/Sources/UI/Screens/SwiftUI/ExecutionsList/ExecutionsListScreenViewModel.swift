@@ -8,7 +8,7 @@ import Combine
 @Observable
 final class ExecutionsListScreenViewModel {
 
-    enum State: CustomStringConvertible {
+    enum State {
         case loading
         case loaded(tasks: [ExecutionTask])
         case empty
@@ -43,7 +43,7 @@ final class ExecutionsListScreenViewModel {
 
         // MARK: - CustomStringConvertible
 
-        var description: String {
+        var title: String {
             switch self {
             case .loading:
                 "Loading"

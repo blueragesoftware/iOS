@@ -318,8 +318,27 @@
         }
       }
     },
-    "Disconnected" : {
-
+    "execution_empty_placeholder_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Run the agent to see execution history here"
+          }
+        }
+      }
+    },
+    "execution_empty_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Executions Yet"
+          }
+        }
+      }
     },
     "execution_name_field_title" : {
       "extractionState" : "manual",
@@ -354,6 +373,17 @@
         }
       }
     },
+    "executions_list_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Executions"
+          }
+        }
+      }
+    },
     "login_image_suggestion_prompt" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -376,11 +406,93 @@
         }
       }
     },
-    "Ready to Connect" : {
-
+    "tools_selection_all_tools_connected_placeholder_placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your agent is peaked with all available tools"
+          }
+        }
+      }
     },
-    "Result" : {
-
+    "tools_selection_all_tools_connected_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All tools connected"
+          }
+        }
+      }
+    },
+    "tools_selection_disconnected_section_header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnected"
+          }
+        }
+      }
+    },
+    "tools_selection_empty_placeholder_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are currently no tools available to add to your agent"
+          }
+        }
+      }
+    },
+    "tools_selection_empty_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Tools Available"
+          }
+        }
+      }
+    },
+    "tools_selection_error_placeholder_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to Load Tools"
+          }
+        }
+      }
+    },
+    "tools_selection_navigation_title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a Tool"
+          }
+        }
+      }
+    },
+    "tools_selection_ready_to_connect_section_header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready to Connect"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
