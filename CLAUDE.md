@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project description
 
-We creating the next generation of automation through an AI agents execution environment. We believe that "agents are the new apps" — instead of complex programming, users simply describe what they want accomplished, and our platform handles the rest.
-Anyone can create AI agents by connecting their existing tools and declaring workflow steps. These agents run automatically based on schedules or triggers, and can be easily shared through our community-driven Agents Store. Our iOS app makes it seamless to share content with your agents and trigger workflows on-the-go.
-We serve both consumers looking to automate personal tasks and businesses needing regular automation. It's a platform designed for rapid experimentation—launch small automation ideas, see what works, and iterate quickly.
+We creating the next generation of automation through an AI agents execution
+environment. We believe that instead of complex programming, users simply describe what they want accomplished, and our platform handles the rest. A declartive approach. Anyone can create AI agents by connecting their existing applications via tools and assembling a workflow. These agents run automatically based on schedules or triggers, and can be easily shared.
+Our iOS app makes it seamless to share content with your agents and trigger workflows on-the-go. We serve both consumers looking to automate personal tasks and businesses needing regular automation. It's a platform designed for rapid experimentation—launch small automation ideas, see what works, and iterate quickly.
 
 ## Build & Development Commands
 
