@@ -6,33 +6,59 @@ import FactoryKit
 
 struct AgentsListScreenView: View {
 
-    @State private var viewModel = AgentsListScreenViewModel()
+    private struct CreateNewAgentButton: View {
 
-    @Environment(\.navigator) private var navigator
+        private let action: () -> Void
+
+        init(action: @escaping () -> Void) {
+            self.action = action
+        }
+
+        var body: some View {
+            Button {
+                self.action()
+            } label: {
+                Text("agents_list_create_new_agent_button_title")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(UIColor.systemBackground.swiftUI)
+                    .padding(.vertical, 15)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding(.horizontal, 20)
+            .buttonStyle(.primaryButtonStyle)
+        }
+
+    }
+
+    @State private var viewModel = AgentsListScreenViewModel()
 
     @Injected(\.hapticManager) private var hapticManager
 
     var body: some View {
-        ManagedNavigationStack {
-            self.content
+        ManagedNavigationStack(name: "AgentsListScreenView") { navigator in
+            self.content(with: navigator)
+                .navigationDestination(AgentListDestinations.self)
                 .safeAreaInset(edge: .bottom) {
-                    self.createNewAgentButton
+                    if self.viewModel.state.main.isLoaded {
+                        CreateNewAgentButton {
+                            self.createNewAgent(with: navigator)
+                        }
+                    }
                 }
                 .scrollDisabled(self.viewModel.state.main.isLoading || self.viewModel.state.main.isError)
                 .onFirstAppear {
                     self.viewModel.connect()
                 }
-                .navigationTitle("agents_list_navigation_title")
-                .navigationDestination(AgentListDestinations.self)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    self.navigator.navigate(to: AgentListDestinations.settings)
-                } label: {
-                    Image(systemName: "gear")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            navigator.navigate(to: AgentListDestinations.settings)
+                        } label: {
+                            Image(systemName: "gear")
+                        }
+                    }
                 }
-            }
+                .navigationTitle("agents_list_navigation_title")
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .errorAlert(error: self.viewModel.state.alertError) {
@@ -42,7 +68,7 @@ struct AgentsListScreenView: View {
     }
 
     @ViewBuilder
-    private var content: some View {
+    private func content(with navigator: Navigator) -> some View {
         switch self.viewModel.state.main {
         case .loading:
             SkeletonAgentsListView()
@@ -55,7 +81,7 @@ struct AgentsListScreenView: View {
                 .transition(.blurReplace)
         case .empty:
             EmptyAgentsListView {
-                self.createNewAgent()
+                self.createNewAgent(with: navigator)
             }
                 .transition(.blurReplace)
         case .error:
@@ -66,31 +92,14 @@ struct AgentsListScreenView: View {
         }
     }
 
-    @ViewBuilder
-    private var createNewAgentButton: some View {
-        if self.viewModel.state.main.isLoaded {
-            Button {
-                self.createNewAgent()
-            } label: {
-                Text("agents_list_create_new_agent_button_title")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.systemBackground.swiftUI)
-                    .padding(.vertical, 15)
-                    .frame(maxWidth: .infinity)
-            }
-            .padding(.horizontal, 20)
-            .buttonStyle(.primaryButtonStyle)
-        }
-    }
+    private func createNewAgent(with navigator: Navigator) {
+        self.hapticManager.triggerSelectionFeedback()
 
-    private func createNewAgent() {
         Task {
-            self.hapticManager.triggerSelectionFeedback()
-
             do {
                 let agent = try await self.viewModel.createNewAgent()
 
-                self.navigator.navigate(to: AgentListDestinations.agent(agent))
+                navigator.navigate(to: AgentListDestinations.agent(agent))
             } catch {
                 Logger.agentsList.error("Error creating new agent: \(error.localizedDescription, privacy: .public)")
 

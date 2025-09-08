@@ -4,29 +4,32 @@ import PostHog
 
 struct RootScreenView: View {
 
-    @State var viewModel = RootScreenViewModel()
+    @State private var viewModel = RootScreenViewModel()
 
     var body: some View {
-        Group {
-            switch self.viewModel.authState {
-            case .loading:
-                LoadingView()
-                    .transition(.blurReplace)
-            case .error:
-                PlaceholderView.error {
-                    self.viewModel.reconnect()
-                }
-                .transition(.blurReplace)
-            case .unauthenticated:
-                LoginScreenView()
-                    .transition(.blurReplace)
-            case .authenticated:
-                RootTabScreenView()
-                    .transition(.blurReplace)
+        self.content
+            .onFirstAppear {
+                self.viewModel.connect()
             }
-        }
-        .onAppear {
-            self.viewModel.connect()
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch self.viewModel.authState {
+        case .loading:
+            LoadingView()
+                .transition(.blurReplace)
+        case .error:
+            PlaceholderView.error {
+                self.viewModel.reconnect()
+            }
+            .transition(.blurReplace)
+        case .unauthenticated:
+            LoginScreenView()
+                .transition(.blurReplace)
+        case .authenticated:
+            AgentsListScreenView()
+                .transition(.blurReplace)
         }
     }
 

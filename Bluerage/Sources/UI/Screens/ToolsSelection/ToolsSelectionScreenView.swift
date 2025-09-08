@@ -1,13 +1,13 @@
 import SwiftUI
 import NavigatorUI
 import OSLog
+import PostHog
 
 struct ToolsSelectionScreenView: View {
 
     @State private var viewModel: ToolsSelectionScreenViewModel
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.navigator) private var navigator
 
     private let onToolSelected: (Tool) -> Void
 
@@ -17,8 +17,8 @@ struct ToolsSelectionScreenView: View {
     }
 
     var body: some View {
-        ManagedNavigationStack {
-            self.content
+        ManagedNavigationStack { navigator in
+            self.content(with: navigator)
                 .navigationTitle("tools_selection_navigation_title")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(ToolsSelectionDestinations.self)
@@ -34,10 +34,11 @@ struct ToolsSelectionScreenView: View {
         .errorAlert(error: self.viewModel.state.alertError) {
             self.viewModel.resetAlertError()
         }
+        .postHogScreenView("ToolsSelectionScreenView")
     }
 
     @ViewBuilder
-    private var content: some View {
+    private func content(with navigator: Navigator) -> some View {
         switch self.viewModel.state.main {
         case .loading:
             ProgressView()
@@ -53,7 +54,7 @@ struct ToolsSelectionScreenView: View {
                         do {
                             let redirectUrl = try await self.viewModel.connectTool(with: inactiveTool.authConfigId)
 
-                            self.navigator.navigate(to: ToolsSelectionDestinations.authWebView(
+                            navigator.navigate(to: ToolsSelectionDestinations.authWebView(
                                 url: redirectUrl,
                                 callback: Callback { [weak viewModel] _ in
                                     viewModel?.load()

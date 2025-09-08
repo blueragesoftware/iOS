@@ -15,4 +15,13 @@ enum AgentListDestinations: NavigationDestination {
         }
     }
 
+    var method: NavigationMethod {
+        switch self {
+        case .agent:
+                .push
+        case .settings:
+                .sheet
+        }
+    }
+
 }

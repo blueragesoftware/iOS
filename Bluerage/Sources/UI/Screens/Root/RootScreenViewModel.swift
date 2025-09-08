@@ -13,14 +13,14 @@ final class RootScreenViewModel {
     @ObservationIgnored
     @Injected(\.authSession) private var authSession
 
+    @ObservationIgnored
+    private var connection: AnyCancellable?
+
     init() {
         @Injected(\.authSession) var authSession
 
         self.authState = authSession.authState
     }
-
-    @ObservationIgnored
-    private var connection: AnyCancellable?
 
     func connect() {
         self.connection?.cancel()

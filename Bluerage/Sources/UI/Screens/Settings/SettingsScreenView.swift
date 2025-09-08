@@ -1,5 +1,6 @@
 import SwiftUI
 import NavigatorUI
+import PostHog
 
 struct SettingsScreenView: View {
 
@@ -43,6 +44,7 @@ struct SettingsScreenView: View {
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .postHogScreenView("SettingsScreenView")
     }
 
 }

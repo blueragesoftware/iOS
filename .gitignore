@@ -68,8 +68,9 @@ Derived/
 
 ### Tuist managed dependencies ###
 Tuist/.build
-Derived/
 
 ## xcconfigs
 xcconfigs/Config.xcconfig
+
+## Sentry
 .sentryclirc
