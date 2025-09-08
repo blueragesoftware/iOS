@@ -15,4 +15,6 @@ extension Logger {
 
     static let tools = Logger(subsystem: Self.subsystem, category: "tools")
 
+    static let settings = Logger(subsystem: Self.subsystem, category: "settings")
+
 }

@@ -22,7 +22,7 @@ final class SettingsScreenViewModel {
             SettingSection(title: "Community", rows: [
                 SettingRow(title: "X",
                            icon: .image(named: BluerageAsset.Assets.xIcon.name,
-                                        size: CGSize(width: 16, height: 22)),
+                                        size: CGSize(width: 13, height: 16)),
                            style: .default,
                            actionType: .redirect,
                            action: {
