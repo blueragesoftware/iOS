@@ -62,4 +62,8 @@ final class AuthSessionImpl: AuthSession {
         }
     }
 
+    func signOut() async {
+        await self.convex.logout()
+    }
+
 }

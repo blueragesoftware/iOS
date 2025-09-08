@@ -12,7 +12,7 @@ struct EmptyAgentsListView: View {
         ZStack {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
-            PlaceholderView(imageName: "empty_placeholder_icon_100",
+            PlaceholderView(imageName: BluerageAsset.Assets.emptyPlaceholderIcon100.name,
                             title: "agents_list_empty_placeholder_title",
                             description: "agents_list_empty_placeholder_description") {
                 self.action()

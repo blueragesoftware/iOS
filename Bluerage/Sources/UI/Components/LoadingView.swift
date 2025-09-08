@@ -5,7 +5,7 @@ struct LoadingView: View {
     @State private var isPulsing = true
 
     var body: some View {
-        Image("bluerage_loading_icon_164")
+        BluerageAsset.Assets.bluerageLoadingIcon164.swiftUIImage
             .resizable()
             .frame(width: 164, height: 164)
             .opacity(self.isPulsing ? 0.5 : 1.0)

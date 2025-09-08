@@ -2,13 +2,13 @@ import Foundation
 
 struct Env {
 
-    enum Error: Swift.Error {
+    private enum Error: Swift.Error {
         case missingKey(String)
         case invalidValue(Any, key: String)
     }
 
     static func value<T>(for key: String) throws -> T where T: LosslessStringConvertible {
-        guard let object = Bundle.main.object(forInfoDictionaryKey: key) else {
+        guard let object = Bundle.module.object(forInfoDictionaryKey: key) else {
             throw Error.missingKey(key)
         }
 

@@ -21,7 +21,7 @@ struct RootScreenView: View {
                 LoginScreenView()
                     .transition(.blurReplace)
             case .authenticated:
-                AgentsListScreenView()
+                RootTabScreenView()
                     .transition(.blurReplace)
             }
         }

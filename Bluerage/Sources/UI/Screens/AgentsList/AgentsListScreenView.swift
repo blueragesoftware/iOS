@@ -25,6 +25,15 @@ struct AgentsListScreenView: View {
                 .navigationTitle("agents_list_navigation_title")
                 .navigationDestination(AgentListDestinations.self)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    self.navigator.navigate(to: AgentListDestinations.settings)
+                } label: {
+                    Image(systemName: "gear")
+                }
+            }
+        }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .errorAlert(error: self.viewModel.state.alertError) {
             self.viewModel.resetAlertError()

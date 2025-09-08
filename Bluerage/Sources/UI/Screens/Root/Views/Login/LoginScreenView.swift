@@ -16,14 +16,14 @@ struct LoginScreenView: View {
             Text("login_title")
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
-                .font(.custom("InstrumentSerif-Regular", size: 60))
+                .font(BluerageFontFamily.InstrumentSerif.regular.swiftUIFont(size: 60))
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 62)
 
             Spacer()
 
-            Image("welcome_illustartion")
+            BluerageAsset.Assets.welcomeIllustration.swiftUIImage
                 .resizable()
                 .scaledToFit()
                 .frame(width: 393, height: 420)

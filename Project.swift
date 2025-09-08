@@ -63,17 +63,21 @@ fi
                 .external(name: "NavigatorUI")
             ],
             settings: .settings(
-                base: SettingsDictionary()
+                base: ["ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO"]
                     .currentProjectVersion("1.0.0"),
                 configurations: [
                     .debug(
                         name: "Debug",
-                        settings: ["CODE_SIGN_ENTITLEMENTS": "entitlements/Debug.entitlements"],
+                        settings: [
+                            "CODE_SIGN_ENTITLEMENTS": "entitlements/Debug.entitlements",
+                        ],
                         xcconfig: "./xcconfigs/Config.xcconfig"
                     ),
                     .release(
                         name: "Release",
-                        settings: ["CODE_SIGN_ENTITLEMENTS": "entitlements/Release.entitlements"],
+                        settings: [
+                            "CODE_SIGN_ENTITLEMENTS": "entitlements/Release.entitlements",
+                        ],
                         xcconfig: "./xcconfigs/Config.xcconfig"
                     )
                 ]

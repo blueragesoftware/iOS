@@ -4,11 +4,14 @@ import NavigatorUI
 enum AgentListDestinations: NavigationDestination {
 
     case agent(Agent)
+    case settings
 
     var body: some View {
         switch self {
         case .agent(let agent):
-            return AgentScreenView(agentId: agent.id)
+            AgentScreenView(agentId: agent.id)
+        case .settings:
+            SettingsScreenView()
         }
     }
 

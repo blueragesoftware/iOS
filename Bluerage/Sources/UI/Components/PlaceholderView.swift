@@ -108,7 +108,7 @@ extension PlaceholderView where ButtonLabel == AnyView {
     static func error(title: LocalizedStringKey = "common_issue_happened",
                       description: LocalizedStringKey = "common_resolve_issue_suggest",
                       action: @escaping () -> Void) -> some View {
-        PlaceholderView(imageName: "issue_placeholder_icon_100",
+        PlaceholderView(imageName: BluerageAsset.Assets.issuePlaceholderIcon100.name,
                         title: title,
                         description: description) {
             action()

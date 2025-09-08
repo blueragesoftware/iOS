@@ -68,7 +68,7 @@ struct ToolsSelectionScreenView: View {
                 }
             )
         case .empty:
-            PlaceholderView(imageName: "tools_placeholder_100",
+            PlaceholderView(imageName: BluerageAsset.Assets.toolsPlaceholder100.name,
                             title: "tools_selection_empty_placeholder_title",
                             description: "tools_selection_empty_placeholder_description")
         case .error:
@@ -76,7 +76,7 @@ struct ToolsSelectionScreenView: View {
                 self.viewModel.load()
             }
         case .allToolsUsed:
-            PlaceholderView(imageName: "tools_placeholder_100",
+            PlaceholderView(imageName: BluerageAsset.Assets.toolsPlaceholder100.name,
                             title: "All tools connected",
                             description: "tools_selection_all_tools_connected_placeholder_placeholder")
         }
