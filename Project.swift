@@ -86,7 +86,9 @@ fi
     ],
     additionalFiles: [
         "entitlements/Debug.entitlements",
-        "entitlements/Release.entitlements"
+        "entitlements/Release.entitlements",
+        "xcconfigs/Common.xcconfig",
+        "xcconfigs/Config.xcconfig"
     ]
 )
 

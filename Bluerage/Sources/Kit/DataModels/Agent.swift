@@ -11,7 +11,7 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
         case goal
         case tools
         case steps
-        case modelId
+        case model
     }
 
     struct Step: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
@@ -48,6 +48,62 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
 
     let steps: [Step]
 
-    let modelId: String
+    let model: AgentModel
+
+}
+
+enum AgentModel: Codable, Equatable, Hashable, ConvexEncodable {
+
+    case model(id: String)
+    case customModel(id: String)
+
+    private enum CodingKeys: String, CodingKey {
+        case type, id
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        let id = try container.decode(String.self, forKey: .id)
+
+        switch type {
+        case "model":
+            self = .model(id: id)
+        case "customModel":
+            self = .customModel(id: id)
+        default:
+            throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: decoder.codingPath,
+                                                                    debugDescription: "Invalid model type: \(type)"))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case .model(let id):
+            try container.encode("model", forKey: .type)
+            try container.encode(id, forKey: .id)
+        case .customModel(let id):
+            try container.encode("customModel", forKey: .type)
+            try container.encode(id, forKey: .id)
+        }
+    }
+
+    var id: String {
+        switch self {
+        case .model(let id), .customModel(let id):
+            return id
+        }
+    }
+
+    var isCustomModel: Bool {
+        switch self {
+        case .customModel:
+            return true
+        case .model:
+            return false
+        }
+    }
 
 }

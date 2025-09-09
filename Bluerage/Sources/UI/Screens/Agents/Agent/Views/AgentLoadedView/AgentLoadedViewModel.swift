@@ -15,7 +15,7 @@ final class AgentLoadedViewModel {
         var goal: String?
         var tools: [Agent.Tool]?
         var steps: [Agent.Step]?
-        var modelId: String?
+        var model: AgentModel?
 
         var hasUpdates: Bool {
             return self.name != nil
@@ -24,7 +24,7 @@ final class AgentLoadedViewModel {
             || self.goal != nil
             || self.tools != nil
             || self.steps != nil
-            || self.modelId != nil
+            || self.model != nil
         }
 
         mutating func merge(with other: UpdateRequest) {
@@ -34,7 +34,7 @@ final class AgentLoadedViewModel {
             if let otherGoal = other.goal { self.goal = otherGoal }
             if let otherTools = other.tools { self.tools = otherTools }
             if let otherSteps = other.steps { self.steps = otherSteps }
-            if let otherModelId = other.modelId { self.modelId = otherModelId }
+            if let otherModel = other.model { self.model = otherModel }
         }
     }
 
@@ -70,9 +70,9 @@ final class AgentLoadedViewModel {
 
     let agent: Agent
 
-    let model: Model
+    let model: ModelUnion
 
-    let availableModels: [Model]
+    let availableModels: AllModelsResponse
 
     private(set) var editableTools: [EditableToolItem]
 
@@ -94,9 +94,9 @@ final class AgentLoadedViewModel {
 
     init(agentId: String,
          agent: Agent,
-         model: Model,
+         model: ModelUnion,
          tools: [Tool],
-         availableModels: [Model]) {
+         availableModels: AllModelsResponse) {
         self.agentId = agentId
         self.agent = agent
         self.model = model
@@ -203,7 +203,7 @@ final class AgentLoadedViewModel {
     }
 
     func updateAgentHeader(params: AgentHeaderUpdateParams) {
-        self.updateAgent(name: params.name, goal: params.goal, modelId: params.modelId)
+        self.updateAgent(name: params.name, goal: params.goal, model: params.model)
     }
 
     private func updateAgent(name: String? = nil,
@@ -212,7 +212,7 @@ final class AgentLoadedViewModel {
                            goal: String? = nil,
                            tools: [Tool]? = nil,
                            steps: [Agent.Step]? = nil,
-                           modelId: String? = nil) {
+                           model: AgentModel? = nil) {
         let request = UpdateRequest(
             name: name,
             description: description,
@@ -222,7 +222,7 @@ final class AgentLoadedViewModel {
                 return Agent.Tool(slug: tool.slug, name: tool.name)
             },
             steps: steps,
-            modelId: modelId
+            model: model
         )
 
         self.updateSubject.send(.merge(request))
@@ -323,7 +323,7 @@ final class AgentLoadedViewModel {
         if let goal = request.goal { args["goal"] = goal }
         if let tools = request.tools { args["tools"] = tools }
         if let steps = request.steps { args["steps"] = steps }
-        if let modelId = request.modelId { args["modelId"] = modelId }
+        if let model = request.model { args["model"] = model }
 
         guard args.count > 1 else {
             return

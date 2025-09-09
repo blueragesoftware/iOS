@@ -213,6 +213,9 @@
         }
       }
     },
+    "Authentication" : {
+
+    },
     "common_empty" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -312,6 +315,24 @@
         }
       }
     },
+    "Create Custom Model" : {
+
+    },
+    "Create New Model" : {
+
+    },
+    "Custom" : {
+
+    },
+    "Default" : {
+
+    },
+    "e.g., gpt-5" : {
+
+    },
+    "e.g., GPT-5" : {
+
+    },
     "execution_empty_placeholder_description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -400,6 +421,15 @@
         }
       }
     },
+    "Model Configuration" : {
+
+    },
+    "OpenAI" : {
+
+    },
+    "sk-..." : {
+
+    },
     "tools_selection_all_tools_connected_placeholder_placeholder" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -487,6 +517,9 @@
           }
         }
       }
+    },
+    "Your API key will be encrypted and stored securely." : {
+
     }
   },
   "version" : "1.0"

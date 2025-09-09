@@ -9,7 +9,7 @@ struct AgentLoadedView: View {
 
     @State private var goal: String
 
-    @State private var model: Model
+    @State private var modelId: String
 
     @FocusState private var isFocused: Bool
 
@@ -22,7 +22,7 @@ struct AgentLoadedView: View {
 
         self._name = State(wrappedValue: viewModel.agent.name)
         self._goal = State(wrappedValue: viewModel.agent.goal)
-        self._model = State(wrappedValue: viewModel.model)
+        self._modelId = State(wrappedValue: viewModel.model.id)
     }
 
     var body: some View {
@@ -31,7 +31,7 @@ struct AgentLoadedView: View {
 
             AgentLoadedAboutSectionView(name: self.$name,
                                         goal: self.$goal,
-                                        model: self.$model,
+                                        modelId: self.$modelId,
                                         availableModels: self.viewModel.availableModels,
                                         isFocused: self.$isFocused,
                                         onUpdate: { params in
@@ -80,7 +80,7 @@ struct AgentLoadedView: View {
         .background(UIColor.systemGroupedBackground.swiftUI)
         .safeAreaPadding(.bottom, 52)
         .overlay {
-            AgentLoadedKeyboardDismissView(isFocused: self.$isFocused)
+            KeyboardDismissView(isFocused: self.$isFocused)
         }
         .overlay {
             VStack(spacing: 0) {

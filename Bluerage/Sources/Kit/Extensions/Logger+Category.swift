@@ -17,4 +17,6 @@ extension Logger {
 
     static let settings = Logger(subsystem: Self.subsystem, category: "settings")
 
+    static let customModels = Logger(subsystem: Self.subsystem, category: "customModels")
+
 }

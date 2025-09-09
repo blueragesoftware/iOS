@@ -1,11 +1,13 @@
 import Foundation
 import SwiftUI
+import NavigatorUI
 
 struct SettingRow: Identifiable, Hashable, Equatable {
 
-    enum Style {
-        case destructive
-        case `default`
+    enum `Type` {
+        case destructive(action: () async throws -> Void)
+        case `default`(action: () async throws -> Void)
+        case navigation(destination: SettingsDestinations)
     }
 
     enum ActionType {
@@ -26,24 +28,20 @@ struct SettingRow: Identifiable, Hashable, Equatable {
 
     let title: String
 
-    let style: Style
+    let type: `Type`
 
     let actionType: ActionType
 
     let icon: Icon
 
-    let action: () async throws -> Void
-
     init(title: String,
          icon: Icon,
-         style: Style,
-         actionType: ActionType,
-         action: @escaping () async throws -> Void) {
+         type: `Type`,
+         actionType: ActionType) {
         self.title = title
         self.icon = icon
-        self.style = style
+        self.type = type
         self.actionType = actionType
-        self.action = action
     }
 
     func hash(into hasher: inout Hasher) {

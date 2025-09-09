@@ -103,6 +103,8 @@ final class AgentsListScreenViewModel {
                 return State.Main.loaded(agents: agents)
             }
             .catch { error in
+                Logger.agentsList.error("Error loading all agents: \(error.localizedDescription, privacy: .public)")
+
                 return Just(State.Main.error(error))
             }
             .receive(on: DispatchQueue.main)

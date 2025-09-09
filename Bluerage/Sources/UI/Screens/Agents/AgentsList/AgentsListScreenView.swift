@@ -35,7 +35,7 @@ struct AgentsListScreenView: View {
     @Injected(\.hapticManager) private var hapticManager
 
     var body: some View {
-        ManagedNavigationStack(name: "AgentsListScreenView") { navigator in
+        ManagedNavigationStack { navigator in
             self.content(with: navigator)
                 .navigationDestination(AgentListDestinations.self)
                 .safeAreaInset(edge: .bottom) {

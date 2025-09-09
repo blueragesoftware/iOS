@@ -80,6 +80,8 @@ final class AgentScreenViewModel {
             return State.loaded(loadedViewModel)
         }
         .catch { error in
+            Logger.agent.error("Error loading agent with id \(self.agentId, privacy: .public): \(error.localizedDescription, privacy: .public)")
+
             return Just(State.error(error))
         }
         .receive(on: DispatchQueue.main)
@@ -104,8 +106,8 @@ final class AgentScreenViewModel {
         .eraseToAnyPublisher()
     }
 
-    private func getAllModelsPublisher() -> AnyPublisher<[Model], ClientError> {
-        return self.convex.subscribe(to: "models:getAll", yielding: [Model].self)
+    private func getAllModelsPublisher() -> AnyPublisher<AllModelsResponse, ClientError> {
+        return self.convex.subscribe(to: "allModels:get", yielding: AllModelsResponse.self)
             .removeDuplicates()
             .eraseToAnyPublisher()
     }

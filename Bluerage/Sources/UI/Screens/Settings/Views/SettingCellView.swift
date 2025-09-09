@@ -1,11 +1,14 @@
 import SwiftUI
 import OSLog
+import NavigatorUI
 
 struct SettingCellView: View {
 
     private let row: SettingRow
 
     private let confirmAction: (String) async -> Bool
+
+    @Environment(\.navigator) private var navigator
 
     init(row: SettingRow, confirmAction: @escaping (String) async -> Bool) {
         self.row = row
@@ -16,15 +19,20 @@ struct SettingCellView: View {
         Button {
             Task {
                 do {
-                    if self.row.style == .destructive {
+                    switch self.row.type {
+                    case .destructive(let action):
                         let result = await self.confirmAction(self.row.title)
 
                         if !result {
                             return
                         }
-                    }
 
-                    try await self.row.action()
+                        try await action()
+                    case .default(let action):
+                        try await action()
+                    case .navigation(let navigationDestination):
+                        self.navigator.navigate(to: navigationDestination)
+                    }
                 } catch {
                     Logger.settings.error("Error performing action \(self.row.title, privacy: .public): \(error.localizedDescription, privacy: .public)")
                 }
@@ -32,7 +40,7 @@ struct SettingCellView: View {
         } label: {
             HStack(alignment: .center, spacing: 0) {
                 self.icon
-                    .foregroundStyle(self.row.style == .destructive ? .red : .primary)
+                    .foregroundStyle(self.foregroundStyle)
                     .fixedSize()
                     .background {
                         Circle()
@@ -43,7 +51,7 @@ struct SettingCellView: View {
 
                 Text(self.row.title)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(row.style == .destructive ? .red : .primary)
+                    .foregroundStyle(self.foregroundStyle)
                     .padding(.leading, 12)
 
                 Spacer()
@@ -70,6 +78,14 @@ struct SettingCellView: View {
             Image(systemName: named)
                 .font(.system(size: fontSize, weight: fontWeight))
         }
+    }
+
+    private var foregroundStyle: Color {
+        if case .destructive = self.row.type {
+            return .red
+        }
+
+        return .primary
     }
 
 }

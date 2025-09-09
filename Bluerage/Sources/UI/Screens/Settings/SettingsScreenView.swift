@@ -21,7 +21,7 @@ struct SettingsScreenView: View {
     @State private var confirmationConfig: ConfirmationDialogConfig?
 
     var body: some View {
-        ManagedNavigationStack {
+        ManagedNavigationStack { navigator in
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(self.viewModel.sections) { section in
@@ -36,6 +36,7 @@ struct SettingsScreenView: View {
                                         SettingCellView(row: row) { actionTitle in
                                             return await self.showConfirmationDialog(for: actionTitle)
                                         }
+                                        .environment(\.navigator, navigator)
                                     }
                                 }
                                 .padding(.vertical, 16)
@@ -57,6 +58,7 @@ struct SettingsScreenView: View {
                 }
                 .padding(.horizontal, 20)
             }
+            .navigationDestination(SettingsDestinations.self)
             .scrollIndicators(.hidden)
             .background(UIColor.systemGroupedBackground.swiftUI)
             .navigationTitle("Settings")

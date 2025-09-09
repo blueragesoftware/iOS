@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct AgentLoadedKeyboardDismissView: View {
+struct KeyboardDismissView: View {
 
     @FocusState.Binding var isFocused: Bool
 
