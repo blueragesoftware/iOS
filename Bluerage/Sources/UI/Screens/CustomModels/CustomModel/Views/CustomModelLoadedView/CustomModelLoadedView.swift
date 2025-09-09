@@ -10,7 +10,7 @@ struct CustomModelLoadedView: View {
 
     @State private var modelId: String
 
-    @State private var apiKey: String
+    @State private var encryptedApiKey: String
 
     @FocusState private var isFocused: Bool
 
@@ -20,9 +20,7 @@ struct CustomModelLoadedView: View {
         self._name = State(wrappedValue: viewModel.customModel.name)
         self._provider = State(wrappedValue: viewModel.customModel.provider)
         self._modelId = State(wrappedValue: viewModel.customModel.modelId)
-
-        let decryptedApiKey = EncryptionManager.decryptApiKey(viewModel.customModel.encryptedApiKey) ?? ""
-        self._apiKey = State(wrappedValue: decryptedApiKey)
+        self._encryptedApiKey = State(wrappedValue: viewModel.customModel.encryptedApiKey)
     }
 
     var body: some View {
@@ -31,15 +29,14 @@ struct CustomModelLoadedView: View {
                 name: self.$name,
                 provider: self.$provider,
                 modelId: self.$modelId,
-                apiKey: self.$apiKey,
+                encryptedApiKey: self.$encryptedApiKey,
                 isFocused: self.$isFocused,
-                onUpdate: { name, provider, modelId, apiKey in
-                    let encryptedApiKey = apiKey.isEmpty ? nil : EncryptionManager.encryptApiKey(apiKey)
+                onUpdate: { name, provider, modelId, encryptedApiKey in
                     self.viewModel.updateCustomModel(
                         name: name,
                         provider: provider,
                         modelId: modelId,
-                        apiKey: encryptedApiKey
+                        encryptedApiKey: encryptedApiKey
                     )
                 }
             )

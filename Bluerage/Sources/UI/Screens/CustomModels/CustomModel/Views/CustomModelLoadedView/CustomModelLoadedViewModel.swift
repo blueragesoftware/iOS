@@ -25,7 +25,7 @@ final class CustomModelLoadedViewModel {
             if let otherName = other.name { self.name = otherName }
             if let otherProvider = other.provider { self.provider = otherProvider }
             if let otherModelId = other.modelId { self.modelId = otherModelId }
-            if let otherApiKey = other.encryptedApiKey { self.encryptedApiKey = otherApiKey }
+            if let otherEncryptedApiKey = other.encryptedApiKey { self.encryptedApiKey = otherEncryptedApiKey }
         }
     }
 
@@ -61,14 +61,14 @@ final class CustomModelLoadedViewModel {
     // MARK: - Public Methods
 
     func updateCustomModel(name: String? = nil,
-                         provider: String? = nil,
-                         modelId: String? = nil,
-                         apiKey: String? = nil) {
+                           provider: String? = nil,
+                           modelId: String? = nil,
+                           encryptedApiKey: String? = nil) {
         let request = UpdateRequest(
             name: name,
             provider: provider,
             modelId: modelId,
-            encryptedApiKey: apiKey
+            encryptedApiKey: encryptedApiKey
         )
 
         self.updateSubject.send(.merge(request))
@@ -132,7 +132,7 @@ final class CustomModelLoadedViewModel {
         if let name = request.name { modelData["name"] = name }
         if let provider = request.provider { modelData["provider"] = provider }
         if let modelId = request.modelId { modelData["modelId"] = modelId }
-        if let apiKey = request.encryptedApiKey { modelData["encryptedApiKey"] = apiKey }
+        if let encryptedApiKey = request.encryptedApiKey { modelData["encryptedApiKey"] = encryptedApiKey }
 
         guard !modelData.isEmpty else {
             return
@@ -142,7 +142,6 @@ final class CustomModelLoadedViewModel {
             "id": self.customModel.id
         ]
 
-        // Add individual fields directly to args instead of nested model
         for (key, value) in modelData {
             args[key] = value
         }
