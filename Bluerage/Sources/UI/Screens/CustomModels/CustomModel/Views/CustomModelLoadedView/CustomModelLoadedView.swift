@@ -12,6 +12,8 @@ struct CustomModelLoadedView: View {
 
     @State private var encryptedApiKey: String
 
+    @State private var baseUrl: String
+
     @FocusState private var isFocused: Bool
 
     init(viewModel: CustomModelLoadedViewModel) {
@@ -21,6 +23,7 @@ struct CustomModelLoadedView: View {
         self._provider = State(wrappedValue: viewModel.customModel.provider)
         self._modelId = State(wrappedValue: viewModel.customModel.modelId)
         self._encryptedApiKey = State(wrappedValue: viewModel.customModel.encryptedApiKey)
+        self._baseUrl = State(wrappedValue: viewModel.customModel.baseUrl ?? "")
     }
 
     var body: some View {
@@ -30,13 +33,15 @@ struct CustomModelLoadedView: View {
                 provider: self.$provider,
                 modelId: self.$modelId,
                 encryptedApiKey: self.$encryptedApiKey,
+                baseUrl: self.$baseUrl,
                 isFocused: self.$isFocused,
-                onUpdate: { name, provider, modelId, encryptedApiKey in
+                onUpdate: { name, provider, modelId, encryptedApiKey, baseUrl in
                     self.viewModel.updateCustomModel(
                         name: name,
                         provider: provider,
                         modelId: modelId,
-                        encryptedApiKey: encryptedApiKey
+                        encryptedApiKey: encryptedApiKey,
+                        baseUrl: baseUrl
                     )
                 }
             )

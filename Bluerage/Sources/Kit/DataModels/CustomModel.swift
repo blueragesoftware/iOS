@@ -9,6 +9,7 @@ struct CustomModel: Identifiable, Codable, Equatable, Hashable {
         case provider
         case modelId
         case encryptedApiKey
+        case baseUrl
     }
 
     let id: String
@@ -22,5 +23,7 @@ struct CustomModel: Identifiable, Codable, Equatable, Hashable {
     let modelId: String
 
     let encryptedApiKey: String
+
+    let baseUrl: String?
 
 }

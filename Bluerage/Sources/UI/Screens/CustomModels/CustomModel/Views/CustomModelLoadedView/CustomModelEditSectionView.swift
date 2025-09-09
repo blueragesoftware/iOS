@@ -2,7 +2,7 @@ import SwiftUI
 
 struct CustomModelEditSectionView: View {
 
-    typealias CustomModelUpdate = (name: String?, provider: String?, modelId: String?, encryptedApiKey: String?)
+    typealias CustomModelUpdate = (name: String?, provider: String?, modelId: String?, encryptedApiKey: String?, baseUrl: String?)
 
     @Binding private var name: String
 
@@ -12,6 +12,8 @@ struct CustomModelEditSectionView: View {
 
     @Binding private var encryptedApiKey: String
 
+    @Binding private var baseUrl: String
+
     private var isFocused: FocusState<Bool>.Binding
 
     private let onUpdate: (CustomModelUpdate) -> Void
@@ -20,22 +22,24 @@ struct CustomModelEditSectionView: View {
          provider: Binding<String>,
          modelId: Binding<String>,
          encryptedApiKey: Binding<String>,
+         baseUrl: Binding<String>,
          isFocused: FocusState<Bool>.Binding,
          onUpdate: @escaping (CustomModelUpdate) -> Void) {
         self._name = name
         self._provider = provider
         self._modelId = modelId
         self._encryptedApiKey = encryptedApiKey
+        self._baseUrl = baseUrl
         self.isFocused = isFocused
         self.onUpdate = onUpdate
     }
 
     var body: some View {
         Section {
-            TextField("Model Name", text: self.$name, prompt: Text("e.g., GPT-5"))
+            TextField("Model Name", text: self.$name)
                 .focused(self.isFocused)
                 .onChange(of: self.name) { _, newValue in
-                    self.onUpdate((newValue, nil, nil, nil))
+                    self.onUpdate((newValue, nil, nil, nil, nil))
                 }
 
             Picker("Provider", selection: self.$provider) {
@@ -43,13 +47,19 @@ struct CustomModelEditSectionView: View {
                     .tag("openai")
             }
             .onChange(of: self.provider) { _, newValue in
-                self.onUpdate((nil, newValue, nil, nil))
+                self.onUpdate((nil, newValue, nil, nil, nil))
             }
 
-            TextField("Model ID", text: self.$modelId, prompt: Text("e.g., gpt-5"))
+            TextField("Model ID", text: self.$modelId)
                 .focused(self.isFocused)
                 .onChange(of: self.modelId) { _, newValue in
-                    self.onUpdate((nil, nil, newValue, nil))
+                    self.onUpdate((nil, nil, newValue, nil, nil))
+                }
+
+            TextField("Base URL", text: self.$baseUrl)
+                .focused(self.isFocused)
+                .onChange(of: self.baseUrl) { _, newValue in
+                    self.onUpdate((nil, nil, nil, nil, newValue.isEmpty ? nil : newValue))
                 }
         } header: {
             Text("Model Configuration")
@@ -59,7 +69,7 @@ struct CustomModelEditSectionView: View {
             SecureField("API Key", text: self.$encryptedApiKey, prompt: Text("sk-..."))
                 .focused(self.isFocused)
                 .onChange(of: self.encryptedApiKey) { _, newValue in
-                    self.onUpdate((nil, nil, nil, newValue))
+                    self.onUpdate((nil, nil, nil, newValue, nil))
                 }
         } header: {
             Text("Authentication")

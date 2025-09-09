@@ -13,12 +13,14 @@ final class CustomModelLoadedViewModel {
         var provider: String?
         var modelId: String?
         var encryptedApiKey: String?
+        var baseUrl: String?
 
         var hasUpdates: Bool {
             return self.name != nil
             || self.provider != nil
             || self.modelId != nil
             || self.encryptedApiKey != nil
+            || self.baseUrl != nil
         }
 
         mutating func merge(with other: UpdateRequest) {
@@ -26,6 +28,7 @@ final class CustomModelLoadedViewModel {
             if let otherProvider = other.provider { self.provider = otherProvider }
             if let otherModelId = other.modelId { self.modelId = otherModelId }
             if let otherEncryptedApiKey = other.encryptedApiKey { self.encryptedApiKey = otherEncryptedApiKey }
+            if let otherBaseUrl = other.baseUrl { self.baseUrl = otherBaseUrl }
         }
     }
 
@@ -63,12 +66,14 @@ final class CustomModelLoadedViewModel {
     func updateCustomModel(name: String? = nil,
                            provider: String? = nil,
                            modelId: String? = nil,
-                           encryptedApiKey: String? = nil) {
+                           encryptedApiKey: String? = nil,
+                           baseUrl: String? = nil) {
         let request = UpdateRequest(
             name: name,
             provider: provider,
             modelId: modelId,
-            encryptedApiKey: encryptedApiKey
+            encryptedApiKey: encryptedApiKey,
+            baseUrl: baseUrl
         )
 
         self.updateSubject.send(.merge(request))
@@ -133,6 +138,7 @@ final class CustomModelLoadedViewModel {
         if let provider = request.provider { modelData["provider"] = provider }
         if let modelId = request.modelId { modelData["modelId"] = modelId }
         if let encryptedApiKey = request.encryptedApiKey { modelData["encryptedApiKey"] = encryptedApiKey }
+        if let baseUrl = request.baseUrl { modelData["baseUrl"] = baseUrl }
 
         guard !modelData.isEmpty else {
             return
