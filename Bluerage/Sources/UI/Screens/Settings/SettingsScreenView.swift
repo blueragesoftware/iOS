@@ -31,7 +31,7 @@ struct SettingsScreenView: View {
                                     .fill(UIColor.systemGray6.swiftUI)
                                     .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
 
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading, spacing: 14) {
                                     ForEach(section.rows) { row in
                                         SettingCellView(row: row) { actionTitle in
                                             return await self.showConfirmationDialog(for: actionTitle)
