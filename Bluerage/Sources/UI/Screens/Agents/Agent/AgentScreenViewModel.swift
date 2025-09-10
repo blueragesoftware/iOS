@@ -36,9 +36,18 @@ final class AgentScreenViewModel {
 
         typealias AgentData = (response: GetByIdWithModelResponse, tools: [Tool])
 
-        let agentWithResolvedTools: AnyPublisher<AgentData, ClientError> = self.getAgentByIdWithModelPublisher(agentId: self.agentId)
+        let agentId = self.agentId
+
+        let agentWithResolvedTools: AnyPublisher<AgentData, ClientError> = self.getAgentByIdWithModelPublisher(agentId: agentId)
             .pairwise()
-            .flatMap { previousResponse, newResponse in
+            .flatMap { [weak self] previousResponse, newResponse in
+                guard let self else {
+                    return Future<AgentData, ClientError> { promise in
+                        promise(.success((newResponse, [])))
+                    }
+                    .eraseToAnyPublisher()
+                }
+
                 let previousSlugs = previousResponse?.agent.tools.map(\.slug)
                 let newSlugs = newResponse.agent.tools.map(\.slug)
 
@@ -80,7 +89,7 @@ final class AgentScreenViewModel {
             return State.loaded(loadedViewModel)
         }
         .catch { error in
-            Logger.agent.error("Error loading agent with id \(self.agentId, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            Logger.agent.error("Error loading agent with id \(agentId, privacy: .public): \(error.localizedDescription, privacy: .public)")
 
             return Just(State.error(error))
         }
@@ -113,7 +122,11 @@ final class AgentScreenViewModel {
     }
 
     private func getToolsBySlugsPublisher(slugs: [String]) -> AnyPublisher<[Tool], ClientError> {
-        return Future { promise in
+        return Future { [weak self] promise in
+            guard let self else {
+                return
+            }
+
             Task {
                 do {
                     let tools: [Tool] = try await self.convex.action("tools:getBySlugsForUser", with: ["slugs": slugs])
