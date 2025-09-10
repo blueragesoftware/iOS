@@ -12,10 +12,4 @@ enum ExecutionsListDestinations: NavigationDestination {
         }
     }
 
-    var method: NavigationMethod {
-        switch self {
-        case .execution:
-            return .push
-        }
-    }
 }

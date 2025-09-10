@@ -70,7 +70,8 @@ Derived/
 Tuist/.build
 
 ## xcconfigs
-xcconfigs/Config.xcconfig
+xcconfigs/Debug.xcconfig
+xcconfigs/Release.xcconfig
 
 ## Sentry
 .sentryclirc

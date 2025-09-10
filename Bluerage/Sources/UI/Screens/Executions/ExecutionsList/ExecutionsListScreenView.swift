@@ -32,7 +32,7 @@ struct ExecutionsListScreenView: View {
                 .transition(.blurReplace)
         case .loaded(let tasks):
             LoadedExecutionsListView(tasks: tasks)
-            .transition(.blurReplace)
+                .transition(.blurReplace)
         case .empty:
             EmptyExecutionsListView()
                 .transition(.blurReplace)

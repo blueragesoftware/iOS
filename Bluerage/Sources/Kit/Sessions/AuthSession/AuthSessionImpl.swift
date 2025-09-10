@@ -32,7 +32,7 @@ final class AuthSessionImpl: AuthSession {
     }
 
     func signInWithApple(idToken: String) async throws {
-        try await self.convex.login(with: ClerkAuthProvider.AppleLoginParams(idToken: idToken))
+        _ = try await self.convex.login(with: ClerkAuthProvider.AppleLoginParams(idToken: idToken))
     }
 
     func start() {

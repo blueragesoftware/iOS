@@ -8,7 +8,7 @@ struct GetByIdWithModelResponse: Codable, Equatable {
 
 }
 
-enum ModelUnion: Codable, Equatable {
+enum ModelUnion: Codable, Equatable, Hashable {
 
     case model(Model)
     case customModel(CustomModel)

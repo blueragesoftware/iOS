@@ -16,7 +16,7 @@
       "location" : "https://github.com/blueragesoftware/convex-swift",
       "state" : {
         "branch" : "main",
-        "revision" : "3254ec4bc0a99b2d71abd41137b282eea3e7e87c"
+        "revision" : "b73cc874f06b637bc47b05f71e5bdafc1a7f07b3"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios",
       "state" : {
-        "revision" : "912218721ca4c253cc0dddd863fd457c00f96e40",
-        "version" : "3.30.1"
+        "revision" : "f381818bc153f63fbe13d6822e65cc7233ba4647",
+        "version" : "3.31.0"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa",
       "state" : {
-        "revision" : "3c2eee7773df58bdfb9e10e72d9a4be44253e0d9",
-        "version" : "8.55.0"
+        "revision" : "2c70925b98238b7efacde11d30075328c3cb6a2a",
+        "version" : "8.55.1"
       }
     },
     {

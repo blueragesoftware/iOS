@@ -69,7 +69,7 @@ struct ExecutionTask: Identifiable, Decodable, Equatable, Hashable {
 
     let agent: Agent
 
-    let model: Model
+    let model: ModelUnion
 
     let state: State
 

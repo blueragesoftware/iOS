@@ -2,7 +2,7 @@ import SwiftUI
 import NavigatorUI
 
 @main
-struct AgentOSApp: App {
+struct BluerageApp: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 

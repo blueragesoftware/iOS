@@ -1,171 +1,65 @@
-# AgentOS iOS
+# Bluerage
 
-A native iOS application for managing and interacting with AI agents on the go.
+Mobile first AI-powered automation that thinks and acts for you. Create workflows that run in the background, connecting your favorite tools and services.
 
-## Prerequisites
+## What is Bluerage?
 
-- macOS 14+ with Xcode 15+
-- [Tuist](https://tuist.io) for project generation
-- Swift 5.9+
+Bluerage transforms automation by combining the simplicity of visual workflows with the intelligence of AI. Think of it as Apple Shortcuts enhanced with AI capabilities - create agents that understand your goals, make decisions, and execute complex tasks autonomously in the cloud.
 
-## Installation
+## Key Features
 
-1. Clone the repository and install Tuist:
+### Mobile First
+Designed from the ground up for iOS. Share content directly to your agents, trigger workflows on the go, and manage automations from anywhere with a native mobile experience.
 
-```bash
-git clone https://github.com/AgentOSS/iOS
-cd iOS
-curl -Ls https://install.tuist.io | bash
-```
+### Bring Your Own Keys
+Full control over your AI usage and costs. Connect your own API keys for OpenAI, Anthropic, or other providers.
 
-2. Install project dependencies:
+### Declarative Automation
+Define your goal in natural language and let AI handle the complexity. Your agents understand context, make decisions, and passes data between steps for you. No node-based architecture!
 
-```bash
-tuist install
-```
+### Cloud-Based Execution
+Agents run in the cloud via Convex, continuing their work even after you close the app. Start a task and come back to see the results.
 
-## Environment Setup
+### Tool Integration
+Connect your existing applications and services through a growing library of tools. Each agent can access multiple tools to accomplish complex, multi-step workflows.
 
-1. Generate the Xcode project with your bundle identifier:
+### Rapid Prototyping
+Go from idea to working automation in minutes. The intuitive interface makes it simple to draft, test, and refine your agents without any coding knowledge.
 
-```bash
-TUIST_BUNDLE_ID=com.yourcompany.AgentOS tuist generate
-```
+## How It Works
 
-2. Configure environment variables for services (optional):
-   - `POSTHOG_API_KEY` - PostHog analytics key
-   - `POSTHOG_HOST` - PostHog server URL (default: https://us.i.posthog.com)
-   - `SENTRY_DSN` - Sentry crash reporting DSN
+### Creating an Agent
 
-## Local Development
+1. **Define Your Goal**  
+   Start with a clear objective written in plain language. The AI understands what you want to achieve.
 
-1. Generate and open the project:
+2. **Choose Your Model**  
+   Select from available AI models or define a custom one to power your agent's intelligence and decision-making.
 
-```bash
-TUIST_BUNDLE_ID=com.yourcompany.AgentOS tuist generate
-open AgentOS.xcworkspace
-```
+3. **Connect Tools**  
+   Add the tools your agent needs - APIs, services, and integrations that enable real-world actions.
 
-2. Build and run the project in Xcode (⌘+R)
+4. **Design Workflow Steps**  
+   Outline the process with simple steps. The AI fills in the details and handles edge cases.
 
-## Project Structure
+5. **Deploy and Run**  
+   Launch immediately or schedule for later. Your agent works autonomously in the cloud.
 
-```
-AgentOS/
-├── Sources/
-│   ├── Kit/Core/        # Core functionality and dependency injection
-│   └── UI/              # SwiftUI views and app lifecycle
-├── Resources/           # Assets, strings, and configuration
-└── Tuist/              # Tuist configuration and dependencies
-```
+## Getting Started
 
-## Build Commands
+Ready to build and run Bluerage locally? Check out our [Contributing Guide](docs/CONTRIBUTING.md) for detailed setup instructions.
 
-### Development
-- `tuist generate` - Generate Xcode project files
-- `tuist build` - Build the project from command line
-- `tuist test` - Run unit tests
-- `tuist clean` - Clean build artifacts
-- `tuist cache` - Warm cache for faster builds
+## Community
 
-### Code Quality
-- `swiftlint ./AgentOS/ --fix --strict` - Run and fix SwiftLint issues
-- `swiftlint analyze ./AgentOS/` - Perform deeper code analysis
+- Follow us on X: [@blueragehq](https://x.com/blueragehq)
+- Discord: [Bluerage Channel](https://threads.com/blueragehq)
+- Website: [bluerage.software](https://bluerage.software)
+- Feedback: [ertem@bluerage.software](mailto:ertem@bluerage.software)
 
-### Initial Setup
-- `make setup` - Install SwiftLint and configure pre-commit hooks
+## Related Projects
 
-## Architecture
-
-### Dependency Management
-
-The project uses Tuist for managing Swift Package Manager dependencies. Key dependencies include:
-- **ConvexMobile** - Backend integration
-- **Factory** - Dependency injection
-- **Nuke** - Image loading
-- **PostHog** - Analytics
-- **Sentry** - Crash reporting
-
-### Dependency Injection
-
-Dependencies are injected using Factory pattern:
-
-```swift
-@Injected(\.postHog) private var postHog
-```
-
-Dependencies are defined in `AgentOS/Sources/Kit/Core/` following the pattern: `{ServiceName}+Dependency.swift`
-
-### Code Style
-
-- SwiftLint is configured with strict mode
-- Pre-commit hooks automatically run SwiftLint
-- Follow the coding guidelines in `CLAUDE.md`
-
-## Configuration
-
-### Build Settings
-
-- Deployment Target: iOS 17.0+
-- Swift Version: 5.9
-- Bundle ID: Configurable via `TUIST_BUNDLE_ID` environment variable
-
-### Environment Variables
-
-Set these in your development environment or CI/CD pipeline:
-- `TUIST_BUNDLE_ID` - Your app's bundle identifier (required)
-- `POSTHOG_API_KEY` - Analytics tracking
-- `POSTHOG_HOST` - Analytics server
-- `SENTRY_DSN` - Crash reporting
-
-## Troubleshooting
-
-### Tuist Issues
-
-1. Clear Tuist cache and regenerate:
-   ```bash
-   tuist clean
-   rm -rf Derived/
-   TUIST_BUNDLE_ID=com.yourcompany.AgentOS tuist generate
-   ```
-
-2. Update Tuist to latest version:
-   ```bash
-   tuist update
-   ```
-
-### Build Issues
-
-1. Clean build folder in Xcode: Product → Clean Build Folder (⇧⌘K)
-
-2. Reset Swift Package Manager cache:
-   ```bash
-   rm -rf ~/Library/Developer/Xcode/DerivedData
-   rm -rf .build/
-   ```
-
-### SwiftLint Issues
-
-1. Install or update SwiftLint:
-   ```bash
-   brew install swiftlint
-   # or
-   brew upgrade swiftlint
-   ```
-
-2. Run SwiftLint with auto-fix:
-   ```bash
-   swiftlint ./AgentOS/ --fix --strict
-   ```
-
-## Support
-
-For issues or questions:
-
-1. Check the [Tuist documentation](https://docs.tuist.io/)
-2. Review existing issues in the repository
-3. Open a new issue with detailed information
+- [Bluerage Backend](https://github.com/blueragesoftware/backend) - Convex backend for clients
 
 ## License
 
-Apache License 2.0
+Apache License 2.0 - See [LICENSE](LICENSE) for details

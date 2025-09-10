@@ -41,8 +41,6 @@ final class ExecutionsListScreenViewModel {
             }
         }
 
-        // MARK: - CustomStringConvertible
-
         var title: String {
             switch self {
             case .loading:

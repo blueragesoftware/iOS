@@ -12,20 +12,23 @@ struct ExecutionScreenView: View {
     }
 
     var body: some View {
-        Group {
-            switch self.viewModel.state {
-            case .loaded(let task):
-                ExecutionLoadedScreenView(task: task, index: self.index)
-            case .loading:
-                LoadingView()
-            case .error:
-                PlaceholderView.error {
-                    self.viewModel.connect()
-                }
+        self.content
+            .onFirstAppear {
+                self.viewModel.connect()
             }
-        }
-        .onFirstAppear {
-            self.viewModel.connect()
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch self.viewModel.state {
+        case .loaded(let task):
+            ExecutionLoadedScreenView(task: task, index: self.index)
+        case .loading:
+            LoadingView()
+        case .error:
+            PlaceholderView.error {
+                self.viewModel.connect()
+            }
         }
     }
 

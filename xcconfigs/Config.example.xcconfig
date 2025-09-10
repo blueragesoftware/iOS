@@ -1,3 +1,5 @@
+#include "Common.xcconfig"
+
 POSTHOG_API_KEY=
 POSTHOG_HOST=
 SENTRY_DSN=

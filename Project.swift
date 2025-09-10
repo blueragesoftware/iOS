@@ -11,6 +11,7 @@ let project = Project(
             deploymentTargets: .iOS("17.0"),
             infoPlist: .extendingDefault(
                 with: [
+                    "ITSAppUsesNonExemptEncryption": false,
                     "UILaunchScreen": [
                         "UIColorName": "",
                         "UIImageName": "",
@@ -71,14 +72,14 @@ fi
                         settings: [
                             "CODE_SIGN_ENTITLEMENTS": "entitlements/Debug.entitlements",
                         ],
-                        xcconfig: "./xcconfigs/Config.xcconfig"
+                        xcconfig: "./xcconfigs/Debug.xcconfig"
                     ),
                     .release(
                         name: "Release",
                         settings: [
                             "CODE_SIGN_ENTITLEMENTS": "entitlements/Release.entitlements",
                         ],
-                        xcconfig: "./xcconfigs/Config.xcconfig"
+                        xcconfig: "./xcconfigs/Release.xcconfig"
                     )
                 ]
             )
@@ -88,7 +89,8 @@ fi
         "entitlements/Debug.entitlements",
         "entitlements/Release.entitlements",
         "xcconfigs/Common.xcconfig",
-        "xcconfigs/Config.xcconfig"
+        "xcconfigs/Debug.xcconfig",
+        "xcconfigs/Release.xcconfig"
     ]
 )
 

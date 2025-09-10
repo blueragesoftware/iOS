@@ -13,6 +13,13 @@ install-swiftlint:
 # Install pre-commit hooks
 install-precommit:
 	@echo "Installing pre-commit hooks..."
+	@if ! command -v pipx &> /dev/null; then \
+		echo "pipx not found. Installing pipx..."; \
+		brew install pipx; \
+		pipx ensurepath; \
+	else \
+		echo "pipx is already installed"; \
+	fi
 	@if ! command -v pre-commit &> /dev/null; then \
 		pipx install pre-commit; \
 	else \
