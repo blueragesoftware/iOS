@@ -19,7 +19,7 @@ struct ExecutionsListScreenView: View {
                 self.viewModel.connect()
             }
             .background(UIColor.systemGroupedBackground.swiftUI)
-            .navigationTitle("executions_list_title")
+            .navigationTitle(BluerageStrings.executionsListTitle)
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(ExecutionsListDestinations.self)
     }

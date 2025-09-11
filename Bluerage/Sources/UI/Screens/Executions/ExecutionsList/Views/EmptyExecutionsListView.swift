@@ -7,8 +7,8 @@ struct EmptyExecutionsListView: View {
             Spacer()
 
             PlaceholderView(imageName: BluerageAsset.Assets.emptyPlaceholderIcon100.name,
-                            title: "execution_empty_placeholder_title",
-                            description: "execution_empty_placeholder_description")
+                            title: BluerageStrings.executionEmptyPlaceholderTitle,
+                            description: BluerageStrings.executionEmptyPlaceholderDescription)
 
             Spacer()
         }

@@ -17,7 +17,7 @@ struct ExecutionLoadedContentView: View {
                     .textSelection(.enabled)
             }
         } header: {
-            Text("execution_result_section_header")
+            Text(BluerageStrings.executionResultSectionHeader)
         }
     }
 }

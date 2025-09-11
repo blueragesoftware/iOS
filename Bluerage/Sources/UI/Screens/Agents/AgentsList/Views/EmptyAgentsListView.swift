@@ -13,11 +13,11 @@ struct EmptyAgentsListView: View {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
             PlaceholderView(imageName: BluerageAsset.Assets.emptyPlaceholderIcon100.name,
-                            title: "agents_list_empty_placeholder_title",
-                            description: "agents_list_empty_placeholder_description") {
+                            title: BluerageStrings.agentsListEmptyPlaceholderTitle,
+                            description: BluerageStrings.agentsListEmptyPlaceholderDescription) {
                 self.action()
             } buttonLabel: {
-                Text("agents_list_empty_action_button_title")
+                Text(BluerageStrings.agentsListEmptyActionButtonTitle)
                     .foregroundStyle(.primary)
                     .font(.system(size: 15, weight: .semibold))
                     .padding(.vertical, 8)

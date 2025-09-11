@@ -12,7 +12,7 @@ struct OpenButton: View {
         Button {
             self.onOpen()
         } label: {
-            Text("common_open")
+            Text(BluerageStrings.commonOpen)
                 .foregroundStyle(.primary)
                 .font(.system(size: 15, weight: .semibold))
                 .padding(.vertical, 6)

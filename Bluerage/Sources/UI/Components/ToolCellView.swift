@@ -5,7 +5,7 @@ import SVGView
 
 struct ToolCellView<TrailingAccessory: View>: View {
 
-    private let imageSize: CGFloat = 20
+    private let imageSize: CGFloat = 24
 
     private let tool: Tool
 

@@ -16,7 +16,7 @@ struct AgentLoadedActionButtonsView: View {
             Button {
                 self.onExecutions()
             } label: {
-                Text("agent_executions_button_title")
+                Text(BluerageStrings.agentExecutionsButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.primary)
                     .padding(.vertical, 15)
@@ -27,7 +27,7 @@ struct AgentLoadedActionButtonsView: View {
             Button {
                 self.onRunAgent()
             } label: {
-                Text("agent_run_button_title")
+                Text(BluerageStrings.agentRunButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(.background)
                     .padding(.vertical, 15)

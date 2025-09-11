@@ -11,15 +11,15 @@ struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
 
     private let imageType: ImageType
 
-    private let title: LocalizedStringKey
+    private let title: String
 
-    private let description: LocalizedStringKey
+    private let description: String
 
     private let buttonConfiguration: ButtonConfiguration?
 
     init(imageSystemName: String,
-         title: LocalizedStringKey,
-         description: LocalizedStringKey,
+         title: String,
+         description: String,
          action: @escaping () -> Void,
          @ViewBuilder buttonLabel: @escaping () -> ButtonLabel) {
         self.imageType = .systemName(imageSystemName)
@@ -29,8 +29,8 @@ struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
     }
 
     init(imageName: String,
-         title: LocalizedStringKey,
-         description: LocalizedStringKey,
+         title: String,
+         description: String,
          action: @escaping () -> Void,
          @ViewBuilder buttonLabel: @escaping () -> ButtonLabel) {
         self.imageType = .named(imageName)
@@ -82,8 +82,8 @@ struct PlaceholderView<ButtonLabel>: View where ButtonLabel: View {
 extension PlaceholderView where ButtonLabel == Never {
 
     init(imageSystemName: String,
-         title: LocalizedStringKey,
-         description: LocalizedStringKey,
+         title: String,
+         description: String,
          buttonConfiguration: ButtonConfiguration? = nil) {
         self.imageType = .systemName(imageSystemName)
         self.title = title
@@ -92,8 +92,8 @@ extension PlaceholderView where ButtonLabel == Never {
     }
 
     init(imageName: String,
-         title: LocalizedStringKey,
-         description: LocalizedStringKey,
+         title: String,
+         description: String,
          buttonConfiguration: ButtonConfiguration? = nil) {
         self.imageType = .named(imageName)
         self.title = title
@@ -105,15 +105,15 @@ extension PlaceholderView where ButtonLabel == Never {
 
 extension PlaceholderView where ButtonLabel == AnyView {
 
-    static func error(title: LocalizedStringKey = "common_issue_happened",
-                      description: LocalizedStringKey = "common_resolve_issue_suggest",
+    static func error(title: String = BluerageStrings.commonIssueHappened,
+                      description: String = BluerageStrings.commonResolveIssueSuggest,
                       action: @escaping () -> Void) -> some View {
         PlaceholderView(imageName: BluerageAsset.Assets.issuePlaceholderIcon100.name,
                         title: title,
                         description: description) {
             action()
         } buttonLabel: {
-            AnyView(Text("common_refresh")
+            AnyView(Text(BluerageStrings.commonRefresh)
                 .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(.primary)
                 .padding(.vertical, 8)

@@ -27,7 +27,7 @@ struct AgentLoadedToolsSectionView: View {
                     Button {
                         self.onAdd()
                     } label: {
-                        Text("agent_add_a_tool_button_title")
+                        Text(BluerageStrings.agentAddAToolButtonTitle)
                             .foregroundStyle(.link)
                     }
                     .deleteDisabled(true)
@@ -37,9 +37,9 @@ struct AgentLoadedToolsSectionView: View {
                 self.onRemove(offsets)
             }
         } header: {
-            Text("agent_tools_section_header")
+            Text(BluerageStrings.agentToolsSectionHeader)
         } footer: {
-            Text("agent_section_footer")
+            Text(BluerageStrings.agentSectionFooter)
         }
     }
 

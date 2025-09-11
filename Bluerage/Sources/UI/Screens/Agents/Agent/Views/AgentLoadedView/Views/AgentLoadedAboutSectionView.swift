@@ -30,21 +30,21 @@ struct AgentLoadedAboutSectionView: View {
 
     var body: some View {
         Section {
-            TextField("agent_name_placeholder", text: self.$name, axis: .vertical)
+            TextField(BluerageStrings.agentNamePlaceholder, text: self.$name, axis: .vertical)
                 .multilineTextAlignment(.leading)
                 .onChange(of: self.name) { _, newValue in
                     self.onUpdate((newValue, nil, nil))
                 }
                 .focused(self.$isFocused)
 
-            TextField("agent_goal_placeholder", text: self.$goal, axis: .vertical)
+            TextField(BluerageStrings.agentGoalPlaceholder, text: self.$goal, axis: .vertical)
                 .multilineTextAlignment(.leading)
                 .onChange(of: self.goal) { _, newValue in
                     self.onUpdate((nil, newValue, nil))
                 }
                 .focused(self.$isFocused)
 
-            Picker("agent_model_picker_title", selection: self.$modelId) {
+            Picker(BluerageStrings.agentModelPickerTitle, selection: self.$modelId) {
                 Section {
                     ForEach(self.availableModels.models) { model in
                         Text(model.name)
@@ -75,7 +75,7 @@ struct AgentLoadedAboutSectionView: View {
                 }
             }
         } header: {
-            Text("agent_about_section_header")
+            Text(BluerageStrings.agentAboutSectionHeader)
         }
     }
 

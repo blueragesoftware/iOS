@@ -44,13 +44,13 @@ final class ExecutionsListScreenViewModel {
         var title: String {
             switch self {
             case .loading:
-                "Loading"
+                BluerageStrings.commonLoading
             case .loaded:
-                "Loaded"
+                BluerageStrings.commonLoaded
             case .error:
-                "Error"
+                BluerageStrings.commonError
             case .empty:
-                "Empty"
+                BluerageStrings.commonEmpty
             }
         }
     }

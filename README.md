@@ -62,7 +62,7 @@ Ready to build and run Bluerage locally? Check out our [Contributing Guide](docs
 ## Community
 
 - X: [@blueragehq](https://x.com/blueragehq)
-- Discord: [Bluerage Channel](https://threads.com/blueragehq)
+- Discord: [Bluerage Channel](https://discord.gg/sCutZ3zd)
 - Website: [bluerage.software](https://bluerage.software)
 - Feedback: [feedback@bluerage.software](mailto:feedback@bluerage.software)
 

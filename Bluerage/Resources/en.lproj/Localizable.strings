@@ -1,0 +1,76 @@
+// MARK: - Agent
+
+"agent_about_section_header" = "About";
+"agent_add_a_tool_button_title" = "Add a Tool";
+"agent_error_placeholder_description" = "Try refreshing the page or come back later";
+"agent_error_placeholder_title" = "Error loading agent";
+"agent_executions_button_title" = "Executions";
+"agent_goal_placeholder" = "Goal";
+"agent_model_picker_title" = "Model";
+"agent_name_placeholder" = "Name";
+"agent_new_step_placeholder" = "Add a Step";
+"agent_run_button_title" = "Run Agent";
+"agent_section_footer" = "Swipe left to delete";
+"agent_step_placeholder" = "Step";
+"agent_steps_section_header" = "Steps";
+"agent_tools_section_header" = "Tools";
+
+// MARK: - Agents List
+
+"agents_list_create_new_agent_button_title" = "Create new Agent";
+"agents_list_empty_action_button_title" = "Create Agent";
+"agents_list_empty_placeholder_description" = "Time to create your first one";
+"agents_list_empty_placeholder_title" = "No Agents yet";
+"agents_list_navigation_title" = "Agents";
+
+// MARK: - Common
+
+"common_empty" = "Empty";
+"common_error" = "Error";
+"common_issue_happened" = "An issue happened";
+"common_loaded" = "Loaded";
+"common_loading" = "Loading";
+"common_ok" = "OK";
+"common_open" = "Open";
+"common_refresh" = "Refresh";
+"common_resolve_issue_suggest" = "Try refreshing the page or come back later";
+
+// MARK: - Execution
+
+"execution_empty_placeholder_description" = "Run the agent to see execution history here";
+"execution_empty_placeholder_title" = "No Executions Yet";
+"execution_name_field_title" = "Name";
+"execution_result_section_header" = "Result";
+"execution_status_field_title" = "Status";
+
+// MARK: - Executions List
+
+"executions_list_title" = "Executions";
+
+// MARK: - Login
+
+"login_title" = "A Home for Agents";
+
+// MARK: - Tools Selection
+
+"tools_selection_all_tools_connected_placeholder_placeholder" = "Your agent is peaked with all available tools";
+"tools_selection_all_tools_connected_placeholder_title" = "All tools connected";
+"tools_selection_disconnected_section_header" = "Disconnected";
+"tools_selection_empty_placeholder_description" = "There are currently no tools available to add to your agent";
+"tools_selection_empty_placeholder_title" = "No Tools Available";
+"tools_selection_error_placeholder_title" = "Failed to Load Tools";
+"tools_selection_navigation_title" = "Select a Tool";
+"tools_selection_ready_to_connect_section_header" = "Ready to Connect";
+
+// MARK: - Standalone Strings
+
+"# %@" = "# %@";
+"Authentication" = "Authentication";
+"Create Custom Model" = "Create Custom Model";
+"Create New Model" = "Create New Model";
+"Custom" = "Custom";
+"Default" = "Default";
+"Model Configuration" = "Model Configuration";
+"OpenAI" = "OpenAI";
+"sk-..." = "sk-...";
+"Your API key will be stored securely on our servers." = "Your API key will be stored securely on our servers.";

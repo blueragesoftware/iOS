@@ -18,7 +18,7 @@ struct AgentsListScreenView: View {
             Button {
                 self.action()
             } label: {
-                Text("agents_list_create_new_agent_button_title")
+                Text(BluerageStrings.agentsListCreateNewAgentButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(UIColor.systemBackground.swiftUI)
                     .padding(.vertical, 15)
@@ -58,7 +58,7 @@ struct AgentsListScreenView: View {
                         }
                     }
                 }
-                .navigationTitle("agents_list_navigation_title")
+                .navigationTitle(BluerageStrings.agentsListNavigationTitle)
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .errorAlert(error: self.viewModel.state.alertError) {

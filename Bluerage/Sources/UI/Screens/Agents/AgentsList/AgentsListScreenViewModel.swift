@@ -62,13 +62,13 @@ final class AgentsListScreenViewModel {
             var title: String {
                 switch self {
                 case .loading:
-                    "common_loading".localized
+                    BluerageStrings.commonLoading
                 case .loaded:
-                    "common_loaded".localized
+                    BluerageStrings.commonLoaded
                 case .error:
-                    "common_error".localized
+                    BluerageStrings.commonError
                 case .empty:
-                    "common_empty".localized
+                    BluerageStrings.commonEmpty
                 }
             }
         }

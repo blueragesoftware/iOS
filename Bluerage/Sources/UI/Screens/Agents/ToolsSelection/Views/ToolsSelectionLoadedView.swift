@@ -61,7 +61,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("tools_selection_ready_to_connect_section_header")
+                    Text(BluerageStrings.toolsSelectionReadyToConnectSectionHeader)
                 }
             }
 
@@ -75,7 +75,7 @@ struct ToolsSelectionLoadedView: View {
                         }
                     }
                 } header: {
-                    Text("tools_selection_disconnected_section_header")
+                    Text(BluerageStrings.toolsSelectionDisconnectedSectionHeader)
                 }
             }
         }

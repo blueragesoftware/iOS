@@ -19,7 +19,7 @@ struct ToolsSelectionScreenView: View {
     var body: some View {
         ManagedNavigationStack { navigator in
             self.content(with: navigator)
-                .navigationTitle("tools_selection_navigation_title")
+                .navigationTitle(BluerageStrings.toolsSelectionNavigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(ToolsSelectionDestinations.self)
         }
@@ -70,16 +70,16 @@ struct ToolsSelectionScreenView: View {
             )
         case .empty:
             PlaceholderView(imageName: BluerageAsset.Assets.toolsPlaceholder100.name,
-                            title: "tools_selection_empty_placeholder_title",
-                            description: "tools_selection_empty_placeholder_description")
+                            title: BluerageStrings.toolsSelectionEmptyPlaceholderTitle,
+                            description: BluerageStrings.toolsSelectionEmptyPlaceholderDescription)
         case .error:
-            PlaceholderView.error(title: "tools_selection_error_placeholder_title") {
+            PlaceholderView.error(title: BluerageStrings.toolsSelectionErrorPlaceholderTitle) {
                 self.viewModel.load()
             }
         case .allToolsUsed:
             PlaceholderView(imageName: BluerageAsset.Assets.toolsPlaceholder100.name,
-                            title: "All tools connected",
-                            description: "tools_selection_all_tools_connected_placeholder_placeholder")
+                            title: BluerageStrings.toolsSelectionAllToolsConnectedPlaceholderTitle,
+                            description: BluerageStrings.toolsSelectionAllToolsConnectedPlaceholderPlaceholder)
         }
     }
 }

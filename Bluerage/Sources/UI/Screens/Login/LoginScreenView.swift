@@ -13,7 +13,7 @@ struct LoginScreenView: View {
 
     var body: some View {
         VStack {
-            Text("login_title")
+            Text(BluerageStrings.loginTitle)
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
                 .font(BluerageFontFamily.InstrumentSerif.regular.swiftUIFont(size: 60))

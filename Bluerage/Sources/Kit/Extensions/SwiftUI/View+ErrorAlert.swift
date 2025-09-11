@@ -24,7 +24,7 @@ private struct LocalizedErrorProxy: LocalizedError {
 extension View {
 
     func errorAlert(error: Binding<Error?>,
-                    buttonTitle: String = "common_ok".localized) -> some View {
+                    buttonTitle: String = BluerageStrings.commonOk) -> some View {
         return errorAlert(error: error.wrappedValue, buttonTitle: buttonTitle) {
             error.wrappedValue = nil
         }
@@ -32,7 +32,7 @@ extension View {
 
     @ViewBuilder
     func errorAlert(error: Error?,
-                    buttonTitle: String = "common_ok".localized,
+                    buttonTitle: String = BluerageStrings.commonOk,
                     action: @escaping () -> Void) -> some View {
         let localizedError = LocalizedErrorProxy(error: error)
 
@@ -46,7 +46,7 @@ extension View {
                 Text(error.recoverySuggestion ?? error.localizedDescription)
             }
         } else {
-            alert("common_error".localized,
+            alert(BluerageStrings.commonError,
                   isPresented: .constant(error != nil),
                   presenting: error) { _ in
                 Button(buttonTitle) {

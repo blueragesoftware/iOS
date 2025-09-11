@@ -28,9 +28,9 @@ struct AgentLoadedStepsSectionView: View {
         Section {
             ForEach(Array(zip(self.steps.indices, self.steps)), id: \.1.id) { index, _ in
                 HStack {
-                    let placeholder: LocalizedStringKey = self.isLastItem(index: index)
-                    ? "agent_new_step_placeholder"
-                    : "agent_step_placeholder"
+                    let placeholder: String = self.isLastItem(index: index)
+                    ? BluerageStrings.agentNewStepPlaceholder
+                    : BluerageStrings.agentStepPlaceholder
 
                     TextField(placeholder,
                              text: Binding(
@@ -73,9 +73,9 @@ struct AgentLoadedStepsSectionView: View {
                 self.onMove(from, to)
             }
         } header: {
-            Text("agent_steps_section_header")
+            Text(BluerageStrings.agentStepsSectionHeader)
         } footer: {
-            Text("agent_section_footer")
+            Text(BluerageStrings.agentSectionFooter)
         }
     }
 
