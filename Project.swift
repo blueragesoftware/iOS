@@ -66,7 +66,7 @@ fi
             settings: .settings(
                 base: ["ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO",
                        "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"]
-                    .currentProjectVersion("3")
+                    .currentProjectVersion("9999")
                     .marketingVersion("1.0.0"),
                 configurations: [
                     .debug(
