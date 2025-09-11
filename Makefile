@@ -1,34 +1,30 @@
 # Default target
 all: setup
 
-# Install SwiftLint using Homebrew
-install-swiftlint:
-	@echo "Installing SwiftLint..."
+# Check SwiftLint installation
+check-swiftlint:
+	@echo "Checking SwiftLint..."
 	@if ! command -v swiftlint &> /dev/null; then \
-		brew install swiftlint; \
+		echo "❌ SwiftLint is not installed. Please install it with: brew install swiftlint"; \
+		exit 1; \
 	else \
-		echo "SwiftLint is already installed"; \
+		echo "✅ SwiftLint is installed"; \
 	fi
 
-# Install pre-commit hooks
-install-precommit:
-	@echo "Installing pre-commit hooks..."
-	@if ! command -v pipx &> /dev/null; then \
-		echo "pipx not found. Installing pipx..."; \
-		brew install pipx; \
-		pipx ensurepath; \
-	else \
-		echo "pipx is already installed"; \
-	fi
+# Check and setup pre-commit hooks
+check-precommit:
+	@echo "Checking pre-commit..."
 	@if ! command -v pre-commit &> /dev/null; then \
-		pipx install pre-commit; \
+		echo "❌ pre-commit is not installed. Please install it with: pipx install pre-commit"; \
+		exit 1; \
 	else \
-		echo "pre-commit is already installed"; \
+		echo "✅ pre-commit is installed"; \
 	fi
+	@echo "Installing pre-commit hooks..."
 	@pre-commit install
 
-# Main setup target that runs all installation steps
-setup: install-swiftlint install-precommit
+# Main setup target that checks dependencies and sets up hooks
+setup: check-swiftlint check-precommit
 	@echo "Setup completed successfully! 🚀"
 
-.PHONY: all setup install-swiftlint install-precommit
+.PHONY: all setup check-swiftlint check-precommit

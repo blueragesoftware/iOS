@@ -1,6 +1,16 @@
-# Bluerage
+# Bluerage iOS
 
-Mobile first AI-powered automation that thinks and acts for you. Create workflows that run in the background, connecting your favorite tools and services.
+<p align="center">
+  <img src="docs/images/cover.png" alt="Bluerage - Where it begins" width="80%" height />
+</p>
+
+Mobile first AI-powered automation that thinks and acts for you. Create workflows that run in the background, connecting your favorite tools and services - all from your phone.
+
+## Download
+
+<a href="https://testflight.apple.com/join/A733K2pz">
+  <img src="docs/images/testflight.png" alt="Download on TestFlight" width="150" />
+</a>
 
 ## What is Bluerage?
 
@@ -30,19 +40,19 @@ Go from idea to working automation in minutes. The intuitive interface makes it 
 
 ### Creating an Agent
 
-1. **Define Your Goal**  
+1. **Define Agent's Goal**  
    Start with a clear objective written in plain language. The AI understands what you want to achieve.
 
 2. **Choose Your Model**  
-   Select from available AI models or define a custom one to power your agent's intelligence and decision-making.
+   Select from available AI models or define a custom one to power your agent.
 
 3. **Connect Tools**  
-   Add the tools your agent needs - APIs, services, and integrations that enable real-world actions.
+   Add the tools your agent needs - integrations that enable real-world actions.
 
 4. **Design Workflow Steps**  
-   Outline the process with simple steps. The AI fills in the details and handles edge cases.
+   Outline the process with simple steps. No need to pass parameters between steps (nodes).
 
-5. **Deploy and Run**  
+5. **Run**  
    Launch immediately or schedule for later. Your agent works autonomously in the cloud.
 
 ## Getting Started
@@ -51,14 +61,29 @@ Ready to build and run Bluerage locally? Check out our [Contributing Guide](docs
 
 ## Community
 
-- Follow us on X: [@blueragehq](https://x.com/blueragehq)
+- X: [@blueragehq](https://x.com/blueragehq)
 - Discord: [Bluerage Channel](https://threads.com/blueragehq)
 - Website: [bluerage.software](https://bluerage.software)
-- Feedback: [ertem@bluerage.software](mailto:ertem@bluerage.software)
+- Feedback: [feedback@bluerage.software](mailto:feedback@bluerage.software)
 
 ## Related Projects
 
-- [Bluerage Backend](https://github.com/blueragesoftware/backend) - Convex backend for clients
+- [Bluerage Backend](https://github.com/blueragesoftware/backend)
+
+## Acknowledgments 
+
+- [Tuist](https://github.com/tuist/tuist)
+- [Convex Swift](https://github.com/blueragesoftware/convex-swift)
+- [Factory](https://github.com/hmlongco/Factory)
+- [Nuke](https://github.com/kean/Nuke)
+- [PinLayout](https://github.com/layoutBox/PinLayout)
+- [PostHog iOS](https://github.com/PostHog/posthog-ios)
+- [Sentry Cocoa](https://github.com/getsentry/sentry-cocoa)
+- [SwiftUI Shimmer](https://github.com/markiv/SwiftUI-Shimmer)
+- [Clerk iOS](https://github.com/blueragesoftware/clerk-ios)
+- [SVGView](https://github.com/exyte/SVGView)
+- [Swift Markdown UI](https://github.com/gonzalezreal/swift-markdown-ui)
+- [Navigator](https://github.com/hmlongco/Navigator)
 
 ## License
 
