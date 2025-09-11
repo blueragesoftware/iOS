@@ -27,7 +27,10 @@ let project = Project(
                 ]
             ),
             sources: ["Bluerage/Sources/**"],
-            resources: ["Bluerage/Resources/**"],
+            resources: [
+                "Bluerage/Resources/**",
+                "Bluerage/Supporting Files/*.bundle"
+            ],
             entitlements: nil,
             scripts: [
                 .post(
