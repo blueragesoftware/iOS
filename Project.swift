@@ -64,21 +64,17 @@ fi
                 .external(name: "NavigatorUI")
             ],
             settings: .settings(
-                base: ["ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO"]
-                    .currentProjectVersion("1.0.0"),
+                base: ["ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "NO",
+                       "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"]
+                    .currentProjectVersion("3")
+                    .marketingVersion("1.0.0"),
                 configurations: [
                     .debug(
                         name: "Debug",
-                        settings: [
-                            "CODE_SIGN_ENTITLEMENTS": "entitlements/Debug.entitlements",
-                        ],
                         xcconfig: "./xcconfigs/Debug.xcconfig"
                     ),
                     .release(
                         name: "Release",
-                        settings: [
-                            "CODE_SIGN_ENTITLEMENTS": "entitlements/Release.entitlements",
-                        ],
                         xcconfig: "./xcconfigs/Release.xcconfig"
                     )
                 ]
@@ -86,8 +82,8 @@ fi
         )
     ],
     additionalFiles: [
-        "entitlements/Debug.entitlements",
-        "entitlements/Release.entitlements",
+        "entitlements/*.entitlements",
+        "entitlements/*.entitlements",
         "xcconfigs/Common.xcconfig",
         "xcconfigs/Debug.xcconfig",
         "xcconfigs/Release.xcconfig"
