@@ -1,5 +1,4 @@
 // MARK: - Agent
-
 "agent_about_section_header" = "About";
 "agent_add_a_tool_button_title" = "Add a Tool";
 "agent_error_placeholder_description" = "Try refreshing the page or come back later";
@@ -16,7 +15,6 @@
 "agent_tools_section_header" = "Tools";
 
 // MARK: - Agents List
-
 "agents_list_create_new_agent_button_title" = "Create new Agent";
 "agents_list_empty_action_button_title" = "Create Agent";
 "agents_list_empty_placeholder_description" = "Time to create your first one";
@@ -24,7 +22,6 @@
 "agents_list_navigation_title" = "Agents";
 
 // MARK: - Common
-
 "common_empty" = "Empty";
 "common_error" = "Error";
 "common_issue_happened" = "An issue happened";
@@ -34,25 +31,59 @@
 "common_open" = "Open";
 "common_refresh" = "Refresh";
 "common_resolve_issue_suggest" = "Try refreshing the page or come back later";
+"common_cancel" = "Cancel";
+
+// MARK: - Custom Models
+"custom_models_navigation_title" = "Custom Models";
+"custom_models_create_button_title" = "Create New Model";
+"custom_models_empty_title" = "No Custom Models";
+"custom_models_empty_description" = "Create your first custom model to get started with personalized AI experiences";
+"custom_models_empty_action_title" = "Create Custom Model";
+"custom_model_navigation_title" = "Custom Model";
+"custom_model_name_field_title" = "Model Name";
+"custom_model_provider_field_title" = "Provider";
+"custom_model_provider_openai" = "OpenAI";
+"custom_model_id_field_title" = "Model ID";
+"custom_model_base_url_field_title" = "Base URL";
+"custom_model_api_key_field_title" = "API Key";
+"custom_model_api_key_placeholder" = "sk-...";
+"custom_model_configuration_section_title" = "Model Configuration";
+"custom_model_authentication_section_title" = "Authentication";
+"custom_model_api_key_footer" = "Your API key will be stored securely on our servers.";
 
 // MARK: - Execution
-
 "execution_empty_placeholder_description" = "Run the agent to see execution history here";
 "execution_empty_placeholder_title" = "No Executions Yet";
 "execution_name_field_title" = "Name";
 "execution_result_section_header" = "Result";
 "execution_status_field_title" = "Status";
+"execution_state_registered" = "Registered";
+"execution_state_running" = "Running";
+"execution_state_error" = "Error";
+"execution_state_success" = "Success";
 
 // MARK: - Executions List
-
 "executions_list_title" = "Executions";
 
 // MARK: - Login
-
+"login_image_suggestion_prompt" = "If you have an idea what to place here - hit me up on";
 "login_title" = "A Home for Agents";
 
-// MARK: - Tools Selection
+// MARK: - Settings
+"settings_navigation_title" = "Settings";
+"settings_app_section_title" = "App";
+"settings_custom_models_title" = "Custom Models";
+"settings_community_section_title" = "Community";
+"settings_x_title" = "X";
+"settings_threads_title" = "Threads";
+"settings_discord_title" = "Discord";
+"settings_contact_support_title" = "Contact Support";
+"settings_danger_zone_section_title" = "Danger Zone";
+"settings_sign_out_title" = "Sign Out";
+"settings_delete_account_title" = "Delete Account";
+"settings_confirmation_title" = "Are you sure you want to %@?";
 
+// MARK: - Tools Selection
 "tools_selection_all_tools_connected_placeholder_placeholder" = "Your agent is peaked with all available tools";
 "tools_selection_all_tools_connected_placeholder_title" = "All tools connected";
 "tools_selection_disconnected_section_header" = "Disconnected";
@@ -61,16 +92,3 @@
 "tools_selection_error_placeholder_title" = "Failed to Load Tools";
 "tools_selection_navigation_title" = "Select a Tool";
 "tools_selection_ready_to_connect_section_header" = "Ready to Connect";
-
-// MARK: - Standalone Strings
-
-"# %@" = "# %@";
-"Authentication" = "Authentication";
-"Create Custom Model" = "Create Custom Model";
-"Create New Model" = "Create New Model";
-"Custom" = "Custom";
-"Default" = "Default";
-"Model Configuration" = "Model Configuration";
-"OpenAI" = "OpenAI";
-"sk-..." = "sk-...";
-"Your API key will be stored securely on our servers." = "Your API key will be stored securely on our servers.";

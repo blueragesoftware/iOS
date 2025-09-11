@@ -36,45 +36,45 @@ struct CustomModelEditSectionView: View {
 
     var body: some View {
         Section {
-            TextField("Model Name", text: self.$name)
+            TextField(BluerageStrings.customModelNameFieldTitle, text: self.$name)
                 .focused(self.isFocused)
                 .onChange(of: self.name) { _, newValue in
                     self.onUpdate((newValue, nil, nil, nil, nil))
                 }
 
-            Picker("Provider", selection: self.$provider) {
-                Text("OpenAI")
+            Picker(BluerageStrings.customModelProviderFieldTitle, selection: self.$provider) {
+                Text(BluerageStrings.customModelProviderOpenai)
                     .tag("openai")
             }
             .onChange(of: self.provider) { _, newValue in
                 self.onUpdate((nil, newValue, nil, nil, nil))
             }
 
-            TextField("Model ID", text: self.$modelId)
+            TextField(BluerageStrings.customModelIdFieldTitle, text: self.$modelId)
                 .focused(self.isFocused)
                 .onChange(of: self.modelId) { _, newValue in
                     self.onUpdate((nil, nil, newValue, nil, nil))
                 }
 
-            TextField("Base URL", text: self.$baseUrl)
+            TextField(BluerageStrings.customModelBaseUrlFieldTitle, text: self.$baseUrl)
                 .focused(self.isFocused)
                 .onChange(of: self.baseUrl) { _, newValue in
                     self.onUpdate((nil, nil, nil, nil, newValue.isEmpty ? nil : newValue))
                 }
         } header: {
-            Text("Model Configuration")
+            Text(BluerageStrings.customModelConfigurationSectionTitle)
         }
 
         Section {
-            SecureField("API Key", text: self.$encryptedApiKey, prompt: Text("sk-..."))
+            SecureField(BluerageStrings.customModelApiKeyFieldTitle, text: self.$encryptedApiKey, prompt: Text(BluerageStrings.customModelApiKeyPlaceholder))
                 .focused(self.isFocused)
                 .onChange(of: self.encryptedApiKey) { _, newValue in
                     self.onUpdate((nil, nil, nil, newValue, nil))
                 }
         } header: {
-            Text("Authentication")
+            Text(BluerageStrings.customModelAuthenticationSectionTitle)
         } footer: {
-            Text("Your API key will be stored securely on our servers.")
+            Text(BluerageStrings.customModelApiKeyFooter)
         }
     }
 

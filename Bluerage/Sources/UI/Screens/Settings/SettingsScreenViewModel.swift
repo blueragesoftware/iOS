@@ -19,16 +19,16 @@ final class SettingsScreenViewModel {
         weak var weakSelf: SettingsScreenViewModel?
 
         self.sections = [
-            SettingSection(title: "App", rows: [
-                SettingRow(title: "Custom Models",
+            SettingSection(title: BluerageStrings.settingsAppSectionTitle, rows: [
+                SettingRow(title: BluerageStrings.settingsCustomModelsTitle,
                            icon: .system(named: "brain.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
                            type: .navigation(destination: .customModels),
                            actionType: .inApp)
             ]),
-            SettingSection(title: "Community", rows: [
-                SettingRow(title: "X",
+            SettingSection(title: BluerageStrings.settingsCommunitySectionTitle, rows: [
+                SettingRow(title: BluerageStrings.settingsXTitle,
                            icon: .image(named: BluerageAsset.Assets.xIcon.name,
                                         size: CGSize(width: 13, height: 16)),
                            type: .default(action: {
@@ -36,7 +36,7 @@ final class SettingsScreenViewModel {
                                await UIApplication.shared.open(url)
                            }),
                            actionType: .redirect),
-                SettingRow(title: "Threads",
+                SettingRow(title: BluerageStrings.settingsThreadsTitle,
                            icon: .image(named: BluerageAsset.Assets.threadsIcon.name,
                                         size: CGSize(width: 16, height: 16)),
                            type: .default(action: {
@@ -44,7 +44,7 @@ final class SettingsScreenViewModel {
                                await UIApplication.shared.open(url)
                            }),
                            actionType: .redirect),
-                SettingRow(title: "Discord",
+                SettingRow(title: BluerageStrings.settingsDiscordTitle,
                            icon: .image(named: BluerageAsset.Assets.discordIcon.name,
                                         size: CGSize(width: 20, height: 16)),
                            type: .default(action: {
@@ -52,7 +52,7 @@ final class SettingsScreenViewModel {
                                await UIApplication.shared.open(url)
                            }),
                            actionType: .redirect),
-                SettingRow(title: "Contact Support",
+                SettingRow(title: BluerageStrings.settingsContactSupportTitle,
                            icon: .system(named: "envelope.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
@@ -62,8 +62,8 @@ final class SettingsScreenViewModel {
                            }),
                            actionType: .redirect)
             ]),
-            SettingSection(title: "Danger Zone", rows: [
-                SettingRow(title: "Sign Out",
+            SettingSection(title: BluerageStrings.settingsDangerZoneSectionTitle, rows: [
+                SettingRow(title: BluerageStrings.settingsSignOutTitle,
                            icon: .system(named: "figure.walk",
                                          fontSize: 15,
                                          fontWeight: .semibold),
@@ -71,7 +71,7 @@ final class SettingsScreenViewModel {
                                await weakSelf?.authSession.signOut()
                            }),
                            actionType: .inApp),
-                SettingRow(title: "Delete Account",
+                SettingRow(title: BluerageStrings.settingsDeleteAccountTitle,
                            icon: .system(named: "trash.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),

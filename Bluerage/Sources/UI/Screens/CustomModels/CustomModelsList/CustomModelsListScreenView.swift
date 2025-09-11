@@ -18,7 +18,7 @@ struct CustomModelsListScreenView: View {
             Button {
                 self.action()
             } label: {
-                Text("Create New Model")
+                Text(BluerageStrings.customModelsCreateButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(UIColor.systemBackground.swiftUI)
                     .padding(.vertical, 15)
@@ -50,7 +50,7 @@ struct CustomModelsListScreenView: View {
             .onFirstAppear {
                 self.viewModel.connect()
             }
-            .navigationTitle("Custom Models")
+            .navigationTitle(BluerageStrings.customModelsNavigationTitle)
             .background(UIColor.systemGroupedBackground.swiftUI)
             .errorAlert(error: self.viewModel.state.alertError) {
                 self.viewModel.resetAlertError()

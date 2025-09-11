@@ -26,13 +26,13 @@ struct ExecutionTask: Identifiable, Decodable, Equatable, Hashable {
         var title: String {
             switch self {
             case .registered:
-                return "Registered"
+                return BluerageStrings.executionStateRegistered
             case .running:
-                return "Running"
+                return BluerageStrings.executionStateRunning
             case .error:
-                return "Error"
+                return BluerageStrings.executionStateError
             case .success:
-                return "Success"
+                return BluerageStrings.executionStateSuccess
             }
         }
 

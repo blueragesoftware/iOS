@@ -13,11 +13,11 @@ struct EmptyCustomModelsListView: View {
             Spacer().containerRelativeFrame([.horizontal, .vertical])
 
             PlaceholderView(imageName: BluerageAsset.Assets.emptyPlaceholderIcon100.name,
-                            title: "No Custom Models",
-                            description: "Create your first custom model to get started with personalized AI experiences") {
+                            title: BluerageStrings.customModelsEmptyTitle,
+                            description: BluerageStrings.customModelsEmptyDescription) {
                 self.action()
             } buttonLabel: {
-                Text("Create Custom Model")
+                Text(BluerageStrings.customModelsEmptyActionTitle)
                     .foregroundStyle(.primary)
                     .font(.system(size: 15, weight: .semibold))
                     .padding(.vertical, 8)

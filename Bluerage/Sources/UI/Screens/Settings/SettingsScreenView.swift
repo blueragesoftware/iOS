@@ -61,7 +61,7 @@ struct SettingsScreenView: View {
             .navigationDestination(SettingsDestinations.self)
             .scrollIndicators(.hidden)
             .background(UIColor.systemGroupedBackground.swiftUI)
-            .navigationTitle("Settings")
+            .navigationTitle(BluerageStrings.settingsNavigationTitle)
             .navigationBarTitleDisplayMode(.inline)
         }
         .postHogScreenView("SettingsScreenView")
@@ -86,7 +86,7 @@ struct SettingsScreenView: View {
                 self.confirmationConfig = nil
             }
 
-            Button("Cancel", role: .cancel) {
+            Button(BluerageStrings.commonCancel, role: .cancel) {
                 config.continuation.resume(returning: false)
                 self.confirmationConfig = nil
             }
@@ -96,7 +96,7 @@ struct SettingsScreenView: View {
     private func showConfirmationDialog(for actionTitle: String) async -> Bool {
         return await withCheckedContinuation { continuation in
             self.confirmationConfig = ConfirmationDialogConfig(
-                title: "Are you sure you want to \(actionTitle)?",
+                title: BluerageStrings.settingsConfirmationTitle(actionTitle),
                 destructiveText: actionTitle,
                 continuation: continuation
             )
