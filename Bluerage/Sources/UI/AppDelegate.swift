@@ -28,6 +28,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
         self.setUpNuke()
 
+        self.setUpBarButtonTintColor()
+
         return true
     }
 
@@ -71,6 +73,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     private func setUpNuke() {
         ImageDecoders.registerSVGDecoder()
+    }
+
+    private func setUpBarButtonTintColor() {
+        UIBarButtonItem.appearance().tintColor = .label
     }
 
 }

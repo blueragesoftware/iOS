@@ -1,7 +1,7 @@
 # Bluerage iOS
 
 <p align="center">
-  <img src="docs/images/cover.png" alt="Bluerage - Where it begins" width="80%" height />
+  <img src="docs/images/сover.png" alt="Bluerage - Where it begins" width="70%" height />
 </p>
 
 Mobile first AI-powered automation that thinks and acts for you. Create workflows that run in the background, connecting your favorite tools and services - all from your phone.

@@ -18,7 +18,7 @@ struct BluerageApp: App {
         WindowGroup {
             RootScreenView()
                 .navigationRoot(self.navigator)
-                .accentColor(.primary)
+                .tint(.primary)
         }
     }
 
