@@ -1,6 +1,0 @@
-repos:
-    - repo: https://github.com/realm/SwiftLint
-      rev: 0.57.1
-      hooks:
-          - id: swiftlint
-            entry: swiftlint ./Bluerage/ --fix --strict

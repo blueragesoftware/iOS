@@ -1,0 +1,19 @@
+#!/bin/sh
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+if ! command -v swiftlint &> /dev/null; then
+    echo "SwiftLint is not installed. Please install it using 'brew install swiftlint'"
+    exit 1
+fi
+
+echo "Running SwiftLint..."
+swiftlint "$ROOT_DIR/Bluerage/" --fix --strict
+
+if [ $? -ne 0 ]; then
+    echo "SwiftLint found issues. Please stage them before committing."
+    exit 1
+fi
+
+echo "SwiftLint checks passed."
+exit 0

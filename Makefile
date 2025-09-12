@@ -11,17 +11,12 @@ check-swiftlint:
 		echo "✅ SwiftLint is installed"; \
 	fi
 
-# Check and setup pre-commit hooks
-check-precommit:
-	@echo "Checking pre-commit..."
-	@if ! command -v pre-commit &> /dev/null; then \
-		echo "❌ pre-commit is not installed. Please install it with: pipx install pre-commit"; \
-		exit 1; \
-	else \
-		echo "✅ pre-commit is installed"; \
-	fi
-	@echo "Installing pre-commit hooks..."
-	@pre-commit install
+# Install git hooks
+install-git-hooks:
+	@echo "Installing git hooks..."
+	@cd "$(shell git rev-parse --show-toplevel)" && \
+		rsync -a scripts/git-hooks/ "$$(git rev-parse --git-path hooks)/"
+	@echo "✅ Git hooks installed successfully!"
 
 # Check swift-package-list installation
 check-swift-package-list:
@@ -38,7 +33,7 @@ check-swift-package-list:
 # Generate Settings.bundle with package licenses
 generate-licenses: check-swift-package-list
 	@echo "Generating Settings.bundle with package licenses..."
-	swift-package-list Tuist/Package.swift --custom-source-packages-path Tuist/.build --output-type settings-bundle --requires-license --output-path "Supporting\ Files/"
+	swift-package-list Tuist/Package.swift --custom-source-packages-path Tuist/.build --output-type settings-bundle --requires-license --output-path "Bluerage/Supporting\ Files/"
 	@echo "✅ Generated Settings.bundle at Bluerage/Supporting Files/"
 
 # Install Tuist dependencies
@@ -54,7 +49,7 @@ tuist-generate:
 	@echo "✅ Xcode project generated"
 
 # Main setup target that checks dependencies and sets up hooks
-setup: check-swiftlint check-precommit tuist-install tuist-generate
+setup: check-swiftlint install-git-hooks tuist-install tuist-generate
 	@echo "Setup completed successfully! 🚀"
 
-.PHONY: all setup check-swiftlint check-precommit check-swift-package-list generate-licenses tuist-install tuist-generate
+.PHONY: all setup check-swiftlint install-git-hooks check-swift-package-list generate-licenses tuist-install tuist-generate
