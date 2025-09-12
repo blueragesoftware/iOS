@@ -90,7 +90,6 @@ let project = Project(
   ],
   additionalFiles: [
     "entitlements/*.entitlements",
-    "entitlements/*.entitlements",
     "xcconfigs/Common.xcconfig",
     "xcconfigs/Debug.xcconfig",
     "xcconfigs/Release.xcconfig",
