@@ -80,8 +80,7 @@ simple to draft, test, and refine your agents without any coding knowledge.
 
 ## Getting Started
 
-Ready to build and run Bluerage locally? Check out our
-[Contributing Guide](docs/CONTRIBUTING.md) for detailed setup instructions.
+Ready to build and run Bluerage locally? Check out our [Local Development Guide](docs/local-development.md) for detailed setup instructions.
 
 ## Localization
 
