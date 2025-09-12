@@ -13,7 +13,7 @@ import PackageDescription
 #endif
 
 let package = Package(
-    name: "AgentOS",
+    name: "Bluerage",
     dependencies: [
         .package(url: "https://github.com/blueragesoftware/convex-swift", branch: "main"),
         .package(url: "https://github.com/hmlongco/Factory", from: "2.5.3"),
