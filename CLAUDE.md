@@ -3,10 +3,10 @@ code in this repository.
 
 # Project description
 
-We creating the next generation of automation through an AI agents execution
+We are creating the next generation of automation through an AI agents execution
 environment. We believe that instead of complex programming, users simply
 describe what they want accomplished, and our platform handles the rest. A
-declartive approach. Anyone can create AI agents by connecting their existing
+declarative approach. Anyone can create AI agents by connecting their existing
 applications via tools and assembling a workflow. These agents run automatically
 based on schedules or triggers, and can be easily shared. Our iOS app makes it
 seamless to share content with your agents and trigger workflows on-the-go. We

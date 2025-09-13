@@ -31,7 +31,7 @@ struct Env {
         }
     }()
 
-    let POSTHOG_HOST: String = {
+    private(set) lazy var POSTHOG_HOST: String = {
         do {
             return try Self.value(for: "POSTHOG_HOST")
         } catch {
@@ -39,7 +39,7 @@ struct Env {
         }
     }()
 
-    let SENTRY_DSN: String = {
+    private(set) lazy var SENTRY_DSN: String = {
         do {
             return try Self.value(for: "SENTRY_DSN")
         } catch {
@@ -47,7 +47,7 @@ struct Env {
         }
     }()
 
-    let CONVEX_DEPLOYMENT_URL: String = {
+    private(set) lazy var CONVEX_DEPLOYMENT_URL: String = {
         do {
             return try Self.value(for: "CONVEX_DEPLOYMENT_URL")
         } catch {
@@ -55,7 +55,7 @@ struct Env {
         }
     }()
 
-    let CLERK_PUBLISHABLE_KEY: String = {
+    private(set) lazy var CLERK_PUBLISHABLE_KEY: String = {
         do {
             return try Self.value(for: "CLERK_PUBLISHABLE_KEY")
         } catch {

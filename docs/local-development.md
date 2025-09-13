@@ -6,7 +6,9 @@ This guide covers how to setup the Bluerage iOS app for local development.
 <details>
 <summary>Expand to see</summary>
 
-### Convex
+### Required
+
+#### Convex
 
 - `CONVEX_DEPLOYMENT_URL`: Your Convex deployment URL (automatically generated when you
   create a deployment, found in Convex dashboard)
@@ -15,7 +17,7 @@ This guide covers how to setup the Bluerage iOS app for local development.
 1. Create a new project at [Convex Dashboard](https://dashboard.convex.dev/)
 2. Copy your deployment URL to the `CONVEX_DEPLOYMENT_URL` environment variable
 
-### Clerk
+#### Clerk
 
 - `CLERK_FRONTEND_URL`: Your Clerk frontend API URL (found in Clerk dashboard under API Keys)
 - `CLERK_PUBLISHABLE_KEY`: Your Clerk publishable key for client-side authentication (found in Clerk dashboard under API Keys)
@@ -26,7 +28,9 @@ This guide covers how to setup the Bluerage iOS app for local development.
 3. Copy your Frontend API URL to `CLERK_FRONTEND_URL`
 4. Copy your Publishable Key to `CLERK_PUBLISHABLE_KEY`
 
-### PostHog
+### Optional
+
+#### PostHog
 
 - `POSTHOG_API_KEY`: Your PostHog project API key (sign up at
   https://posthog.com/)
@@ -38,7 +42,7 @@ This guide covers how to setup the Bluerage iOS app for local development.
 2. Create a new project and copy your API key to `POSTHOG_API_KEY`
 3. Set the appropriate host URL for your region in `POSTHOG_HOST` (usually `https://app.posthog.com` or `https://us.i.posthog.com`)
 
-### Sentry
+#### Sentry
 
 - `SENTRY_DSN`: Your Sentry Data Source Name for error tracking (obtained from Sentry project settings after creating a project at https://sentry.io/)
 
@@ -47,6 +51,13 @@ This guide covers how to setup the Bluerage iOS app for local development.
 2. Create a new project and copy your DSN to `SENTRY_DSN`
 
 </details>
+
+## Requirements
+
+- **Xcode**: 15.0+
+- **iOS SDK**: 17.0+
+- **Tuist**: 4.0+
+- **SwiftLint**: 0.61.0+
 
 ## Setup Instructions
 
