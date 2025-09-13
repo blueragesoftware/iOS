@@ -67,6 +67,7 @@ let project = Project(
         .external(name: "MarkdownUI"),
         .external(name: "SVGView"),
         .external(name: "NavigatorUI"),
+        .external(name: "SwiftUIIntrospect")
       ],
       settings: .settings(
         base: [

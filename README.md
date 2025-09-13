@@ -112,6 +112,7 @@ Bluerage is currently localized in the following languages:
 - [Swift Markdown UI](https://github.com/gonzalezreal/swift-markdown-ui)
 - [Navigator](https://github.com/hmlongco/Navigator)
 - [Swift Package List](https://github.com/FelixHerrmann/swift-package-list)
+- [Swift Introspect](https://github.com/siteline/swiftui-introspect)
 
 ## Community
 

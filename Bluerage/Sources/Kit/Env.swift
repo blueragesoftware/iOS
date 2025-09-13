@@ -1,6 +1,6 @@
 import Foundation
 
-struct Env {
+final class Env {
 
     private enum Error: Swift.Error {
         case missingKey(String)

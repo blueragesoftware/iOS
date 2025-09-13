@@ -33,7 +33,7 @@ check-swift-package-list:
 # Generate Settings.bundle with package licenses
 generate-licenses: check-swift-package-list
 	@echo "Generating Settings.bundle with package licenses..."
-	swift-package-list Tuist/Package.swift --custom-source-packages-path Tuist/.build --output-type settings-bundle --requires-license --output-path "Bluerage/Supporting\ Files/"
+	swift-package-list Tuist/Package.swift --custom-source-packages-path Tuist/.build --output-type settings-bundle --requires-license --output-path "Bluerage/Supporting Files/"
 	@echo "✅ Generated Settings.bundle at Bluerage/Supporting Files/"
 
 # Install Tuist dependencies

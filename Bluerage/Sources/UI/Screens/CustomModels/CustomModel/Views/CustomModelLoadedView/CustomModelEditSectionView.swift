@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIIntrospect
 
 struct CustomModelEditSectionView: View {
 
@@ -66,11 +67,17 @@ struct CustomModelEditSectionView: View {
         }
 
         Section {
-            SecureField(BluerageStrings.customModelApiKeyFieldTitle, text: self.$encryptedApiKey, prompt: Text(BluerageStrings.customModelApiKeyPlaceholder))
-                .focused(self.isFocused)
-                .onChange(of: self.encryptedApiKey) { _, newValue in
-                    self.onUpdate((nil, nil, nil, newValue, nil))
-                }
+            SecureField(BluerageStrings.customModelApiKeyFieldTitle,
+                        text: self.$encryptedApiKey,
+                        prompt: Text(BluerageStrings.customModelApiKeyPlaceholder))
+            .introspect(.secureField, on: .iOS(.v17, .v18)) { secureField in
+                secureField.clearButtonMode = .whileEditing
+                secureField.clearsOnInsertion = true
+            }
+            .focused(self.isFocused)
+            .onChange(of: self.encryptedApiKey) { _, newValue in
+                self.onUpdate((nil, nil, nil, newValue, nil))
+            }
         } header: {
             Text(BluerageStrings.customModelAuthenticationSectionTitle)
         } footer: {
