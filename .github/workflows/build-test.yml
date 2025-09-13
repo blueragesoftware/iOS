@@ -20,13 +20,16 @@ jobs:
       - uses: jdx/mise-action@v2  
           
       - name: Tuist Generate
-          run: tuist generate
+          run: 
+            tuist generate
           env:
             TUIST_BUNDLE_ID: com.bluerage.ci
             TUIST_SENTRY_ORG: bluerage-ci
         
       - name: Tuist Install
-          run: tuist install
+          run: 
+            tuist install
 
       - name: Tuist Build
-          run: tuist build
+          run: 
+            tuist build
