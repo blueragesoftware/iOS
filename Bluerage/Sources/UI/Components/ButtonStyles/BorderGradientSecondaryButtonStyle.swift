@@ -17,7 +17,7 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
                 .glassEffect(.regular.interactive())
         } else {
             configuration.label
-                .background{
+                .background {
                     Capsule()
                         .fill(UIColor.systemGray5.swiftUI)
                         .strokeBorder(

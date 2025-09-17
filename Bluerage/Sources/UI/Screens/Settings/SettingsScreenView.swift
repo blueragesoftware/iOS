@@ -71,7 +71,7 @@ struct SettingsScreenView: View {
                 self.confirmationConfig = nil
             }
         }
-        
+
     }
 
     private func showConfirmationDialog(for actionTitle: String) async -> Bool {
