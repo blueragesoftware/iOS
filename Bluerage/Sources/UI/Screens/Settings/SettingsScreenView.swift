@@ -22,41 +22,21 @@ struct SettingsScreenView: View {
 
     var body: some View {
         ManagedNavigationStack { navigator in
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(self.viewModel.sections) { section in
-                        Section {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 28)
-                                    .fill(UIColor.systemGray6.swiftUI)
-                                    .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
-
-                                VStack(alignment: .leading, spacing: 14) {
-                                    ForEach(section.rows) { row in
-                                        SettingCellView(row: row) { actionTitle in
-                                            return await self.showConfirmationDialog(for: actionTitle)
-                                        }
-                                        .environment(\.navigator, navigator)
-                                    }
-                                }
-                                .padding(.vertical, 16)
-                                .padding(.horizontal, 20)
+            List {
+                ForEach(self.viewModel.sections) { section in
+                    Section {
+                        ForEach(section.rows) { row in
+                            SettingCellView(row: row) { actionTitle in
+                                return await self.showConfirmationDialog(for: actionTitle)
                             }
-                            .padding(.top, 8)
-                            .padding(.bottom, 24)
-                        } header: {
-                            HStack {
-                                Text(section.title)
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundStyle(.primary)
-                                    .padding(.leading, 24)
-
-                                Spacer()
-                            }
+                            .environment(\.navigator, navigator)
                         }
+                    } header: {
+                        Text(section.title)
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.primary)
                     }
                 }
-                .padding(.horizontal, 20)
             }
             .navigationDestination(SettingsDestinations.self)
             .scrollIndicators(.hidden)
@@ -91,6 +71,7 @@ struct SettingsScreenView: View {
                 self.confirmationConfig = nil
             }
         }
+        
     }
 
     private func showConfirmationDialog(for actionTitle: String) async -> Bool {

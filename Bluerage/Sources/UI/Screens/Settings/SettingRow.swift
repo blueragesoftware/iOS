@@ -28,18 +28,22 @@ struct SettingRow: Identifiable, Hashable, Equatable {
 
     let title: String
 
+    let icon: Icon
+
+    let fillColor: Color
+
     let type: `Type`
 
     let actionType: ActionType
 
-    let icon: Icon
-
     init(title: String,
          icon: Icon,
+         fillColor: Color,
          type: `Type`,
          actionType: ActionType) {
         self.title = title
         self.icon = icon
+        self.fillColor = fillColor
         self.type = type
         self.actionType = actionType
     }

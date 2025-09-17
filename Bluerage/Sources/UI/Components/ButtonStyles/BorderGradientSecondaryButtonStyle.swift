@@ -12,24 +12,29 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
     }
 
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .background {
-                Capsule()
-                    .fill(UIColor.systemGray5.swiftUI)
-                    .strokeBorder(
-                        LinearGradient(
-                            colors: [
-                                .white.opacity(0.64),
-                                .white.opacity(0.24)
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        ).opacity(0.24),
-                        lineWidth: 1
-                    )
-            }
-            .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
-            .animation(self.animation, value: configuration.isPressed)
+        if #available(iOS 26.0, *) {
+            configuration.label
+                .glassEffect(.regular.interactive())
+        } else {
+            configuration.label
+                .background{
+                    Capsule()
+                        .fill(UIColor.systemGray5.swiftUI)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [
+                                    .white.opacity(0.64),
+                                    .white.opacity(0.24)
+                                ],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            ).opacity(0.24),
+                            lineWidth: 1
+                        )
+                        .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
+                        .animation(self.animation, value: configuration.isPressed)
+                }
+        }
     }
 
 }

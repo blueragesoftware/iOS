@@ -70,7 +70,7 @@ struct CustomModelEditSectionView: View {
             SecureField(BluerageStrings.customModelApiKeyFieldTitle,
                         text: self.$encryptedApiKey,
                         prompt: Text(BluerageStrings.customModelApiKeyPlaceholder))
-            .introspect(.secureField, on: .iOS(.v17, .v18)) { secureField in
+            .introspect(.secureField, on: .iOS(.v17, .v18, .v26)) { secureField in
                 secureField.clearButtonMode = .whileEditing
                 secureField.clearsOnInsertion = true
             }

@@ -24,6 +24,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "brain.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
+                           fillColor: .gray,
                            type: .navigation(destination: .customModels),
                            actionType: .inApp)
             ]),
@@ -31,6 +32,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsXTitle,
                            icon: .image(named: BluerageAsset.Assets.xIcon.name,
                                         size: CGSize(width: 13, height: 16)),
+                           fillColor: .black,
                            type: .default(action: {
                                let url = URL(string: "https://x.com/blueragehq")!
                                await UIApplication.shared.open(url)
@@ -39,6 +41,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsThreadsTitle,
                            icon: .image(named: BluerageAsset.Assets.threadsIcon.name,
                                         size: CGSize(width: 16, height: 16)),
+                           fillColor: .black,
                            type: .default(action: {
                                let url = URL(string: "https://threads.com/blueragehq")!
                                await UIApplication.shared.open(url)
@@ -47,6 +50,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsDiscordTitle,
                            icon: .image(named: BluerageAsset.Assets.discordIcon.name,
                                         size: CGSize(width: 20, height: 16)),
+                           fillColor: BluerageAsset.Assets.discordColor.swiftUIColor,
                            type: .default(action: {
                                let url = URL(string: "https://discord.gg/sCutZ3zd")!
                                await UIApplication.shared.open(url)
@@ -56,6 +60,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "envelope.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
+                           fillColor: .blue,
                            type: .default(action: {
                                let url = URL(string: "mailto:support@bluerage.software")!
                                await UIApplication.shared.open(url)
@@ -67,6 +72,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "figure.walk",
                                          fontSize: 15,
                                          fontWeight: .semibold),
+                           fillColor: .red,
                            type: .destructive(action: {
                                await weakSelf?.authSession.signOut()
                            }),
@@ -75,6 +81,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "trash.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
+                           fillColor: .red,
                            type: .destructive(action: {
                                try await weakSelf?.clerk.user?.delete()
                            }),

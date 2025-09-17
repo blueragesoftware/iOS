@@ -38,20 +38,20 @@ struct SettingCellView: View {
                 }
             }
         } label: {
-            HStack(alignment: .center, spacing: 0) {
+            HStack(spacing: 0) {
                 self.icon
-                    .foregroundStyle(self.foregroundStyle)
+                    .foregroundStyle(.primary)
                     .fixedSize()
                     .background {
-                        Circle()
-                            .fill(UIColor.quaternarySystemFill.swiftUI)
-                            .frame(width: 36, height: 36)
+                        RoundedRectangle(cornerRadius: 8, style: .continuous)
+                            .fill(self.row.fillColor)
+                            .frame(width: 28, height: 28)
                     }
-                    .frame(width: 36, height: 36)
+                    .frame(width: 28, height: 28)
 
                 Text(self.row.title)
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(self.foregroundStyle)
+                    .foregroundStyle(.primary)
                     .padding(.leading, 12)
 
                 Spacer()
@@ -78,14 +78,6 @@ struct SettingCellView: View {
             Image(systemName: named)
                 .font(.system(size: fontSize, weight: fontWeight))
         }
-    }
-
-    private var foregroundStyle: Color {
-        if case .destructive = self.row.type {
-            return .red
-        }
-
-        return .primary
     }
 
 }

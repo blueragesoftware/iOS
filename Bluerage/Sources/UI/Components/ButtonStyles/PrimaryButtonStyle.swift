@@ -12,12 +12,19 @@ public struct PrimaryButtonStyle: ButtonStyle {
     }
 
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .background(UIColor.label.swiftUI)
-            .foregroundStyle(UIColor.systemBackground.swiftUI)
-            .clipShape(Capsule())
-            .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
-            .animation(self.animation, value: configuration.isPressed)
+        if #available(iOS 26.0, *) {
+            configuration.label
+                .glassEffect(.regular.tint(.white).interactive())
+                .foregroundStyle(UIColor.systemBackground.swiftUI)
+        } else {
+            configuration.label
+                .background(UIColor.label.swiftUI)
+                .foregroundStyle(UIColor.systemBackground.swiftUI)
+                .clipShape(Capsule())
+                .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
+                .animation(self.animation, value: configuration.isPressed)
+        }
+
     }
 
 }
