@@ -20,7 +20,7 @@ struct AgentsListScreenView: View {
             } label: {
                 Text(BluerageStrings.agentsListCreateNewAgentButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.systemBackground.swiftUI)
+                    .foregroundStyle(.primary)
                     .padding(.vertical, 15)
                     .frame(maxWidth: .infinity)
             }

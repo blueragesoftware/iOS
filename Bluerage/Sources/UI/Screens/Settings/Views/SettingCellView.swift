@@ -40,7 +40,7 @@ struct SettingCellView: View {
         } label: {
             HStack(spacing: 0) {
                 self.icon
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.white)
                     .fixedSize()
                     .background {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)

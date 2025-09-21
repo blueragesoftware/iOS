@@ -5,6 +5,8 @@ import SVGView
 
 struct ToolCellView<TrailingAccessory: View>: View {
 
+    @State private var isLoading = false
+
     private let imageSize: CGFloat = 24
 
     private let tool: Tool
@@ -50,11 +52,15 @@ struct ToolCellView<TrailingAccessory: View>: View {
 
                     Spacer()
 
-                    self.trailingAccessory?(self.tool)
+                    if self.isLoading {
+                        ProgressView()
+                    } else {
+                        self.trailingAccessory?(self.tool)
+                    }
                 }
             }
         }
-        .buttonStyle(.plain)
+        .disabled(self.isLoading)
     }
 
 }

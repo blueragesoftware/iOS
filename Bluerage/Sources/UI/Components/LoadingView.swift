@@ -7,6 +7,8 @@ struct LoadingView: View {
     var body: some View {
         BluerageAsset.Assets.bluerageLoadingIcon164.swiftUIImage
             .resizable()
+            .renderingMode(.template)
+            .tint(Color.primary.quaternary)
             .frame(width: 164, height: 164)
             .opacity(self.isPulsing ? 0.5 : 1.0)
             .onAppear {

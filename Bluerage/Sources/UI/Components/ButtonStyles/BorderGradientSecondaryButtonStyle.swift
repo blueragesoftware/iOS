@@ -15,6 +15,7 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
         if #available(iOS 26.0, *) {
             configuration.label
                 .glassEffect(.regular.interactive())
+                .contentShape(Capsule())
         } else {
             configuration.label
                 .background {
@@ -34,6 +35,7 @@ public struct BorderGradientProminentButtonStyle: ButtonStyle {
                         .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
                         .animation(self.animation, value: configuration.isPressed)
                 }
+                .contentShape(Capsule())
         }
     }
 

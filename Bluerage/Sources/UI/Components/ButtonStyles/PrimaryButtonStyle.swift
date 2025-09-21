@@ -6,6 +6,8 @@ public struct PrimaryButtonStyle: ButtonStyle {
 
     private let animation: Animation
 
+    @Environment(\.colorScheme) private var colorScheme
+
     public init(scaleAmount: CGFloat = 0.95, animation: Animation = .spring(response: CATransaction.animationDuration(), dampingFraction: 1, blendDuration: 0)) {
         self.scaleAmount = scaleAmount
         self.animation = animation
@@ -14,13 +16,14 @@ public struct PrimaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         if #available(iOS 26.0, *) {
             configuration.label
-                .glassEffect(.regular.tint(.white).interactive())
+                .glassEffect(.regular.tint(self.colorScheme == .dark ? .white : .black).interactive())
+                .contentShape(Capsule())
                 .foregroundStyle(UIColor.systemBackground.swiftUI)
         } else {
             configuration.label
                 .background(UIColor.label.swiftUI)
                 .foregroundStyle(UIColor.systemBackground.swiftUI)
-                .clipShape(Capsule())
+                .contentShape(Capsule())
                 .scaleEffect(configuration.isPressed ? self.scaleAmount : 1.0)
                 .animation(self.animation, value: configuration.isPressed)
         }
