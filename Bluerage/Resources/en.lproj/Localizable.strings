@@ -86,6 +86,8 @@
 "settings_threads_title" = "Threads";
 "settings_discord_title" = "Discord";
 "settings_contact_support_title" = "Contact Support";
+"settings_additional_section_title" = "Additional";
+"settings_acknowledgements_title"= "Acknowledgements";
 "settings_danger_zone_section_title" = "Danger Zone";
 "settings_sign_out_title" = "Sign Out";
 "settings_delete_account_title" = "Delete Account";

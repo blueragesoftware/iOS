@@ -1,7 +1,7 @@
 # Bluerage iOS
 
 <p align="center">
-  <img src="docs/images/сover.png" alt="Bluerage - A Home for Agents"/>
+  <img src="docs/images/сover.jpg" alt="Bluerage - A Home for Agents"/>
 </p>
 
 Mobile first AI-powered automation that thinks and acts for you. Create
@@ -113,6 +113,7 @@ Bluerage is currently localized in the following languages:
 - [Navigator](https://github.com/hmlongco/Navigator)
 - [Swift Package List](https://github.com/FelixHerrmann/swift-package-list)
 - [Swift Introspect](https://github.com/siteline/swiftui-introspect)
+- [Swift Lint](https://github.com/realm/SwiftLint)
 
 ## Community
 

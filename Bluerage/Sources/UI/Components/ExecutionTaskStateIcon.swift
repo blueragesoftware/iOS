@@ -19,6 +19,7 @@ struct ExecutionTaskStateIcon: View {
             Image(systemName: "smallcircle.filled.circle.fill")
                 .resizable()
                 .symbolRenderingMode(.hierarchical)
+                .symbolEffect(.pulse)
                 .foregroundStyle(.blue)
         case .error:
             Image(systemName: "x.circle")
