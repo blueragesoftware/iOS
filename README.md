@@ -1,7 +1,7 @@
 # Bluerage iOS
 
 <p align="center">
-  <img src="docs/images/сover.jpg" alt="Bluerage - A Home for Agents"/>
+  <img src="docs/images/cover.jpg" alt="Bluerage - A Home for Agents"/>
 </p>
 
 Mobile first AI-powered automation that thinks and acts for you. Create
@@ -80,7 +80,9 @@ simple to draft, test, and refine your agents without any coding knowledge.
 
 ## Getting Started
 
-Ready to build and run Bluerage locally? Check out our [Local Development Guide](docs/local-development.md) for detailed setup instructions.
+Ready to build and run Bluerage locally? Check out our
+[Local Development Guide](docs/local-development.md) for detailed setup
+instructions.
 
 ## Localization
 
