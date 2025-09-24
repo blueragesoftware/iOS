@@ -51,6 +51,7 @@ struct CustomModelsListScreenView: View {
                 self.viewModel.connect()
             }
             .navigationTitle(BluerageStrings.customModelsNavigationTitle)
+            .toolbarTitleDisplayMode(.inlineLarge)
             .background(UIColor.systemGroupedBackground.swiftUI)
             .errorAlert(error: self.viewModel.state.alertError) {
                 self.viewModel.resetAlertError()
