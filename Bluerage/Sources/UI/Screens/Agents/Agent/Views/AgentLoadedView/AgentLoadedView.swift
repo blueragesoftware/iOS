@@ -28,6 +28,7 @@ struct AgentLoadedView: View {
     var body: some View {
         Form {
             AgentLoadedHeaderView(iconUrl: self.viewModel.agent.iconUrl)
+                .stretchyFormHeader()
 
             AgentLoadedAboutSectionView(name: self.$name,
                                         goal: self.$goal,
