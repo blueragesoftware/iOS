@@ -59,6 +59,7 @@ struct AgentsListScreenView: View {
                     }
                 }
                 .navigationTitle(BluerageStrings.agentsListNavigationTitle)
+                .toolbarTitleDisplayMode(.inlineLarge)
         }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .errorAlert(error: self.viewModel.state.alertError) {
