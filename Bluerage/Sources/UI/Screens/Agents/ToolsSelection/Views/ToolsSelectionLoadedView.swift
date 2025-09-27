@@ -12,20 +12,36 @@ struct ToolsSelectionLoadedView: View {
 
         var body: some View {
             switch self.tool.status {
-            case .initializing, .initiated:
+            case .initializing:
                 ProgressView()
             case .active:
                 Image(systemName: "plus")
                     .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(.primary)
             case .failed, .expired:
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.red)
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.red)
+
+                    Image(systemName: "arrow.up.right")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.primary)
+                }
             case .inactive:
-                Image(systemName: "link.badge.plus")
+                Image(systemName: "arrow.up.right")
                     .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(.primary)
+            case .initiated:
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.yellow)
+
+                    Image(systemName: "arrow.up.right")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.primary)
+                }
             }
         }
 
