@@ -1,19 +1,25 @@
 // MARK: - Agent
 
 "agent_about_section_header" = "About";
-"agent_add_a_tool_button_title" = "Add a Tool";
+"agent_new_tool_button_title" = "Add a Tool";
 "agent_error_placeholder_description" = "Try refreshing the page or come back later";
 "agent_error_placeholder_title" = "Error loading agent";
 "agent_executions_button_title" = "Executions";
 "agent_goal_placeholder" = "Goal";
 "agent_model_picker_title" = "Model";
 "agent_name_placeholder" = "Name";
-"agent_new_step_placeholder" = "Add a Step";
+"agent_new_step_button_title" = "Add a Step";
+"agent_new_file_button_title" = "Add a File";
 "agent_run_button_title" = "Run Agent";
 "agent_section_footer" = "Swipe left to delete";
 "agent_step_placeholder" = "Step";
 "agent_steps_section_header" = "Steps";
 "agent_tools_section_header" = "Tools";
+"agent_files_section_header" = "Files";
+"agent_default_models_section_header" = "Default";
+"agent_custom_models_section_header" = "Custom";
+"agent_file_type_image" = "Image";
+"agent_file_type_file" = "File";
 
 // MARK: - Agents List
 

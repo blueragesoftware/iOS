@@ -118,7 +118,7 @@ final class AgentsListScreenViewModel {
     }
 
     func removeAgents(with ids: [String]) async throws {
-        try await self.convex.mutation("agents:removeByIds", with: ["id": ids])
+        try await self.convex.mutation("agents:removeByIds", with: ["ids": ids])
     }
 
     func showErrorAlert(with error: Error) {

@@ -1,5 +1,6 @@
 import SwiftUI
 import NavigatorUI
+import OSLog
 
 struct AgentLoadedView: View {
 
@@ -12,8 +13,6 @@ struct AgentLoadedView: View {
     @State private var modelId: String
 
     @FocusState private var isFocused: Bool
-
-    @FocusedValue(\.agentLoadedStepsSectionViewFocusedStepIndex) private var focusedStepIndex: Int?
 
     @Environment(\.navigator) private var navigator
 
@@ -39,32 +38,50 @@ struct AgentLoadedView: View {
                 self.viewModel.updateAgentHeader(params: params)
             })
 
-            AgentLoadedToolsSectionView(tools: self.viewModel.editableTools,
+            AgentLoadedToolsSectionView(tools: self.viewModel.tools,
                                         onRemove: { offsets in
                 self.viewModel.removeTools(at: offsets)
             },
                                         onAdd: {
-                let slugs = self.viewModel.editableTools.compactMap { editableTool in
-                    if case .content(let tool) = editableTool {
-                        return tool.slug
-                    }
-
-                    return nil
-                }
+                let slugs = self.viewModel.tools.map(\.slug)
 
                 let slugsSet = Set(slugs)
 
                 self.navigator.navigate(to: AgentDestinations.toolsSelection(
                     agentToolsSlugSet: slugsSet,
                     callback: Callback { [weak viewModel] tool in
-                        viewModel?.addTool(tool)
+                        viewModel?.add(tool: tool)
                     })
                 )
+            }, onSelectTool: { tool in
+                guard tool.status != .active && tool.status != .initializing else {
+                    return
+                }
+
+                Task {
+                    do {
+                        let redirectUrl = try await self.viewModel.connectTool(with: tool.authConfigId)
+
+                        self.navigator.navigate(to: ToolsSelectionDestinations.authWebView(
+                            url: redirectUrl,
+                            callback: Callback { [weak viewModel] _ in
+                                viewModel?.reload()
+                            }
+                        ))
+                    } catch {
+                        Logger.agent.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
+
+                        self.viewModel.alertError = error
+                    }
+                }
             })
 
-            AgentLoadedStepsSectionView(steps: self.viewModel.editableSteps,
+            AgentLoadedStepsSectionView(steps: self.viewModel.steps,
                                         isFocused: self.$isFocused,
-                                        onStepChange: { index, value in
+                                        onAdd: {
+                self.viewModel.addStep()
+            },
+                                        onChange: { index, value in
                 self.viewModel.handleStepChange(at: index, newValue: value)
             },
                                         onMove: { from, to in
@@ -73,11 +90,16 @@ struct AgentLoadedView: View {
                                         onRemove: { offsets in
                 self.viewModel.removeSteps(at: offsets)
             })
+
+            AgentLoadedFilesSectionView(files: self.viewModel.files,
+                                        isUploading: self.viewModel.isUploadingFile,
+                                        onRemove: { offsets in
+                self.viewModel.removeFiles(at: offsets)
+            }, onAdd: { localFile in
+                self.viewModel.add(localFile: localFile)
+            })
         }
         .scrollIndicators(.hidden)
-        .onChange(of: self.focusedStepIndex) { _, newFocusedIndex in
-            self.viewModel.focusedStepIndex = newFocusedIndex
-        }
         .background(UIColor.systemGroupedBackground.swiftUI)
         .safeAreaPadding(.bottom, 52)
         .overlay {

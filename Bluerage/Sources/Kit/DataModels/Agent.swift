@@ -12,6 +12,7 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
         case tools
         case steps
         case model
+        case files
     }
 
     struct Step: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
@@ -34,6 +35,25 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
 
     }
 
+    struct File: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
+
+        enum `Type`: String, Codable {
+            case image
+            case file
+        }
+
+        var id: String {
+            return self.storageId
+        }
+
+        let storageId: String
+
+        let name: String
+
+        let type: `Type`
+
+    }
+
     let id: String
 
     let name: String
@@ -49,6 +69,8 @@ struct Agent: Identifiable, Codable, Equatable, Hashable, ConvexEncodable {
     let steps: [Step]
 
     let model: AgentModel
+
+    let files: [File]
 
 }
 

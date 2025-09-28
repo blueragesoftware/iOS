@@ -119,7 +119,7 @@ final class CustomModelsListScreenViewModel {
     }
 
     func removeCustomModels(with ids: [String]) async throws {
-        try await self.convex.mutation("customModels:removeByIds", with: ["id": ids])
+        try await self.convex.mutation("customModels:removeByIds", with: ["ids": ids])
     }
 
     func showErrorAlert(with error: Error) {

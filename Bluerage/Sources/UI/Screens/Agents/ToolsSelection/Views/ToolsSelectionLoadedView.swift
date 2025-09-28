@@ -2,51 +2,6 @@ import SwiftUI
 
 struct ToolsSelectionLoadedView: View {
 
-    private struct TrailingAccessory: View {
-
-        private let tool: Tool
-
-        init(tool: Tool) {
-            self.tool = tool
-        }
-
-        var body: some View {
-            switch self.tool.status {
-            case .initializing:
-                ProgressView()
-            case .active:
-                Image(systemName: "plus")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.primary)
-            case .failed, .expired:
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.red)
-
-                    Image(systemName: "arrow.up.right")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.primary)
-                }
-            case .inactive:
-                Image(systemName: "arrow.up.right")
-                    .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.primary)
-            case .initiated:
-                HStack {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.yellow)
-
-                    Image(systemName: "arrow.up.right")
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.primary)
-                }
-            }
-        }
-
-    }
-
     private let activeTools: [Tool]
 
     private let inactiveTools: [Tool]
@@ -72,8 +27,6 @@ struct ToolsSelectionLoadedView: View {
                     ForEach(self.activeTools) { tool in
                         ToolCellView(tool: tool) { tool in
                             self.onActiveToolSelected(tool)
-                        } trailingAccessory: { tool in
-                            TrailingAccessory(tool: tool)
                         }
                     }
                 } header: {
@@ -86,8 +39,6 @@ struct ToolsSelectionLoadedView: View {
                     ForEach(self.inactiveTools) { tool in
                         ToolCellView(tool: tool) { tool in
                             self.onInactiveToolSelected(tool)
-                        } trailingAccessory: { tool in
-                            TrailingAccessory(tool: tool)
                         }
                     }
                 } header: {

@@ -3,74 +3,92 @@ import NukeUI
 import Nuke
 import SVGView
 
-struct ToolCellView<TrailingAccessory: View>: View {
+struct ToolCellView: View {
 
-    @State private var isLoading = false
+    private struct TrailingAccessory: View {
 
-    private let imageSize: CGFloat = 24
+        private let status: Tool.Status
+
+        init(status: Tool.Status) {
+            self.status = status
+        }
+
+        var body: some View {
+            switch self.status {
+            case .initializing:
+                ProgressView()
+            case .active:
+                EmptyView()
+            case .failed, .expired:
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.red)
+
+                    Image(systemName: "arrow.up.right")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.primary)
+                }
+            case .inactive:
+                Image(systemName: "arrow.up.right")
+                    .symbolRenderingMode(.hierarchical)
+                    .foregroundStyle(.primary)
+            case .initiated:
+                HStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.yellow)
+
+                    Image(systemName: "arrow.up.right")
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.primary)
+                }
+            }
+        }
+
+    }
+
+    private static let imageSize: CGFloat = 28
 
     private let tool: Tool
 
     private let onTap: ((Tool) -> Void)?
 
-    @ViewBuilder
-    private let trailingAccessory: ((Tool) -> TrailingAccessory)?
-
     init(tool: Tool,
-         onTap: ((Tool) -> Void)? = nil,
-         @ViewBuilder trailingAccessory: @escaping (Tool) -> TrailingAccessory) {
+         onTap: ((Tool) -> Void)? = nil) {
         self.tool = tool
         self.onTap = onTap
-        self.trailingAccessory = trailingAccessory
     }
 
     var body: some View {
         Button {
             self.onTap?(self.tool)
         } label: {
-            ZStack {
-                Color.clear
+            HStack {
+                LazyImage(url: self.tool.logoURL) { state in
+                    let isSVG = (try? state.result?.get().request.url?.absoluteString.hasSuffix(".svg")) ?? false
 
-                HStack {
-                    LazyImage(url: self.tool.logoURL) { state in
-                        let isSVG = (try? state.result?.get().request.url?.absoluteString.hasSuffix(".svg")) ?? false
-
-                        if isSVG, let data = state.imageContainer?.data {
-                            SVGView(data: data)
-                        } else if let image = state.image {
-                            image.resizable().aspectRatio(contentMode: .fit)
-                        } else {
-                            UIColor.quaternarySystemFill.swiftUI
-                        }
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
-                    .frame(width: self.imageSize, height: self.imageSize)
-                    .fixedSize()
-                    .padding(.trailing, 4)
-
-                    Text(self.tool.name)
-
-                    Spacer()
-
-                    if self.isLoading {
-                        ProgressView()
+                    if isSVG, let data = state.imageContainer?.data {
+                        SVGView(data: data)
+                    } else if let image = state.image {
+                        image.resizable().aspectRatio(contentMode: .fit)
                     } else {
-                        self.trailingAccessory?(self.tool)
+                        UIColor.quaternarySystemFill.swiftUI
                     }
                 }
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .frame(width: Self.imageSize, height: Self.imageSize)
+                .fixedSize()
+                .padding(.trailing, 4)
+
+                Text(self.tool.name)
+
+                Spacer()
+
+                TrailingAccessory(status: self.tool.status)
+                    .font(.system(size: 13, weight: .semibold))
             }
         }
-        .disabled(self.isLoading)
-    }
-
-}
-
-extension ToolCellView where TrailingAccessory == Never {
-
-    init(tool: Tool, onTap: ((Tool) -> Void)? = nil) {
-        self.tool = tool
-        self.onTap = onTap
-        self.trailingAccessory = nil
     }
 
 }

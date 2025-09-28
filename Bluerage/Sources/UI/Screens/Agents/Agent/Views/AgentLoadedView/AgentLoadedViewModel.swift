@@ -3,10 +3,21 @@ import ConvexMobile
 import OSLog
 import Combine
 import SwiftUI
+import Get
+import UniformTypeIdentifiers
 
 @MainActor
 @Observable
 final class AgentLoadedViewModel {
+
+    enum LocalFile {
+        case image(name: String, data: Data, uTType: UTType?)
+        case file(url: URL)
+    }
+
+    private enum Error: Swift.Error {
+        case unableToAccessSecurelyScopedResource
+    }
 
     private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
         var name: String?
@@ -16,6 +27,7 @@ final class AgentLoadedViewModel {
         var tools: [Agent.Tool]?
         var steps: [Agent.Step]?
         var model: AgentModel?
+        var files: [Agent.File]?
 
         var hasUpdates: Bool {
             return self.name != nil
@@ -25,6 +37,7 @@ final class AgentLoadedViewModel {
             || self.tools != nil
             || self.steps != nil
             || self.model != nil
+            || self.files != nil
         }
 
         mutating func merge(with other: UpdateRequest) {
@@ -35,6 +48,7 @@ final class AgentLoadedViewModel {
             if let otherTools = other.tools { self.tools = otherTools }
             if let otherSteps = other.steps { self.steps = otherSteps }
             if let otherModel = other.model { self.model = otherModel }
+            if let otherFiles = other.files { self.files = otherFiles }
         }
     }
 
@@ -43,30 +57,11 @@ final class AgentLoadedViewModel {
         case reset
     }
 
-    private static func editableTools(from tools: [Tool]) -> [EditableToolItem] {
-        var toolsList: [EditableToolItem] = tools.map { .content($0) }
-        toolsList.append(.empty(id: UUID().uuidString))
-        return toolsList
+    private struct UploadResponse: Decodable {
+        let storageId: String
     }
 
-    private static func editableSteps(from steps: [Agent.Step]) -> [EditableStepItem] {
-        var stepsList: [EditableStepItem] = steps.map { .content($0) }
-        stepsList.append(.empty(id: UUID().uuidString))
-        return stepsList
-    }
-
-    var alertError: Error?
-
-    @ObservationIgnored
-    var focusedStepIndex: Int? {
-        didSet {
-            if self.focusedStepIndex == nil {
-                self.cleanupEmptySteps()
-            }
-        }
-    }
-
-    let agentId: String
+    var alertError: Swift.Error?
 
     let agent: Agent
 
@@ -74,9 +69,16 @@ final class AgentLoadedViewModel {
 
     let availableModels: AllModelsResponse
 
-    private(set) var editableTools: [EditableToolItem]
+    @ObservationIgnored
+    let reload: () -> Void
 
-    private(set) var editableSteps: [EditableStepItem]
+    private(set) var isUploadingFile = false
+
+    private(set) var tools: [Tool]
+
+    private(set) var steps: [Agent.Step]
+
+    private(set) var files: [Agent.File]
 
     @ObservationIgnored
     private var updatesQueueCancellables = Set<AnyCancellable>()
@@ -85,35 +87,35 @@ final class AgentLoadedViewModel {
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
+    @Injected(\.apiClient) private var apiClient
+
+    @ObservationIgnored
     private let updateSubject = CurrentValueSubject<UpdateAction, Never>(.reset)
 
     @ObservationIgnored
     private let currentAccumulatedSubject = CurrentValueSubject<UpdateRequest, Never>(UpdateRequest())
 
-    // MARK: - Initialization
-
-    init(agentId: String,
-         agent: Agent,
+    init(agent: Agent,
          model: ModelUnion,
          tools: [Tool],
-         availableModels: AllModelsResponse) {
-        self.agentId = agentId
+         availableModels: AllModelsResponse,
+         reload: @escaping () -> Void) {
         self.agent = agent
         self.model = model
+        self.tools = tools
+        self.steps = agent.steps
+        self.files = agent.files
         self.availableModels = availableModels
 
-        self.editableTools = Self.editableTools(from: tools)
-        self.editableSteps = Self.editableSteps(from: agent.steps)
+        self.reload = reload
 
         self.setupUpdatesQueue()
     }
 
-    // MARK: - Public Methods
-
     func run() {
         Task {
             do {
-                try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agentId])
+                try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agent.id])
             } catch {
                 Logger.agent.error("Error running agent: \(error.localizedDescription, privacy: .public)")
 
@@ -137,68 +139,128 @@ final class AgentLoadedViewModel {
         }
     }
 
-    func addTool(_ tool: Tool) {
-        if let lastIndex = self.editableTools.indices.last,
-           case .empty = self.editableTools[lastIndex] {
-            self.editableTools[lastIndex] = .content(tool)
-            self.editableTools.append(.empty(id: UUID().uuidString))
-        } else {
-            self.editableTools.append(.content(tool))
-            self.editableTools.append(.empty(id: UUID().uuidString))
-        }
+    func add(tool: Tool) {
+        self.tools.append(tool)
 
-        self.notifyToolsChanged()
+        self.updateAgent(tools: self.tools)
     }
 
     func removeTools(at offsets: IndexSet) {
-        self.editableTools.remove(atOffsets: offsets)
-        self.notifyToolsChanged()
+        self.tools.remove(atOffsets: offsets)
+
+        self.updateAgent(tools: self.tools)
+    }
+
+    func add(localFile: LocalFile) {
+        Task {
+            do {
+                withAnimation {
+                    self.isUploadingFile = true
+                }
+
+                let uploadUrlAbsoluteString: String = try await self.convex.mutation("files:generateUploadUrl")
+
+                guard let url = URL(string: uploadUrlAbsoluteString) else {
+                    return
+                }
+
+                let response: UploadResponse
+                let fileName: String
+                let fileType: Agent.File.`Type`
+
+                switch localFile {
+                case .image(let name, let data, let utType):
+                    fileName = name
+                    fileType = .image
+
+                    let headers: [String: String] = if let preferredMIMEType = utType?.preferredMIMEType {
+                        ["Content-Type": preferredMIMEType]
+                    } else {
+                        [:]
+                    }
+
+                    let request = Request<UploadResponse>(url: url,
+                                                          method: .post,
+                                                          headers: headers)
+                    response = try await self.apiClient.upload(for: request, from: data).value
+                case .file(let fileUrl):
+                    fileName = fileUrl.lastPathComponent
+                    fileType = .file
+
+                    let headers: [String: String] = if let preferredMIMEType = UTType(filenameExtension: fileUrl.pathExtension)?.preferredMIMEType {
+                        ["Content-Type": preferredMIMEType]
+                    } else {
+                        [:]
+                    }
+
+                    let request = Request<UploadResponse>(url: url,
+                                                          method: .post,
+                                                          headers: headers)
+
+                    let canAccess = fileUrl.startAccessingSecurityScopedResource()
+
+                    if !canAccess {
+                        throw Error.unableToAccessSecurelyScopedResource
+                    }
+
+                    let data = try Data(contentsOf: fileUrl)
+                    fileUrl.stopAccessingSecurityScopedResource()
+
+                    response = try await self.apiClient.upload(for: request, from: data).value
+                }
+
+                self.files.append(Agent.File(storageId: response.storageId, name: fileName, type: fileType))
+
+                self.updateAgent(files: self.files)
+
+                withAnimation {
+                    self.isUploadingFile = false
+                }
+            } catch {
+                withAnimation {
+                    self.isUploadingFile = false
+                }
+                self.alertError = error
+
+                Logger.agent.error("Error uploading file: \(error, privacy: .public)")
+            }
+        }
+
+    }
+
+    func removeFiles(at offsets: IndexSet) {
+        self.files.remove(atOffsets: offsets)
+
+        self.updateAgent(files: self.files)
+    }
+
+    func addStep() {
+        self.steps.append(Agent.Step(id: UUID().uuidString, value: ""))
+
+        self.updateAgent(steps: self.steps)
     }
 
     func handleStepChange(at index: Int, newValue: String) {
-        guard index < self.editableSteps.count else {
+        guard let existingStep = self.steps[safeIndex: index] else {
+            Logger.agent.warning("Editing a step with invalid index: \(index, privacy: .public), steps count: \(self.steps.count)")
+
             return
         }
 
-        let currentStepItem = self.editableSteps[index]
-        let isLast = index == self.editableSteps.count - 1
-        let isFocused = self.focusedStepIndex == index
+        self.steps[index] = Agent.Step(id: existingStep.id, value: newValue)
 
-        if newValue.isEmpty {
-            if isLast {
-                return
-            } else if isFocused {
-                let stepId = currentStepItem.id
-                self.editableSteps[index] = .empty(id: stepId)
-                return
-            } else {
-                self.editableSteps.remove(at: index)
-
-                if let focusedIndex = self.focusedStepIndex, focusedIndex > index {
-                    self.focusedStepIndex = focusedIndex - 1
-                }
-
-                self.notifyStepsChanged()
-            }
-        } else {
-            let stepId = currentStepItem.id
-            self.editableSteps[index] = .content(Agent.Step(id: stepId, value: newValue))
-
-            if isLast {
-                self.editableSteps.append(.empty(id: UUID().uuidString))
-            }
-
-            self.notifyStepsChanged()
-        }
+        self.updateAgent(steps: self.steps)
     }
 
     func moveSteps(from: IndexSet, to: Int) {
-        self.editableSteps.move(fromOffsets: from, toOffset: to)
+        self.steps.move(fromOffsets: from, toOffset: to)
+
         self.notifyStepsChanged()
     }
 
     func removeSteps(at offsets: IndexSet) {
-        self.editableSteps.remove(atOffsets: offsets)
+        self.steps.remove(atOffsets: offsets)
+
         self.notifyStepsChanged()
     }
 
@@ -206,13 +268,24 @@ final class AgentLoadedViewModel {
         self.updateAgent(name: params.name, goal: params.goal, model: params.model)
     }
 
+    func connectTool(with authConfigId: String) async throws -> URL {
+        let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+
+        guard let url = URL(string: connectionResult.redirectUrl) else {
+            throw URLError(.badURL)
+        }
+
+        return url
+    }
+
     private func updateAgent(name: String? = nil,
-                           description: String? = nil,
-                           iconUrl: String? = nil,
-                           goal: String? = nil,
-                           tools: [Tool]? = nil,
-                           steps: [Agent.Step]? = nil,
-                           model: AgentModel? = nil) {
+                             description: String? = nil,
+                             iconUrl: String? = nil,
+                             goal: String? = nil,
+                             tools: [Tool]? = nil,
+                             steps: [Agent.Step]? = nil,
+                             model: AgentModel? = nil,
+                             files: [Agent.File]? = nil) {
         let request = UpdateRequest(
             name: name,
             description: description,
@@ -222,61 +295,23 @@ final class AgentLoadedViewModel {
                 return Agent.Tool(slug: tool.slug, name: tool.name)
             },
             steps: steps,
-            model: model
+            model: model,
+            files: files
         )
 
         self.updateSubject.send(.merge(request))
     }
 
-    private func cleanupEmptySteps() {
-        var indicesToRemove: [Int] = []
-
-        for (index, step) in self.editableSteps.enumerated() {
-            let isLast = index == self.editableSteps.count - 1
-
-            if !isLast {
-                switch step {
-                case .empty:
-                    indicesToRemove.append(index)
-                case .content(let stepContent):
-                    if stepContent.value.isEmpty {
-                        indicesToRemove.append(index)
-                    }
-                }
-            }
-        }
-
-        guard !indicesToRemove.isEmpty else {
-            return
-        }
-
-        for index in indicesToRemove.reversed() {
-            self.editableSteps.remove(at: index)
-        }
-
-        self.notifyStepsChanged()
-    }
-
     private func notifyToolsChanged() {
-        let contentTools = self.editableTools.compactMap { item in
-            if case .content(let tool) = item {
-                return tool
-            }
-            return nil
-        }
-
-        self.updateAgent(tools: contentTools)
+        self.updateAgent(tools: self.tools)
     }
 
     private func notifyStepsChanged() {
-        let contentSteps = self.editableSteps.compactMap { item in
-            if case .content(let step) = item {
-                return step
-            }
-            return nil
-        }
+        self.updateAgent(steps: self.steps)
+    }
 
-        self.updateAgent(steps: contentSteps)
+    private func notifyFilesChanged() {
+        self.updateAgent(files: self.files)
     }
 
     private func setupUpdatesQueue() {
@@ -315,7 +350,7 @@ final class AgentLoadedViewModel {
     }
 
     private func performUpdate(request: UpdateRequest) {
-        var args: [String: any ConvexEncodable] = ["id": self.agentId]
+        var args: [String: any ConvexEncodable] = ["id": self.agent.id]
 
         if let name = request.name { args["name"] = name }
         if let description = request.description { args["description"] = description }
@@ -324,6 +359,7 @@ final class AgentLoadedViewModel {
         if let tools = request.tools { args["tools"] = tools }
         if let steps = request.steps { args["steps"] = steps }
         if let model = request.model { args["model"] = model }
+        if let files = request.files { args["files"] = files }
 
         guard args.count > 1 else {
             return

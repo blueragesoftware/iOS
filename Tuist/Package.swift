@@ -26,6 +26,7 @@ let package = Package(
         .package(url: "https://github.com/exyte/SVGView", from: "1.0.6"),
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui.git", from: "2.4.1"),
         .package(url: "https://github.com/hmlongco/Navigator", from: "1.1.1"),
-        .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0")
+        .package(url: "https://github.com/siteline/swiftui-introspect", from: "26.0.0"),
+        .package(url: "https://github.com/kean/Get", from: "2.2.1")
     ]
 )

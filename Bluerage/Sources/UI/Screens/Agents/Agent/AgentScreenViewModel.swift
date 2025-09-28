@@ -80,11 +80,13 @@ final class AgentScreenViewModel {
         .map { (agentData, models) in
             let (response, tools) = agentData
 
-            let loadedViewModel = AgentLoadedViewModel(agentId: response.agent.id,
-                                                       agent: response.agent,
+            let loadedViewModel = AgentLoadedViewModel(agent: response.agent,
                                                        model: response.model,
                                                        tools: tools,
-                                                       availableModels: models)
+                                                       availableModels: models,
+                                                       reload: { [weak self] in
+                self?.connect()
+            })
 
             return State.loaded(loadedViewModel)
         }

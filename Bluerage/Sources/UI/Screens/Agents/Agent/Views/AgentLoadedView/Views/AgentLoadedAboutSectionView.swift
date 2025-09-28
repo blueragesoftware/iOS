@@ -51,7 +51,7 @@ struct AgentLoadedAboutSectionView: View {
                             .tag(model.id)
                     }
                 } header: {
-                    Text("Default")
+                    Text(BluerageStrings.agentDefaultModelsSectionHeader)
                 }
 
                 Section {
@@ -60,7 +60,7 @@ struct AgentLoadedAboutSectionView: View {
                             .tag(customModel.id)
                     }
                 } header: {
-                    Text("Custom")
+                    Text(BluerageStrings.agentCustomModelsSectionHeader)
                 }
             }
             .onChange(of: self.modelId) { _, newValue in
