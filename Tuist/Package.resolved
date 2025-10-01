@@ -1,5 +1,5 @@
 {
-  "originHash" : "286647f37d686439294981ba98ba6a5d5769d74810a730e3971325d6c5661e92",
+  "originHash" : "b1d5b22ce962742dd995d3619b61f1f939b671c0efc2b1d989689ee62d5f175d",
   "pins" : [
     {
       "identity" : "clerk-ios",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "2015fda791daa72c8058619545a593bf8c1dd59f",
         "version" : "8.5.0"
+      }
+    },
+    {
+      "identity" : "knock-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/knocklabs/knock-swift.git",
+      "state" : {
+        "revision" : "9c31004cec80014c16ec7a11f00182df8c730c50",
+        "version" : "1.2.4"
       }
     },
     {
@@ -161,6 +170,15 @@
       "state" : {
         "revision" : "bbadd4b853a33fd78c4ae977d17bb2af15eb3f2a",
         "version" : "1.1.0"
+      }
+    },
+    {
+      "identity" : "swiftphoenixclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/davidstump/SwiftPhoenixClient.git",
+      "state" : {
+        "revision" : "25a4d8a3fa754ef3fb587a34addd08c7e568abc4",
+        "version" : "5.3.5"
       }
     },
     {

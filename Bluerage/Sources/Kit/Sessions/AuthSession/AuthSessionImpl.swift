@@ -23,6 +23,8 @@ final class AuthSessionImpl: AuthSession {
 
     @Injected(\.clerk) private var clerk
 
+    @Injected(\.env) private var env
+
     private let authStateSubject: CurrentValueSubject<AuthState, Never>
 
     init() {
@@ -41,8 +43,8 @@ final class AuthSessionImpl: AuthSession {
         self.convex.authState
             .map { convexState in
                 switch convexState {
-                case .authenticated:
-                    return AuthState.authenticated
+                case .authenticated(let user):
+                    return AuthState.authenticated(id: user.user.id)
                 case .loading:
                     return AuthState.loading
                 case .unauthenticated:
@@ -62,7 +64,7 @@ final class AuthSessionImpl: AuthSession {
         }
     }
 
-    func signOut() async {
+    func signOut() async throws {
         await self.convex.logout()
     }
 

@@ -19,4 +19,6 @@ extension Logger {
 
     static let customModels = Logger(subsystem: Self.subsystem, category: "customModels")
 
+    static let knockManager = Logger(subsystem: Self.subsystem, category: "knockManager")
+
 }

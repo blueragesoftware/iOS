@@ -140,13 +140,17 @@ final class AgentLoadedViewModel {
     }
 
     func add(tool: Tool) {
-        self.tools.append(tool)
+        withAnimation {
+            self.tools.append(tool)
+        }
 
         self.updateAgent(tools: self.tools)
     }
 
     func removeTools(at offsets: IndexSet) {
-        self.tools.remove(atOffsets: offsets)
+        withAnimation {
+            self.tools.remove(atOffsets: offsets)
+        }
 
         self.updateAgent(tools: self.tools)
     }
@@ -209,7 +213,9 @@ final class AgentLoadedViewModel {
                     response = try await self.apiClient.upload(for: request, from: data).value
                 }
 
-                self.files.append(Agent.File(storageId: response.storageId, name: fileName, type: fileType))
+                withAnimation {
+                    self.files.append(Agent.File(storageId: response.storageId, name: fileName, type: fileType))
+                }
 
                 self.updateAgent(files: self.files)
 
@@ -229,13 +235,17 @@ final class AgentLoadedViewModel {
     }
 
     func removeFiles(at offsets: IndexSet) {
-        self.files.remove(atOffsets: offsets)
+        withAnimation {
+            self.files.remove(atOffsets: offsets)
+        }
 
         self.updateAgent(files: self.files)
     }
 
     func addStep() {
-        self.steps.append(Agent.Step(id: UUID().uuidString, value: ""))
+        withAnimation {
+            self.steps.append(Agent.Step(id: UUID().uuidString, value: ""))
+        }
 
         self.updateAgent(steps: self.steps)
     }
@@ -253,13 +263,17 @@ final class AgentLoadedViewModel {
     }
 
     func moveSteps(from: IndexSet, to: Int) {
-        self.steps.move(fromOffsets: from, toOffset: to)
+        withAnimation {
+            self.steps.move(fromOffsets: from, toOffset: to)
+        }
 
         self.notifyStepsChanged()
     }
 
     func removeSteps(at offsets: IndexSet) {
-        self.steps.remove(atOffsets: offsets)
+        withAnimation {
+            self.steps.remove(atOffsets: offsets)
+        }
 
         self.notifyStepsChanged()
     }

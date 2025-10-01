@@ -1,8 +1,8 @@
 import Foundation
 
-enum AuthState {
+enum AuthState: Equatable {
     case loading
     case error
     case unauthenticated
-    case authenticated
+    case authenticated(id: String)
 }

@@ -11,6 +11,6 @@ protocol AuthSession {
 
     func start()
 
-    func signOut() async
+    func signOut() async throws
 
 }

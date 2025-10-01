@@ -118,7 +118,7 @@ final class SettingsScreenViewModel {
                                    return
                                }
 
-                               await self.authSession.signOut()
+                               try await self.authSession.signOut()
                            }),
                            actionType: .inApp),
                 SettingRow(title: BluerageStrings.settingsDeleteAccountTitle,

@@ -63,4 +63,19 @@ final class Env {
         }
     }()
 
+    private(set) lazy var KNOCK_PUBLISHABLE_KEY: String = {
+        do {
+            return try Self.value(for: "KNOCK_PUBLISHABLE_KEY")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
+
+    private(set) lazy var KNOCK_CHANNEL_ID: String = {
+        do {
+            return try Self.value(for: "KNOCK_CHANNEL_ID")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
 }

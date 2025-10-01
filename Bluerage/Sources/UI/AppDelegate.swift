@@ -5,8 +5,9 @@ import Sentry
 import Clerk
 import OSLog
 import Nuke
+import Knock
 
-final class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: KnockAppDelegate {
 
     @Injected(\.postHog) private var postHog
 
@@ -16,9 +17,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
     @Injected(\.authSession) private var authSession
 
-    func application(_ application: UIApplication,
+    @Injected(\.knockManager) private var knockManager
+
+    override func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         self.setUpClerk()
+
+        self.setUpKnock()
 
         self.setUpSentry()
 
@@ -30,7 +35,33 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
         self.setUpBarButtonTintColor()
 
-        return true
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+
+    override func pushNotificationTapped(userInfo: [AnyHashable: Any]) {
+        super.pushNotificationTapped(userInfo: userInfo)
+
+        if let deeplink = userInfo["link"] as? String, let url = URL(string: deeplink) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    override func pushNotificationDeliveredInForeground(notification: UNNotification) -> UNNotificationPresentationOptions {
+        let options = super.pushNotificationDeliveredInForeground(notification: notification)
+
+        return [options]
+    }
+
+    private func setUpClerk() {
+        self.clerk.configure(publishableKey: self.env.CLERK_PUBLISHABLE_KEY)
+
+        Task {
+            do {
+                try await self.clerk.load()
+            } catch {
+                Logger.default.error("Error loading clerk: \(error.localizedDescription, privacy: .public)")
+            }
+        }
     }
 
     private func setUpSentry() {
@@ -46,14 +77,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
 
-    private func setUpClerk() {
-        self.clerk.configure(publishableKey: self.env.CLERK_PUBLISHABLE_KEY)
+    private func setUpKnock() {
+        self.knockManager.start()
 
         Task {
             do {
-                try await self.clerk.load()
+                try await self.knockManager.setup(publishableKey: self.env.KNOCK_PUBLISHABLE_KEY,
+                                           pushChannelId: self.env.KNOCK_CHANNEL_ID)
             } catch {
-                Logger.default.error("Error loading clerk: \(error.localizedDescription, privacy: .public)")
+                Logger.knockManager.error("Error setting up remote notifications: \(error.localizedDescription, privacy: .public)")
             }
         }
     }
