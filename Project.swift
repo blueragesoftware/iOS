@@ -31,7 +31,7 @@ let project = Project(
                     "SENTRY_DSN": "$(SENTRY_DSN)",
                     "CONVEX_DEPLOYMENT_URL": "$(CONVEX_DEPLOYMENT_URL)",
                     "CLERK_PUBLISHABLE_KEY": "$(CLERK_PUBLISHABLE_KEY)",
-                    "KNOCK_PUBLISHABLE_KEY": "$(KNOCK_PUBLISHAB LE_KEY)",
+                    "KNOCK_PUBLISHABLE_KEY": "$(KNOCK_PUBLISHABLE_KEY)",
                     "BUNDLE_ID": "$(BUNDLE_ID)",
                     "SENTRY_ORG": "$(SENTRY_ORG)",
                     "KNOCK_CHANNEL_ID": "$(KNOCK_CHANNEL_ID)",
