@@ -66,7 +66,7 @@ struct ToolCellView: View {
         } label: {
             HStack {
                 LazyImage(url: self.tool.logoURL) { state in
-                    let isSVG = (try? state.result?.get().request.url?.absoluteString.hasSuffix(".svg")) ?? false
+                    let isSVG = (try? state.result?.get().container.type == .svg) ?? false
 
                     if isSVG, let data = state.imageContainer?.data {
                         SVGView(data: data)
