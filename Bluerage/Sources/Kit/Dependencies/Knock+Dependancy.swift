@@ -4,9 +4,9 @@ import FactoryKit
 
 extension Container {
 
-    var knockManager: Factory<KnockManager> {
+    var knock: Factory<Knock> {
         self {
-            return KnockManager()
+            return Knock.shared
         }.shared
     }
 

@@ -1,5 +1,5 @@
 {
-  "originHash" : "b1d5b22ce962742dd995d3619b61f1f939b671c0efc2b1d989689ee62d5f175d",
+  "originHash" : "3a3dcafb3005f5e1e7cba267823d83d952e3dba5ffd7bce2873cc36ff1a52d38",
   "pins" : [
     {
       "identity" : "clerk-ios",
@@ -107,6 +107,15 @@
       "state" : {
         "revision" : "f381818bc153f63fbe13d6822e65cc7233ba4647",
         "version" : "3.31.0"
+      }
+    },
+    {
+      "identity" : "queue",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/Queue",
+      "state" : {
+        "revision" : "38826d0b8838ce5edcdafa1ffb2f507693d5abcb",
+        "version" : "0.2.2"
       }
     },
     {

@@ -2,11 +2,20 @@ import Foundation
 import FactoryKit
 import Combine
 import Knock
+import PostHog
 import OSLog
+import Sentry
+import Queue
 
-final class KnockManager {
+final class AuthObserver {
 
     @Injected(\.authSession) private var authSession
+
+    @Injected(\.knock) private var knock
+
+    @Injected(\.postHog) private var postHog
+
+    private let queue = AsyncQueue()
 
     private var connection: AnyCancellable?
 
@@ -15,23 +24,31 @@ final class KnockManager {
         self.connection = nil
 
         self.connection = self.authSession.authStatePublisher
-            .sink { authState in
-                Task {
+            .sink { [weak self] authState in
+                self?.queue.addOperation { [ weak self] in
+                    guard let self else {
+                        return
+                    }
+
                     if case .authenticated(let id) = authState {
                         await Knock.shared.signIn(userId: id, userToken: nil)
+
+                        self.postHog.identify(id, userProperties: nil)
+
+                        SentrySDK.setUser(User(userId: id))
                     } else if case .unauthenticated = authState {
                         do {
                             try await Knock.shared.signOut()
                         } catch {
                             Logger.knockManager.error("Error signing out of knock")
                         }
+
+                        self.postHog.reset()
+
+                        SentrySDK.setUser(nil)
                     }
                 }
+
             }
     }
-
-    func setup(publishableKey: String, pushChannelId: String?, options: Knock.KnockStartupOptions? = nil) async throws {
-        try await Knock.shared.setup(publishableKey: publishableKey, pushChannelId: pushChannelId, options: options)
-    }
-
 }

@@ -17,7 +17,9 @@ final class AppDelegate: KnockAppDelegate {
 
     @Injected(\.authSession) private var authSession
 
-    @Injected(\.knockManager) private var knockManager
+    @Injected(\.knock) private var knock
+
+    private let authObserver = AuthObserver()
 
     override func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
@@ -28,6 +30,8 @@ final class AppDelegate: KnockAppDelegate {
         self.setUpSentry()
 
         self.setUpPostHog()
+
+        self.setUpAuthObserver()
 
         self.setUpAuthSession()
 
@@ -50,6 +54,10 @@ final class AppDelegate: KnockAppDelegate {
         let options = super.pushNotificationDeliveredInForeground(notification: notification)
 
         return [options]
+    }
+
+    private func setUpAuthObserver() {
+        self.authObserver.start()
     }
 
     private func setUpClerk() {
@@ -78,11 +86,9 @@ final class AppDelegate: KnockAppDelegate {
     }
 
     private func setUpKnock() {
-        self.knockManager.start()
-
         Task {
             do {
-                try await self.knockManager.setup(publishableKey: self.env.KNOCK_PUBLISHABLE_KEY,
+                try await self.knock.setup(publishableKey: self.env.KNOCK_PUBLISHABLE_KEY,
                                            pushChannelId: self.env.KNOCK_CHANNEL_ID)
             } catch {
                 Logger.knockManager.error("Error setting up remote notifications: \(error.localizedDescription, privacy: .public)")

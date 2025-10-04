@@ -22,8 +22,6 @@ let project = Project(
                     "UIAppFonts": [
                         "InstrumentSerif-Regular.ttf"
                     ],
-                    "CADisableMinimumFrameDurationOnPhone": true,
-                    "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": true,
                     "CFBundleDisplayName": "$(BUNDLE_DISPLAY_NAME)",
                     "CFBundleName": "$(BUNDLE_NAME)",
                     "POSTHOG_API_KEY": "$(POSTHOG_API_KEY)",
@@ -84,6 +82,7 @@ let project = Project(
                 .external(name: "SwiftUIIntrospect"),
                 .external(name: "Get"),
                 .external(name: "Knock"),
+                .external(name: "Queue")
             ],
             settings: .settings(
                 base: .init()
