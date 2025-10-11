@@ -9,71 +9,7 @@ final class MCPServersListScreenViewModel {
 
     struct State {
 
-        enum Main: Equatable {
-
-            // MARK: - Equatable
-
-            static func == (lhs: Main, rhs: Main) -> Bool {
-                return lhs.isError && rhs.isError
-                || lhs.isLoading && rhs.isLoading
-                || lhs.isLoaded && rhs.isLoaded
-                || lhs.isEmpty && rhs.isEmpty
-            }
-
-            // MARK: - Properties
-
-            case loading
-            case loaded(mcpServers: [MCPServer])
-            case empty
-            case error(Error)
-
-            var isLoading: Bool {
-                if case .loading = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isError: Bool {
-                if case .error = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isLoaded: Bool {
-                if case .loaded = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isEmpty: Bool {
-                if case .empty = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var title: String {
-                switch self {
-                case .loading:
-                    BluerageStrings.commonLoading
-                case .loaded:
-                    BluerageStrings.commonLoaded
-                case .error:
-                    BluerageStrings.commonError
-                case .empty:
-                    BluerageStrings.commonEmpty
-                }
-            }
-        }
-
-        var main: Main
+        var main: LoadingViewModelState<[MCPServer]>
 
         var alertError: Error?
 
@@ -101,15 +37,15 @@ final class MCPServersListScreenViewModel {
             .removeDuplicates()
             .map { mcpServers in
                 if mcpServers.isEmpty {
-                    return State.Main.empty
+                    return LoadingViewModelState.empty
                 }
 
-                return State.Main.loaded(mcpServers: mcpServers)
+                return LoadingViewModelState.loaded(mcpServers)
             }
             .catch { error in
                 Logger.mcpServers.error("Error receiving all servers: \(error.localizedDescription, privacy: .public)")
 
-                return Just(State.Main.error(error))
+                return Just(LoadingViewModelState<[MCPServer]>.error(error))
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] main in

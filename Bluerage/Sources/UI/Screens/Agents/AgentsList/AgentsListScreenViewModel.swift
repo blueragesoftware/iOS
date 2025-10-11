@@ -9,71 +9,7 @@ final class AgentsListScreenViewModel {
 
     struct State {
 
-        enum Main: Equatable {
-
-            // MARK: - Equatable
-
-            static func == (lhs: Main, rhs: Main) -> Bool {
-                return lhs.isError && rhs.isError
-                || lhs.isLoading && rhs.isLoading
-                || lhs.isLoaded && rhs.isLoaded
-                || lhs.isEmpty && rhs.isEmpty
-            }
-
-            // MARK: - Properties
-
-            case loading
-            case loaded(agents: [Agent])
-            case empty
-            case error(Error)
-
-            var isLoading: Bool {
-                if case .loading = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isError: Bool {
-                if case .error = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isLoaded: Bool {
-                if case .loaded = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var isEmpty: Bool {
-                if case .empty = self {
-                    true
-                } else {
-                    false
-                }
-            }
-
-            var title: String {
-                switch self {
-                case .loading:
-                    BluerageStrings.commonLoading
-                case .loaded:
-                    BluerageStrings.commonLoaded
-                case .error:
-                    BluerageStrings.commonError
-                case .empty:
-                    BluerageStrings.commonEmpty
-                }
-            }
-        }
-
-        var main: Main
+        var main: LoadingViewModelState<[Agent]>
 
         var alertError: Error?
 
@@ -100,15 +36,15 @@ final class AgentsListScreenViewModel {
             .removeDuplicates()
             .map { agents in
                 if agents.isEmpty {
-                    return State.Main.empty
+                    return LoadingViewModelState.empty
                 }
 
-                return State.Main.loaded(agents: agents)
+                return LoadingViewModelState.loaded(agents)
             }
             .catch { error in
                 Logger.agents.error("Error loading all agents: \(error.localizedDescription, privacy: .public)")
 
-                return Just(State.Main.error(error))
+                return Just(LoadingViewModelState<[Agent]>.error(error))
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] main in
