@@ -3,7 +3,7 @@ import SwiftUIIntrospect
 
 struct CustomModelEditSectionView: View {
 
-    typealias CustomModelUpdate = (name: String?, provider: String?, modelId: String?, encryptedApiKey: String?, baseUrl: String?)
+    typealias CustomModelUpdate = (name: String?, provider: String?, modelId: String?, encryptedApiKey: String?, baseUrl: String??)
 
     @Binding private var name: String
 
@@ -60,7 +60,7 @@ struct CustomModelEditSectionView: View {
             TextField(BluerageStrings.customModelBaseUrlFieldTitle, text: self.$baseUrl)
                 .focused(self.isFocused)
                 .onChange(of: self.baseUrl) { _, newValue in
-                    self.onUpdate((nil, nil, nil, nil, newValue.isEmpty ? nil : newValue))
+                    self.onUpdate((nil, nil, nil, nil, newValue.isEmpty ? Optional(nil) : newValue))
                 }
         } header: {
             Text(BluerageStrings.customModelConfigurationSectionTitle)

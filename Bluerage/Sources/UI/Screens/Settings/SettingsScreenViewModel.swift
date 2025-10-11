@@ -27,7 +27,14 @@ final class SettingsScreenViewModel {
                                          fontWeight: .semibold),
                            fillColor: .gray,
                            type: .navigation(destination: .customModels),
-                           actionType: .inApp)
+                           actionType: .navigation),
+                SettingRow(title: BluerageStrings.settingsMcpServersTitle,
+                           icon: .system(named: "server.rack",
+                                         fontSize: 15,
+                                         fontWeight: .semibold),
+                           fillColor: .green,
+                           type: .navigation(destination: .mcpServers),
+                           actionType: .navigation)
             ]),
             SettingSection(title: BluerageStrings.settingsCommunitySectionTitle, rows: [
                 SettingRow(title: BluerageStrings.settingsXTitle,

@@ -13,7 +13,7 @@ final class CustomModelLoadedViewModel {
         var provider: String?
         var modelId: String?
         var encryptedApiKey: String?
-        var baseUrl: String?
+        var baseUrl: String??
 
         var hasUpdates: Bool {
             return self.name != nil
@@ -67,7 +67,7 @@ final class CustomModelLoadedViewModel {
                            provider: String? = nil,
                            modelId: String? = nil,
                            encryptedApiKey: String? = nil,
-                           baseUrl: String? = nil) {
+                           baseUrl: String?? = nil) {
         let request = UpdateRequest(
             name: name,
             provider: provider,

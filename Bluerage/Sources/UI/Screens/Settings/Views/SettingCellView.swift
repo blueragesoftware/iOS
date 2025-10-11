@@ -56,12 +56,12 @@ struct SettingCellView: View {
 
                 Spacer()
 
-                Image(systemName: self.row.actionType == .redirect ? "arrow.up.right" : "ellipsis")
+                Image(systemName: self.actionIconName)
                     .renderingMode(.template)
-                    .foregroundStyle(UIColor.label.swiftUI)
+                    .foregroundStyle(.primary)
                     .font(.system(size: 13, weight: .semibold))
                     .fixedSize()
-                    .rotationEffect(self.row.actionType == .redirect ? .zero : Angle(degrees: 90))
+                    .rotationEffect(self.row.actionType == .inApp ? Angle(degrees: 90) : .zero)
             }
         }
     }
@@ -77,6 +77,17 @@ struct SettingCellView: View {
         case .system(let named, let fontSize, let fontWeight):
             Image(systemName: named)
                 .font(.system(size: fontSize, weight: fontWeight))
+        }
+    }
+
+    private var actionIconName: String {
+        switch self.row.actionType {
+        case .redirect:
+            "arrow.up.forward"
+        case .inApp:
+            "ellipsis"
+        case .navigation:
+            "chevron.forward"
         }
     }
 

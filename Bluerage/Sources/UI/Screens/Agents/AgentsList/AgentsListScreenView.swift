@@ -37,7 +37,7 @@ struct AgentsListScreenView: View {
     var body: some View {
         ManagedNavigationStack { navigator in
             self.content(with: navigator)
-                .navigationDestination(AgentListDestinations.self)
+                .navigationDestinationAutoReceive(AgentListDestinations.self)
                 .safeAreaInset(edge: .bottom) {
                     if self.viewModel.state.main.isLoaded {
                         CreateNewAgentButton {
@@ -102,7 +102,7 @@ struct AgentsListScreenView: View {
 
                 navigator.navigate(to: AgentListDestinations.agent(agent))
             } catch {
-                Logger.agentsList.error("Error creating new agent: \(error.localizedDescription, privacy: .public)")
+                Logger.agents.error("Error creating new agent: \(error.localizedDescription, privacy: .public)")
 
                 self.viewModel.showErrorAlert(with: error)
             }
@@ -114,7 +114,7 @@ struct AgentsListScreenView: View {
             do {
                 try await self.viewModel.removeAgents(with: ids)
             } catch {
-                Logger.agentsList.error("Error removing agents: \(error.localizedDescription, privacy: .public)")
+                Logger.agents.error("Error removing agents: \(error.localizedDescription, privacy: .public)")
 
                 self.viewModel.showErrorAlert(with: error)
             }

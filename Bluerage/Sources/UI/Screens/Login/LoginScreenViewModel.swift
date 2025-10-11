@@ -2,6 +2,7 @@ import Foundation
 import AuthenticationServices
 import OSLog
 import FactoryKit
+import Clerk
 
 @Observable
 @MainActor
@@ -27,6 +28,9 @@ final class LoginScreenViewModel {
 
     @ObservationIgnored
     @Injected(\.authSession) private var authSession
+
+    @ObservationIgnored
+    @Injected(\.clerk) private var clerk
 
     func handle(authorization: ASAuthorization) {
         guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential else {

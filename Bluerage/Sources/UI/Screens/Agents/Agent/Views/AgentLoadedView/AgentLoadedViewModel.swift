@@ -115,9 +115,9 @@ final class AgentLoadedViewModel {
     func run() {
         Task {
             do {
-                try await self.convex.mutation("executionTasks:create", with: ["agentId": self.agent.id])
+                try await self.convex.mutation("agent.tasks:create", with: ["agentId": self.agent.id])
             } catch {
-                Logger.agent.error("Error running agent: \(error.localizedDescription, privacy: .public)")
+                Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
 
                 self.alertError = error
             }
@@ -228,7 +228,7 @@ final class AgentLoadedViewModel {
                 }
                 self.alertError = error
 
-                Logger.agent.error("Error uploading file: \(error, privacy: .public)")
+                Logger.agents.error("Error uploading file: \(error, privacy: .public)")
             }
         }
 
@@ -252,7 +252,7 @@ final class AgentLoadedViewModel {
 
     func handleStepChange(at index: Int, newValue: String) {
         guard let existingStep = self.steps[safeIndex: index] else {
-            Logger.agent.warning("Editing a step with invalid index: \(index, privacy: .public), steps count: \(self.steps.count)")
+            Logger.agents.warning("Editing a step with invalid index: \(index, privacy: .public), steps count: \(self.steps.count)")
 
             return
         }
@@ -383,9 +383,9 @@ final class AgentLoadedViewModel {
             do {
                 try await self.convex.mutation("agents:update", with: args)
 
-                Logger.agent.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
+                Logger.agents.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
             } catch {
-                Logger.agent.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
+                Logger.agents.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
 
                 self.alertError = error
             }

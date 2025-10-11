@@ -25,8 +25,7 @@ struct SkeletonCustomModelsListView: View {
                 }
                 .padding(.horizontal, 20)
             }
-            .shimmering(active: true,
-                        gradient: ShimmerGradientProvider.shimmerGradient)
+            .shimmering(active: true)
 
             Spacer()
         }

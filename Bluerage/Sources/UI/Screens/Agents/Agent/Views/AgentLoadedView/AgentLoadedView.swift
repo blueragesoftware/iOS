@@ -69,7 +69,7 @@ struct AgentLoadedView: View {
                             }
                         ))
                     } catch {
-                        Logger.agent.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
+                        Logger.agents.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
 
                         self.viewModel.alertError = error
                     }

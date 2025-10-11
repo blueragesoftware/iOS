@@ -47,19 +47,35 @@
 "custom_models_navigation_title" = "Custom Models";
 "custom_models_create_button_title" = "Create New Model";
 "custom_models_empty_title" = "No Custom Models";
-"custom_models_empty_description" = "Create your first custom model to get started with personalized AI experiences";
+"custom_models_empty_description" = "Create your first custom model";
 "custom_models_empty_action_title" = "Create Custom Model";
 "custom_model_navigation_title" = "Custom Model";
-"custom_model_name_field_title" = "Model Name";
+"custom_model_name_field_title" = "Name";
 "custom_model_provider_field_title" = "Provider";
 "custom_model_provider_openai" = "OpenAI";
 "custom_model_id_field_title" = "Model ID";
 "custom_model_base_url_field_title" = "Base URL";
 "custom_model_api_key_field_title" = "API Key";
 "custom_model_api_key_placeholder" = "sk-...";
-"custom_model_configuration_section_title" = "Model Configuration";
+"custom_model_configuration_section_title" = "Configuration";
 "custom_model_authentication_section_title" = "Authentication";
 "custom_model_api_key_footer" = "Your API key will be stored securely on our servers";
+
+// MARK: - MCP Servers
+
+"mcp_servers_navigation_title" = "MCP Servers";
+"mcp_servers_create_button_title" = "Create New MCP Server";
+"mcp_servers_empty_title" = "No MCP Servers";
+"mcp_servers_empty_description" = "Add your first mcp server to give your agents custom tools";
+"mcp_servers_empty_action_title" = "Add MCP Server";
+"mcp_server_navigation_title" = "MCP Server";
+"mcp_server_name_field_title" = "Name";
+"mcp_server_url_field_title" = "URL";
+"mcp_server_authentication_field_title" = "Access Token / API Key";
+"mcp_server_authentication_placeholder" = "sk-...";
+"mcp_server_configuration_section_title" = "Configuration";
+"mcp_server_authentication_section_title" = "Authentication";
+"mcp_server_api_key_footer" = "Your API key will be stored securely on our servers";
 
 // MARK: - Execution
 
@@ -87,6 +103,7 @@
 "settings_navigation_title" = "Settings";
 "settings_app_section_title" = "App";
 "settings_custom_models_title" = "Custom Models";
+"settings_mcp_servers_title" = "MCP Servers";
 "settings_community_section_title" = "Community";
 "settings_x_title" = "X";
 "settings_threads_title" = "Threads";

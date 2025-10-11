@@ -5,8 +5,6 @@ struct ExecutionTask: Identifiable, Decodable, Equatable, Hashable {
     private enum CodingKeys: String, CodingKey {
         case id = "_id"
         case agentId
-        case agent
-        case model
         case state
     }
 
@@ -66,10 +64,6 @@ struct ExecutionTask: Identifiable, Decodable, Equatable, Hashable {
     let id: String
 
     let agentId: String
-
-    let agent: Agent
-
-    let model: ModelUnion
 
     let state: State
 

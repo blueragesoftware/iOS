@@ -38,7 +38,7 @@ struct SettingsScreenView: View {
                     }
                 }
             }
-            .navigationDestination(SettingsDestinations.self)
+            .navigationDestinationAutoReceive(SettingsDestinations.self)
             .scrollIndicators(.hidden)
             .background(UIColor.systemGroupedBackground.swiftUI)
             .navigationTitle(BluerageStrings.settingsNavigationTitle)

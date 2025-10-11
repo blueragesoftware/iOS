@@ -4,9 +4,9 @@ import PostHog
 import NavigatorUI
 import FactoryKit
 
-struct CustomModelsListScreenView: View {
+struct MCPServersListScreenView: View {
 
-    private struct CreateNewCustomModelButton: View {
+    private struct CreateNewMCPServerButton: View {
 
         private let action: () -> Void
 
@@ -18,7 +18,7 @@ struct CustomModelsListScreenView: View {
             Button {
                 self.action()
             } label: {
-                Text(BluerageStrings.customModelsCreateButtonTitle)
+                Text(BluerageStrings.mcpServersCreateButtonTitle)
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(UIColor.systemBackground.swiftUI)
                     .padding(.vertical, 15)
@@ -30,7 +30,7 @@ struct CustomModelsListScreenView: View {
 
     }
 
-    @State private var viewModel = CustomModelsListScreenViewModel()
+    @State private var viewModel = MCPServersListScreenViewModel()
 
     @Injected(\.hapticManager) private var hapticManager
 
@@ -38,11 +38,12 @@ struct CustomModelsListScreenView: View {
 
     var body: some View {
         self.content
-            .navigationDestination(CustomModelsListDestinations.self)
+            .transition(.blurReplace)
+            .navigationDestinationAutoReceive(MCPServersListDestinations.self)
             .safeAreaInset(edge: .bottom) {
                 if self.viewModel.state.main.isLoaded {
-                    CreateNewCustomModelButton {
-                        self.createNewCustomModel()
+                    CreateNewMCPServerButton {
+                        self.createNewMCPServer()
                     }
                 }
             }
@@ -50,62 +51,58 @@ struct CustomModelsListScreenView: View {
             .onFirstAppear {
                 self.viewModel.connect()
             }
-            .navigationTitle(BluerageStrings.customModelsNavigationTitle)
+            .navigationTitle(BluerageStrings.mcpServersNavigationTitle)
             .toolbarTitleDisplayMode(.inline)
             .background(UIColor.systemGroupedBackground.swiftUI)
             .errorAlert(error: self.viewModel.state.alertError) {
                 self.viewModel.resetAlertError()
             }
-            .postHogScreenView("CustomModelsListScreenView")
+            .postHogScreenView("MCPServersListScreenView")
     }
 
     @ViewBuilder
     private var content: some View {
         switch self.viewModel.state.main {
         case .loading:
-            SkeletonCustomModelsListView()
-                .transition(.blurReplace)
-        case .loaded(let customModels):
-            LoadedCustomModelsListView(customModels: customModels,
-                                       onRemove: { ids in
-                self.removeCustomModels(with: ids)
+            SkeletonMCPServersListView()
+        case .loaded(let mcpServers):
+            LoadedMCPServersListView(mcpServers: mcpServers,
+                                     onRemove: { ids in
+                self.removeMCPServers(with: ids)
             })
-            .transition(.blurReplace)
         case .empty:
-            EmptyCustomModelsListView {
-                self.createNewCustomModel()
+            EmptyMCPServersListView {
+                self.createNewMCPServer()
             }
-            .transition(.blurReplace)
         case .error:
-            ErrorCustomModelsListView {
+            ErrorMCPServersListView {
                 self.viewModel.connect()
             }
-            .transition(.blurReplace)
         }
     }
 
-    private func createNewCustomModel() {
+    private func createNewMCPServer() {
         self.hapticManager.triggerSelectionFeedback()
 
         Task {
             do {
-                let customModel = try await self.viewModel.createNewCustomModel()
+                let mcpServer = try await self.viewModel.createNewMCPServer()
 
-                self.navigator.navigate(to: CustomModelsListDestinations.customModel(id: customModel.id))
+                self.navigator.navigate(to: MCPServersListDestinations.mcpServer(id: mcpServer.id))
             } catch {
-                Logger.customModels.error("Error creating new custom model: \(error.localizedDescription, privacy: .public)")
+                Logger.customModels.error("Error creating new mcp server: \(error.localizedDescription, privacy: .public)")
 
                 self.viewModel.showErrorAlert(with: error)
             }
         }
     }
 
-    private func removeCustomModels(with ids: [String]) {
+    private func removeMCPServers(with ids: [String]) {
         Task {
             do {
-                try await self.viewModel.removeCustomModels(with: ids)
+                try await self.viewModel.removeMCPServers(with: ids)
             } catch {
-                Logger.customModels.error("Error removing custom models: \(error.localizedDescription, privacy: .public)")
+                Logger.mcpServers.error("Error removing servers: \(error.localizedDescription, privacy: .public)")
 
                 self.viewModel.showErrorAlert(with: error)
             }

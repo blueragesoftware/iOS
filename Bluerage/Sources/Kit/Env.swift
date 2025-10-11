@@ -78,4 +78,12 @@ final class Env {
             fatalError(error.localizedDescription)
         }
     }()
+
+    private(set) lazy var URL_SCHEME: String = {
+        do {
+            return try Self.value(for: "URL_SCHEME")
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }()
 }

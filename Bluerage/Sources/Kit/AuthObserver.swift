@@ -40,7 +40,7 @@ final class AuthObserver {
                         do {
                             try await Knock.shared.signOut()
                         } catch {
-                            Logger.knockManager.error("Error signing out of knock")
+                            Logger.default.error("Error signing out of knock")
                         }
 
                         self.postHog.reset()

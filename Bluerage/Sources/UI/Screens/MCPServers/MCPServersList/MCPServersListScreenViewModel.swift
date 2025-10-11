@@ -5,7 +5,7 @@ import Combine
 
 @MainActor
 @Observable
-final class AgentsListScreenViewModel {
+final class MCPServersListScreenViewModel {
 
     struct State {
 
@@ -23,7 +23,7 @@ final class AgentsListScreenViewModel {
             // MARK: - Properties
 
             case loading
-            case loaded(agents: [Agent])
+            case loaded(mcpServers: [MCPServer])
             case empty
             case error(Error)
 
@@ -93,17 +93,18 @@ final class AgentsListScreenViewModel {
         self.connection?.cancel()
         self.connection = nil
 
-        self.connection = self.convex.subscribe(to: "agents:getAll", yielding: [Agent].self)
+        self.connection = self.convex.subscribe(to: "mcpServers:getAll",
+                                                yielding: [MCPServer].self)
             .removeDuplicates()
-            .map { agents in
-                if agents.isEmpty {
+            .map { mcpServers in
+                if mcpServers.isEmpty {
                     return State.Main.empty
                 }
 
-                return State.Main.loaded(agents: agents)
+                return State.Main.loaded(mcpServers: mcpServers)
             }
             .catch { error in
-                Logger.agents.error("Error loading all agents: \(error.localizedDescription, privacy: .public)")
+                Logger.mcpServers.error("Error receiving all servers: \(error.localizedDescription, privacy: .public)")
 
                 return Just(State.Main.error(error))
             }
@@ -113,12 +114,12 @@ final class AgentsListScreenViewModel {
             }
     }
 
-    func createNewAgent() async throws -> Agent {
-        return try await self.convex.mutation("agents:create")
+    func createNewMCPServer() async throws -> MCPServer {
+        return try await self.convex.mutation("mcpServers:create")
     }
 
-    func removeAgents(with ids: [String]) async throws {
-        try await self.convex.mutation("agents:removeByIds", with: ["ids": ids])
+    func removeMCPServers(with ids: [String]) async throws {
+        try await self.convex.mutation("mcpServers:removeByIds", with: ["ids": ids])
     }
 
     func showErrorAlert(with error: Error) {

@@ -36,8 +36,7 @@ struct SkeletonExecutionsListView: View {
 
                 Spacer()
             }
-            .shimmering(active: true,
-                        gradient: ShimmerGradientProvider.shimmerGradient)
+            .shimmering(active: true)
         }
     }
 

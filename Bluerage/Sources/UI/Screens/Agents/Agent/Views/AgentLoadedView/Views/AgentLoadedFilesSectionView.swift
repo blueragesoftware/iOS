@@ -121,7 +121,7 @@ struct AgentLoadedFilesSectionView: View {
 
                     self.onAdd(.image(name: newValue.itemIdentifier ?? "image-\(UUID().uuidString.prefix(4))", data: data, uTType: newValue.supportedContentTypes.first))
                 } catch {
-                    Logger.agent.error("Error loading image file: \(error.localizedDescription, privacy: .public)")
+                    Logger.agents.error("Error loading image file: \(error.localizedDescription, privacy: .public)")
                 }
             }
         }
@@ -134,7 +134,7 @@ struct AgentLoadedFilesSectionView: View {
             case .success(let fileUrl):
                 self.onAdd(.file(url: fileUrl))
             case .failure(let error):
-                Logger.agent.error("Error importing file: \(error.localizedDescription, privacy: .public)")
+                Logger.agents.error("Error importing file: \(error.localizedDescription, privacy: .public)")
             }
         }
     }

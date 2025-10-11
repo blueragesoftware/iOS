@@ -35,7 +35,7 @@ final class ExecutionScreenViewModel {
         self.connection?.cancel()
         self.connection = nil
 
-        self.connection = self.convex.subscribe(to: "executionTasks:getById",
+        self.connection = self.convex.subscribe(to: "agent.tasks:getById",
                                                 with: ["id": self.taskId],
                                                 yielding: ExecutionTask.self)
         .removeDuplicates()

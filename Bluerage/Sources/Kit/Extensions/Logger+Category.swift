@@ -7,9 +7,7 @@ extension Logger {
 
     static let `default` = Logger(subsystem: Self.subsystem, category: "default")
 
-    static let agentsList = Logger(subsystem: Self.subsystem, category: "agentsList")
-
-    static let agent = Logger(subsystem: Self.subsystem, category: "agent")
+    static let agents = Logger(subsystem: Self.subsystem, category: "agent")
 
     static let login = Logger(subsystem: Self.subsystem, category: "login")
 
@@ -19,6 +17,8 @@ extension Logger {
 
     static let customModels = Logger(subsystem: Self.subsystem, category: "customModels")
 
-    static let knockManager = Logger(subsystem: Self.subsystem, category: "knockManager")
+    static let mcpServers = Logger(subsystem: Self.subsystem, category: "mcpServers")
+
+    static let notifications = Logger(subsystem: Self.subsystem, category: "notifications")
 
 }

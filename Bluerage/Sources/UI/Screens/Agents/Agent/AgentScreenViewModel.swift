@@ -91,7 +91,7 @@ final class AgentScreenViewModel {
             return State.loaded(loadedViewModel)
         }
         .catch { error in
-            Logger.agent.error("Error loading agent with id \(agentId, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            Logger.agents.error("Error loading agent with id \(agentId, privacy: .public): \(error.localizedDescription, privacy: .public)")
 
             return Just(State.error(error))
         }

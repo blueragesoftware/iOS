@@ -1,120 +1,44 @@
 import UIKit
-import PostHog
 import FactoryKit
-import Sentry
-import Clerk
 import OSLog
-import Nuke
-import Knock
 
-final class AppDelegate: KnockAppDelegate {
+@MainActor
+final class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    @Injected(\.postHog) private var postHog
+    @Injected(\.notificationsManager) private var notificationsManager
 
-    @Injected(\.clerk) private var clerk
-
-    @Injected(\.env) private var env
-
-    @Injected(\.authSession) private var authSession
-
-    @Injected(\.knock) private var knock
-
-    private let authObserver = AuthObserver()
-
-    override func application(_ application: UIApplication,
+    func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        self.setUpClerk()
-
-        self.setUpKnock()
-
-        self.setUpSentry()
-
-        self.setUpPostHog()
-
-        self.setUpAuthObserver()
-
-        self.setUpAuthSession()
-
-        self.setUpNuke()
-
-        self.setUpBarButtonTintColor()
-
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        return true
     }
 
-    override func pushNotificationTapped(userInfo: [AnyHashable: Any]) {
-        super.pushNotificationTapped(userInfo: userInfo)
-
-        if let deeplink = userInfo["link"] as? String, let url = URL(string: deeplink) {
-            UIApplication.shared.open(url)
-        }
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let sceneConfig: UISceneConfiguration = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        sceneConfig.delegateClass = SceneDelegate.self
+        return sceneConfig
     }
 
-    override func pushNotificationDeliveredInForeground(notification: UNNotification) -> UNNotificationPresentationOptions {
-        let options = super.pushNotificationDeliveredInForeground(notification: notification)
+    // MARK: - Notifications
 
-        return [options]
+    func application(_ application: UIApplication,
+                     didFailToRegisterForRemoteNotificationsWithError error: any Error) {
+        Logger.notifications.error("Failed to register for notifications: \(error.localizedDescription, privacy: .public)")
     }
 
-    private func setUpAuthObserver() {
-        self.authObserver.start()
+    func application(_ application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Logger.notifications.info("didRegisterForRemoteNotifications")
+
+        self.notificationsManager.registerTokenForAPNS(with: deviceToken)
     }
 
-    private func setUpClerk() {
-        self.clerk.configure(publishableKey: self.env.CLERK_PUBLISHABLE_KEY)
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async -> UIBackgroundFetchResult {
+        Logger.notifications.info("pushNotificationDeliveredSilently")
 
-        Task {
-            do {
-                try await self.clerk.load()
-            } catch {
-                Logger.default.error("Error loading clerk: \(error.localizedDescription, privacy: .public)")
-            }
-        }
-    }
-
-    private func setUpSentry() {
-        SentrySDK.start { options in
-            options.dsn = self.env.SENTRY_DSN
-
-            options.sendDefaultPii = true
-            options.enableMetricKit = true
-
-#if DEBUG
-            options.environment = "debug"
-#endif
-        }
-    }
-
-    private func setUpKnock() {
-        Task {
-            do {
-                try await self.knock.setup(publishableKey: self.env.KNOCK_PUBLISHABLE_KEY,
-                                           pushChannelId: self.env.KNOCK_CHANNEL_ID)
-            } catch {
-                Logger.knockManager.error("Error setting up remote notifications: \(error.localizedDescription, privacy: .public)")
-            }
-        }
-    }
-
-    private func setUpPostHog() {
-        let config = PostHogConfig(apiKey: self.env.POSTHOG_API_KEY, host: self.env.POSTHOG_HOST)
-
-        config.captureScreenViews = true
-        config.captureApplicationLifecycleEvents = true
-
-        self.postHog.setup(config)
-    }
-
-    private func setUpAuthSession() {
-        self.authSession.start()
-    }
-
-    private func setUpNuke() {
-        ImageDecoders.registerSVGDecoder()
-    }
-
-    private func setUpBarButtonTintColor() {
-        UIBarButtonItem.appearance().tintColor = .label
+        return .noData
     }
 
 }

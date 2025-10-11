@@ -13,6 +13,7 @@ struct SettingRow: Identifiable, Hashable, Equatable {
     enum ActionType {
         case redirect
         case inApp
+        case navigation
     }
 
     enum Icon {

@@ -1,25 +1,20 @@
 import SwiftUI
 import Shimmer
 
-struct SkeletonAgentsListView: View {
+struct SkeletonMCPServersListView: View {
 
     var body: some View {
         VStack(spacing: 28) {
             ForEach(0...4, id: \.self) { _ in
                 HStack(spacing: 0) {
-                    Circle()
-                        .foregroundStyle(UIColor.quaternarySystemFill.swiftUI)
-                        .frame(width: 60, height: 60)
-                        .padding(.trailing, 16)
-
                     VStack(alignment: .leading, spacing: 6) {
                         RoundedRectangle(cornerRadius: 4)
                             .foregroundStyle(UIColor.systemFill.swiftUI)
-                            .frame(width: 100, height: 13)
+                            .frame(width: 120, height: 13)
 
                         RoundedRectangle(cornerRadius: 4)
                             .foregroundStyle(UIColor.quaternarySystemFill.swiftUI)
-                            .frame(width: 120, height: 10)
+                            .frame(width: 80, height: 10)
                     }
 
                     Spacer()
