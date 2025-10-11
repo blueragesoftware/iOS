@@ -60,9 +60,11 @@ struct AgentLoadedFilesSectionView: View {
 
     @State private var showsPhotoPicker = false
 
-    private let files: [Agent.File]
+    @Binding private var alertError: Error?
 
-    private let isUploading: Bool
+    @State var isUploading: Bool
+
+    private let files: [Agent.File]
 
     private let onRemove: (IndexSet) -> Void
 
@@ -73,7 +75,8 @@ struct AgentLoadedFilesSectionView: View {
          onRemove: @escaping (IndexSet) -> Void,
          onAdd: @escaping (AgentLoadedViewModel.LocalFile) -> Void) {
         self.files = files
-        self.isUploading = isUploading
+        self._alertError = .constant(nil)
+        self._isUploading = .init(wrappedValue: isUploading)
         self.onRemove = onRemove
         self.onAdd = onAdd
     }
@@ -108,6 +111,21 @@ struct AgentLoadedFilesSectionView: View {
         } footer: {
             Text(BluerageStrings.agentSectionFooter)
         }
+        .background(EmptyView().photosPicker(isPresented: self.$showsPhotoPicker,
+                                             selection: self.$photosPickerItem,
+                                             matching: .images))
+        .background(EmptyView().fileImporter(isPresented: self.$showsFilePicker,
+                                             allowedContentTypes: [.pdf]) { result in
+                                   switch result {
+                                   case .success(let fileUrl):
+                                       self.onAdd(.file(id: UUID().uuidString, url: fileUrl))
+                                   case .failure(let error):
+                                       Logger.agents.error("Error importing file: \(error.localizedDescription, privacy: .public)")
+
+                                       self.alertError = error
+                                   }
+                               })
+        .background(EmptyView().errorAlert(error: self.$alertError))
         .onChange(of: self.photosPickerItem) { _, newValue in
             guard let newValue else {
                 return
@@ -119,22 +137,15 @@ struct AgentLoadedFilesSectionView: View {
                         return
                     }
 
-                    self.onAdd(.image(name: newValue.itemIdentifier ?? "image-\(UUID().uuidString.prefix(4))", data: data, uTType: newValue.supportedContentTypes.first))
+                    self.onAdd(.image(id: UUID().uuidString,
+                                      name: newValue.itemIdentifier ?? "image-\(UUID().uuidString.prefix(4))",
+                                      data: data,
+                                      uTType: newValue.supportedContentTypes.first))
                 } catch {
                     Logger.agents.error("Error loading image file: \(error.localizedDescription, privacy: .public)")
+
+                    self.alertError = error
                 }
-            }
-        }
-        .photosPicker(isPresented: self.$showsPhotoPicker,
-                      selection: self.$photosPickerItem,
-                      matching: .images)
-        .fileImporter(isPresented: self.$showsFilePicker,
-                      allowedContentTypes: [.pdf]) { result in
-            switch result {
-            case .success(let fileUrl):
-                self.onAdd(.file(url: fileUrl))
-            case .failure(let error):
-                Logger.agents.error("Error importing file: \(error.localizedDescription, privacy: .public)")
             }
         }
     }

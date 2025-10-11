@@ -13,4 +13,6 @@ protocol AuthSession {
 
     func signOut() async throws
 
+    func deleteAccount() async throws
+
 }

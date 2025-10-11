@@ -16,6 +16,8 @@ final class NotificationsManager: NSObject, UNUserNotificationCenterDelegate {
 
     @Injected(\.knock) private var knock
 
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
     nonisolated override init() {
         super.init()
 
@@ -23,14 +25,12 @@ final class NotificationsManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     func pushNotificationTapped(userInfo: [AnyHashable: Any]) {
-        if let messageId = self.getMessageId(userInfo: userInfo) {
-            Task {
-                do {
-                    _ = try await self.knock.updateMessageStatus(messageId: messageId, status: .interacted)
-                } catch {
-                    Logger.notifications.error("Error sending updating message status for messageId: \(messageId, privacy: .public), error: \(error.localizedDescription, privacy: .public)")
-                }
-            }
+        guard let messageId = self.getMessageId(userInfo: userInfo) else {
+            return
+        }
+
+        Task {
+            await self.updateMessageStatus(messageId: messageId, status: .interacted)
         }
     }
 
@@ -39,7 +39,9 @@ final class NotificationsManager: NSObject, UNUserNotificationCenterDelegate {
             let channelId = await Knock.shared.getPushChannelId()
 
             do {
-                _ = try await Knock.shared.registerTokenForAPNS(channelId: channelId, token: Self.convertTokenToString(token: deviceToken))
+                try await self.keyedExecutor.executeOperation(for: "notificationsManager/registerTokenForAPNS/\(channelId ?? "nil")") {
+                    _ = try await Knock.shared.registerTokenForAPNS(channelId: channelId, token: Self.convertTokenToString(token: deviceToken))
+                }
             } catch let error {
                 Logger.notifications.error("Unable to register for push notification at this time, error: \(error.localizedDescription, privacy: .public)")
             }
@@ -52,18 +54,34 @@ final class NotificationsManager: NSObject, UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
         Logger.notifications.info("pushNotificationDeliveredInForeground")
 
-        if let messageId = getMessageId(userInfo: notification.request.content.userInfo) {
-            self.knock.updateMessageStatus(messageId: messageId, status: .read) { _ in }
+        let options: UNNotificationPresentationOptions = [.sound, .badge, .banner]
+
+        guard let messageId = self.getMessageId(userInfo: notification.request.content.userInfo) else {
+            return options
         }
 
-        return [.sound, .badge, .banner]
+        await self.updateMessageStatus(messageId: messageId, status: .read)
+
+        return options
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         Logger.notifications.info("pushNotificationTapped")
 
-        if let messageId = getMessageId(userInfo: response.notification.request.content.userInfo) {
-            Knock.shared.updateMessageStatus(messageId: messageId, status: .interacted) { _ in }
+        guard let messageId = self.getMessageId(userInfo: response.notification.request.content.userInfo) else {
+            return
+        }
+
+        await self.updateMessageStatus(messageId: messageId, status: .interacted)
+    }
+
+    private func updateMessageStatus(messageId: String, status: Knock.KnockMessageStatusUpdateType) async {
+        do {
+            try await self.keyedExecutor.executeOperation(for: "notificationsManager/updateMessageStatus/\(status.rawValue)/\(messageId)") {
+                _ = try await self.knock.updateMessageStatus(messageId: messageId, status: status)
+            }
+        } catch {
+            Logger.notifications.error("Failed to update messageId \(messageId, privacy: .public) to status \(status.rawValue, privacy: .public), error: \(error.localizedDescription, privacy: .public)")
         }
     }
 

@@ -33,6 +33,9 @@ final class ToolsSelectionScreenViewModel {
     @ObservationIgnored
     @Injected(\.convex) private var convex
 
+    @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
     init(agentToolsSlugSet: Set<String>) {
         self.agentToolsSlugSet = agentToolsSlugSet
     }
@@ -42,7 +45,9 @@ final class ToolsSelectionScreenViewModel {
 
         Task {
             do {
-                let tools: [Tool] = try await self.convex.action("tools:getAll")
+                let tools: [Tool] = try await self.keyedExecutor.executeOperation(for: "tools/getAll") {
+                    try await self.convex.action("tools:getAll")
+                }
 
                 let nonUsedTools = tools.filter { tool in
                     return !self.agentToolsSlugSet.contains(tool.slug)
@@ -75,7 +80,9 @@ final class ToolsSelectionScreenViewModel {
     }
 
     func connectTool(with authConfigId: String) async throws -> URL {
-        let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+        let connectionResult: ConnectToolResponse = try await self.keyedExecutor.executeOperation(for: "tools/connectWithAuthConfigId/\(authConfigId)") {
+            try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+        }
 
         guard let url = URL(string: connectionResult.redirectUrl) else {
             throw URLError(.badURL)

@@ -2,8 +2,20 @@ import Foundation
 import FactoryKit
 import Combine
 import ConvexMobile
+import OSLog
 
 final class AuthSessionImpl: AuthSession {
+
+    enum Error: LocalizedError {
+        case userInformationIsMissingForDelete
+
+        var errorDescription: String? {
+            switch self {
+            case .userInformationIsMissingForDelete:
+                "Delete account failure due to missing user session"
+            }
+        }
+    }
 
     private(set) var authState: AuthState {
         get {
@@ -25,6 +37,8 @@ final class AuthSessionImpl: AuthSession {
 
     @Injected(\.env) private var env
 
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
     private let authStateSubject: CurrentValueSubject<AuthState, Never>
 
     init() {
@@ -34,7 +48,9 @@ final class AuthSessionImpl: AuthSession {
     }
 
     func signInWithApple(idToken: String) async throws {
-        _ = try await self.convex.login(with: ClerkAuthProvider.AppleLoginParams(idToken: idToken))
+        try await self.keyedExecutor.executeOperation(for: "authSession/signInWithApple/\(idToken)") {
+            _ = try await self.convex.login(with: ClerkAuthProvider.AppleLoginParams(idToken: idToken))
+        }
     }
 
     func start() {
@@ -60,12 +76,32 @@ final class AuthSessionImpl: AuthSession {
             .store(in: &self.cancellables)
 
         Task {
-            try await self.convex.loginFromCache()
+            do {
+                try await self.keyedExecutor.executeOperation(for: "authSession/loginFromCache") {
+                    try await self.convex.loginFromCache()
+                }
+            } catch {
+                Logger.auth.error("Error logging in from cache: \(error.localizedDescription, privacy: .public)")
+            }
         }
     }
 
+    @MainActor
     func signOut() async throws {
-        await self.convex.logout()
+        try await self.keyedExecutor.executeOperation(for: "authSession/signOut") {
+            try await self.convex.logout()
+        }
+    }
+
+    @MainActor
+    func deleteAccount() async throws {
+        guard let user = self.clerk.user else {
+            throw Error.userInformationIsMissingForDelete
+        }
+
+        try await self.keyedExecutor.executeOperation(for: "settings/deleteUser") {
+            try await user.delete()
+        }
     }
 
 }

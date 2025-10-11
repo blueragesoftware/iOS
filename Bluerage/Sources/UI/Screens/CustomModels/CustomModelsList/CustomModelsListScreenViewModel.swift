@@ -85,6 +85,9 @@ final class CustomModelsListScreenViewModel {
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
+    @ObservationIgnored
     private var connection: AnyCancellable?
 
     func connect() {
@@ -115,11 +118,15 @@ final class CustomModelsListScreenViewModel {
     }
 
     func createNewCustomModel() async throws -> CustomModel {
-        return try await self.convex.mutation("customModels:create")
+        try await self.keyedExecutor.executeOperation(for: "customModels/create") {
+            try await self.convex.mutation("customModels:create")
+        }
     }
 
     func removeCustomModels(with ids: [String]) async throws {
-        try await self.convex.mutation("customModels:removeByIds", with: ["ids": ids])
+        try await self.keyedExecutor.executeOperation(for: "customModels/removeByIds/\(ids)") {
+            try await self.convex.mutation("customModels:removeByIds", with: ["ids": ids])
+        }
     }
 
     func showErrorAlert(with error: Error) {

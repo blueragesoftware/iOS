@@ -11,12 +11,31 @@ import UniformTypeIdentifiers
 final class AgentLoadedViewModel {
 
     enum LocalFile {
-        case image(name: String, data: Data, uTType: UTType?)
-        case file(url: URL)
+        case image(id: String, name: String, data: Data, uTType: UTType?)
+        case file(id: String, url: URL)
+
+        var id: String {
+            switch self {
+            case .image(let id, _, _, _):
+                id
+            case .file(let id, _):
+                id
+            }
+        }
     }
 
-    private enum Error: Swift.Error {
+    private enum Error: LocalizedError {
         case unableToAccessSecurelyScopedResource
+        case unableToConstructUrl
+
+        var errorDescription: String? {
+            switch self {
+            case .unableToAccessSecurelyScopedResource:
+                "Unable to access securely scoped resource"
+            case .unableToConstructUrl:
+                "Unable to construct url"
+            }
+        }
     }
 
     private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
@@ -90,6 +109,9 @@ final class AgentLoadedViewModel {
     @Injected(\.apiClient) private var apiClient
 
     @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
+    @ObservationIgnored
     private let updateSubject = CurrentValueSubject<UpdateAction, Never>(.reset)
 
     @ObservationIgnored
@@ -115,7 +137,9 @@ final class AgentLoadedViewModel {
     func run() {
         Task {
             do {
-                try await self.convex.mutation("agent.tasks:create", with: ["agentId": self.agent.id])
+                try await self.keyedExecutor.executeOperation(for: "agent/tasks/create/\(self.agent.id)") {
+                    try await self.convex.mutation("agent.tasks:create", with: ["agentId": self.agent.id])
+                }
             } catch {
                 Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
 
@@ -156,61 +180,20 @@ final class AgentLoadedViewModel {
     }
 
     func add(localFile: LocalFile) {
+        withAnimation {
+            self.isUploadingFile = true
+        }
+
         Task {
-            do {
+            defer {
                 withAnimation {
-                    self.isUploadingFile = true
+                    self.isUploadingFile = false
                 }
+            }
 
-                let uploadUrlAbsoluteString: String = try await self.convex.mutation("files:generateUploadUrl")
-
-                guard let url = URL(string: uploadUrlAbsoluteString) else {
-                    return
-                }
-
-                let response: UploadResponse
-                let fileName: String
-                let fileType: Agent.File.`Type`
-
-                switch localFile {
-                case .image(let name, let data, let utType):
-                    fileName = name
-                    fileType = .image
-
-                    let headers: [String: String] = if let preferredMIMEType = utType?.preferredMIMEType {
-                        ["Content-Type": preferredMIMEType]
-                    } else {
-                        [:]
-                    }
-
-                    let request = Request<UploadResponse>(url: url,
-                                                          method: .post,
-                                                          headers: headers)
-                    response = try await self.apiClient.upload(for: request, from: data).value
-                case .file(let fileUrl):
-                    fileName = fileUrl.lastPathComponent
-                    fileType = .file
-
-                    let headers: [String: String] = if let preferredMIMEType = UTType(filenameExtension: fileUrl.pathExtension)?.preferredMIMEType {
-                        ["Content-Type": preferredMIMEType]
-                    } else {
-                        [:]
-                    }
-
-                    let request = Request<UploadResponse>(url: url,
-                                                          method: .post,
-                                                          headers: headers)
-
-                    let canAccess = fileUrl.startAccessingSecurityScopedResource()
-
-                    if !canAccess {
-                        throw Error.unableToAccessSecurelyScopedResource
-                    }
-
-                    let data = try Data(contentsOf: fileUrl)
-                    fileUrl.stopAccessingSecurityScopedResource()
-
-                    response = try await self.apiClient.upload(for: request, from: data).value
+            do {
+                let (response, fileName, fileType) = try await self.keyedExecutor.executeOperation(for: "files/generateUploadUrl/\(localFile.id)") {
+                    try await self.upload(localFile: localFile)
                 }
 
                 withAnimation {
@@ -218,17 +201,10 @@ final class AgentLoadedViewModel {
                 }
 
                 self.updateAgent(files: self.files)
-
-                withAnimation {
-                    self.isUploadingFile = false
-                }
             } catch {
-                withAnimation {
-                    self.isUploadingFile = false
-                }
-                self.alertError = error
-
                 Logger.agents.error("Error uploading file: \(error, privacy: .public)")
+
+                self.alertError = error
             }
         }
 
@@ -283,7 +259,9 @@ final class AgentLoadedViewModel {
     }
 
     func connectTool(with authConfigId: String) async throws -> URL {
-        let connectionResult: ConnectToolResponse = try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+        let connectionResult: ConnectToolResponse = try await self.keyedExecutor.executeOperation(for: "tools/connectWithAuthConfigId/\(authConfigId)") {
+            try await self.convex.action("tools:connectWithAuthConfigId", with: ["authConfigId": authConfigId])
+        }
 
         guard let url = URL(string: connectionResult.redirectUrl) else {
             throw URLError(.badURL)
@@ -390,6 +368,63 @@ final class AgentLoadedViewModel {
                 self.alertError = error
             }
         }
+    }
+
+    private func upload(localFile: LocalFile) async throws -> (response: UploadResponse,
+                                                               fileName: String,
+                                                               fileType: Agent.File.`Type`) {
+        let uploadUrlAbsoluteString: String = try await self.convex.mutation("files:generateUploadUrl")
+
+        guard let url = URL(string: uploadUrlAbsoluteString) else {
+            throw Error.unableToConstructUrl
+        }
+
+        let response: UploadResponse
+        let fileName: String
+        let fileType: Agent.File.`Type`
+
+        switch localFile {
+        case .image(_, let name, let data, let utType):
+            fileName = name
+            fileType = .image
+
+            let headers: [String: String] = if let preferredMIMEType = utType?.preferredMIMEType {
+                ["Content-Type": preferredMIMEType]
+            } else {
+                [:]
+            }
+
+            let request = Request<UploadResponse>(url: url,
+                                                  method: .post,
+                                                  headers: headers)
+            response = try await self.apiClient.upload(for: request, from: data).value
+        case .file(_, let fileUrl):
+            fileName = fileUrl.lastPathComponent
+            fileType = .file
+
+            let headers: [String: String] = if let preferredMIMEType = UTType(filenameExtension: fileUrl.pathExtension)?.preferredMIMEType {
+                ["Content-Type": preferredMIMEType]
+            } else {
+                [:]
+            }
+
+            let request = Request<UploadResponse>(url: url,
+                                                  method: .post,
+                                                  headers: headers)
+
+            let canAccess = fileUrl.startAccessingSecurityScopedResource()
+
+            if !canAccess {
+                throw Error.unableToAccessSecurelyScopedResource
+            }
+
+            let data = try Data(contentsOf: fileUrl)
+            fileUrl.stopAccessingSecurityScopedResource()
+
+            response = try await self.apiClient.upload(for: request, from: data).value
+        }
+
+        return (response, fileName, fileType)
     }
 
 }

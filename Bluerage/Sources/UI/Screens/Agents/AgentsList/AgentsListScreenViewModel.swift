@@ -85,6 +85,9 @@ final class AgentsListScreenViewModel {
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
+    @ObservationIgnored
     private var connection: AnyCancellable?
 
     func connect() {
@@ -114,11 +117,15 @@ final class AgentsListScreenViewModel {
     }
 
     func createNewAgent() async throws -> Agent {
-        return try await self.convex.mutation("agents:create")
+        try await self.keyedExecutor.executeOperation(for: "agents/create") {
+            try await self.convex.mutation("agents:create")
+        }
     }
 
     func removeAgents(with ids: [String]) async throws {
-        try await self.convex.mutation("agents:removeByIds", with: ["ids": ids])
+        try await self.keyedExecutor.executeOperation(for: "agents/removeByIds/\(ids)") {
+            try await self.convex.mutation("agents:removeByIds", with: ["ids": ids])
+        }
     }
 
     func showErrorAlert(with error: Error) {

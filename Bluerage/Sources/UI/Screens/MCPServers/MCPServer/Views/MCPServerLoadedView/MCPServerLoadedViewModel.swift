@@ -53,6 +53,8 @@ final class MCPServerLoadedViewModel {
 
     let mcpServer: MCPServer
 
+    private(set) var isConnecting = false
+
     @ObservationIgnored
     private var updatesQueueCancellables = Set<AnyCancellable>()
 
@@ -94,6 +96,12 @@ final class MCPServerLoadedViewModel {
     }
 
     func flush() {
+        Task {
+            await self.flushAsync()
+        }
+    }
+
+    func flushAsync() async {
         var currentRequest = self.currentAccumulatedSubject.value
         let queueRequest = self.updateSubject.value
 
@@ -104,13 +112,19 @@ final class MCPServerLoadedViewModel {
         if currentRequest.hasUpdates {
             self.queue.cancelAllPendingTasks()
 
-            Task {
-                await self.performUpdate(request: currentRequest)
-            }
+            await self.performUpdate(request: currentRequest)
         }
     }
 
     func connect() async throws -> Result {
+        self.isConnecting = true
+
+        defer {
+            self.isConnecting = false
+        }
+
+        await self.flushAsync()
+
         let params = [
             "id": self.mcpServer.id,
             "callbackUrl": self.callbackUrl(for: self.mcpServer.id)
@@ -120,27 +134,33 @@ final class MCPServerLoadedViewModel {
     }
 
     func handle(oauthResult: MCPOAuthURLHandler.OAuthResult) {
-        if let error = oauthResult.error {
-            Logger.mcpServers.error("Received an error authenticating with code from mcp server with id \(self.mcpServer.id, privacy: .public): \(error, privacy: .public)")
-
-            self.alertError = Error.mcpAuthError(error)
-
-            return
-        }
-
-        guard let code = oauthResult.code else {
-            Logger.mcpServers.error("Didn't receive code from mcp server with id \(self.mcpServer.id, privacy: .public)")
-
-            return
-        }
-
-        let params = [
-            "id": self.mcpServer.id,
-            "callbackUrl": self.callbackUrl(for: self.mcpServer.id),
-            "oauthCode": code
-        ]
-
         Task {
+            self.isConnecting = true
+
+            defer {
+                self.isConnecting = false
+            }
+
+            if let error = oauthResult.error {
+                Logger.mcpServers.error("Received an error authenticating with code from mcp server with id \(self.mcpServer.id, privacy: .public): \(error, privacy: .public)")
+
+                self.alertError = Error.mcpAuthError(error)
+
+                return
+            }
+
+            guard let code = oauthResult.code else {
+                Logger.mcpServers.error("Didn't receive code from mcp server with id \(self.mcpServer.id, privacy: .public)")
+
+                return
+            }
+
+            let params = [
+                "id": self.mcpServer.id,
+                "callbackUrl": self.callbackUrl(for: self.mcpServer.id),
+                "oauthCode": code
+            ]
+
             do {
                 try await self.convex.action("mcpServer/connect:withId", with: params)
             } catch {

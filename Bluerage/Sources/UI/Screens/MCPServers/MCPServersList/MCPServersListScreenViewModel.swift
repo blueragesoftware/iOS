@@ -79,10 +79,13 @@ final class MCPServersListScreenViewModel {
 
     }
 
-    private(set) var state: State = State(main: .loading)
+    private(set) var state = State(main: .loading)
 
     @ObservationIgnored
     @Injected(\.convex) private var convex
+
+    @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
 
     @ObservationIgnored
     private var connection: AnyCancellable?
@@ -115,11 +118,15 @@ final class MCPServersListScreenViewModel {
     }
 
     func createNewMCPServer() async throws -> MCPServer {
-        return try await self.convex.mutation("mcpServers:create")
+        try await self.keyedExecutor.executeOperation(for: "mcpServers/create") {
+            try await self.convex.mutation("mcpServers:create")
+        }
     }
 
     func removeMCPServers(with ids: [String]) async throws {
-        try await self.convex.mutation("mcpServers:removeByIds", with: ["ids": ids])
+        try await self.keyedExecutor.executeOperation(for: "mcpServers/removeByIds/\(ids)") {
+            try await self.convex.mutation("mcpServers:removeByIds", with: ["ids": ids])
+        }
     }
 
     func showErrorAlert(with error: Error) {

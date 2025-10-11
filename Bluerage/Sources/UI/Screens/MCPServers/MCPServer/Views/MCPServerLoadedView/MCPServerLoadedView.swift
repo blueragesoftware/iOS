@@ -6,9 +6,12 @@ struct MCPServerLoadedView: View {
 
     private struct ConnectButton: View {
 
+        private let isLoading: Bool
+
         private let action: () -> Void
 
-        init(action: @escaping () -> Void) {
+        init(isLoading: Bool, action: @escaping () -> Void) {
+            self.isLoading = isLoading
             self.action = action
         }
 
@@ -16,11 +19,15 @@ struct MCPServerLoadedView: View {
             Button {
                 self.action()
             } label: {
-                Text("Connect")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.systemBackground.swiftUI)
-                    .padding(.vertical, 15)
-                    .frame(maxWidth: .infinity)
+                if self.isLoading {
+                    ProgressView()
+                } else {
+                    Text("Connect")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(UIColor.systemBackground.swiftUI)
+                        .padding(.vertical, 15)
+                        .frame(maxWidth: .infinity)
+                }
             }
             .padding(.horizontal, 20)
             .buttonStyle(.primaryButtonStyle)
@@ -60,8 +67,9 @@ struct MCPServerLoadedView: View {
                 }
             )
         }
+        .safeAreaPadding(.bottom, 52)
         .safeAreaInset(edge: .bottom) {
-            ConnectButton {
+            ConnectButton(isLoading: self.viewModel.isConnecting) {
                 Task {
                     do {
                         let res = try await self.viewModel.connect()

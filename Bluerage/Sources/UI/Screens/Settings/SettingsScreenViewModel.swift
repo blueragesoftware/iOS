@@ -16,6 +16,9 @@ final class SettingsScreenViewModel {
     @ObservationIgnored
     @Injected(\.authSession) private var authSession
 
+    @ObservationIgnored
+    @Injected(\.keyedExecutor) private var keyedExecutor
+
     init() {
         weak var weakSelf: SettingsScreenViewModel?
 
@@ -140,13 +143,7 @@ final class SettingsScreenViewModel {
                                    return
                                }
 
-                               guard let user = self.clerk.user else {
-                                   Logger.settings.error("Delete account failure due to missing user session")
-
-                                   return
-                               }
-
-                               try await user.delete()
+                               try await self.authSession.deleteAccount()
                            }),
                            actionType: .inApp)
             ])
