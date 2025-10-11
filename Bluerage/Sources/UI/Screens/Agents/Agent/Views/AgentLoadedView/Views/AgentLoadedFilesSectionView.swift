@@ -108,8 +108,6 @@ struct AgentLoadedFilesSectionView: View {
             }
         } header: {
             Text(BluerageStrings.agentFilesSectionHeader)
-        } footer: {
-            Text(BluerageStrings.agentSectionFooter)
         }
         .background(EmptyView().photosPicker(isPresented: self.$showsPhotoPicker,
                                              selection: self.$photosPickerItem,

@@ -1,7 +1,6 @@
 import FactoryKit
 import ConvexMobile
 import OSLog
-import Combine
 import SwiftUI
 import Get
 import UniformTypeIdentifiers
@@ -38,7 +37,7 @@ final class AgentLoadedViewModel {
         }
     }
 
-    private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
+    private struct AgentUpdateRequest: UpdateRequest, Encodable, ConvexEncodable {
         var name: String?
         var description: String?
         var iconUrl: String?
@@ -47,6 +46,10 @@ final class AgentLoadedViewModel {
         var steps: [Agent.Step]?
         var model: AgentModel?
         var files: [Agent.File]?
+
+        static var empty: AgentUpdateRequest {
+            AgentUpdateRequest()
+        }
 
         var hasUpdates: Bool {
             return self.name != nil
@@ -59,7 +62,7 @@ final class AgentLoadedViewModel {
             || self.files != nil
         }
 
-        mutating func merge(with other: UpdateRequest) {
+        mutating func merge(with other: AgentUpdateRequest) {
             if let otherName = other.name { self.name = otherName }
             if let otherDescription = other.description { self.description = otherDescription }
             if let otherIconUrl = other.iconUrl { self.iconUrl = otherIconUrl }
@@ -69,11 +72,6 @@ final class AgentLoadedViewModel {
             if let otherModel = other.model { self.model = otherModel }
             if let otherFiles = other.files { self.files = otherFiles }
         }
-    }
-
-    private enum UpdateAction {
-        case merge(UpdateRequest)
-        case reset
     }
 
     private struct UploadResponse: Decodable {
@@ -100,9 +98,6 @@ final class AgentLoadedViewModel {
     private(set) var files: [Agent.File]
 
     @ObservationIgnored
-    private var updatesQueueCancellables = Set<AnyCancellable>()
-
-    @ObservationIgnored
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
@@ -112,10 +107,7 @@ final class AgentLoadedViewModel {
     @Injected(\.keyedExecutor) private var keyedExecutor
 
     @ObservationIgnored
-    private let updateSubject = CurrentValueSubject<UpdateAction, Never>(.reset)
-
-    @ObservationIgnored
-    private let currentAccumulatedSubject = CurrentValueSubject<UpdateRequest, Never>(UpdateRequest())
+    private let queuedUpdater: QueuedUpdater<AgentUpdateRequest>
 
     init(agent: Agent,
          model: ModelUnion,
@@ -128,17 +120,28 @@ final class AgentLoadedViewModel {
         self.steps = agent.steps
         self.files = agent.files
         self.availableModels = availableModels
-
         self.reload = reload
 
-        self.setupUpdatesQueue()
+        weak var weakSelf: AgentLoadedViewModel?
+
+        self.queuedUpdater = QueuedUpdater<AgentUpdateRequest> { request in
+            guard let self = weakSelf else {
+                return false
+            }
+
+            return await self.performUpdate(request: request)
+        }
+
+        weakSelf = self
     }
 
     func run() {
         Task {
             do {
+                await self.queuedUpdater.flushAsync()
+
                 try await self.keyedExecutor.executeOperation(for: "agent/tasks/create/\(self.agent.id)") {
-                    try await self.convex.mutation("agent.tasks:create", with: ["agentId": self.agent.id])
+                    try await self.convex.mutation("agent/tasks:create", with: ["agentId": self.agent.id])
                 }
             } catch {
                 Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
@@ -149,18 +152,7 @@ final class AgentLoadedViewModel {
     }
 
     func flush() {
-        var currentRequest = self.currentAccumulatedSubject.value
-        let queueRequest = self.updateSubject.value
-
-        if case .merge(let queueRequest) = queueRequest {
-            currentRequest.merge(with: queueRequest)
-        }
-
-        self.updateSubject.send(.reset)
-
-        if currentRequest.hasUpdates {
-            self.performUpdate(request: currentRequest)
-        }
+        self.queuedUpdater.flush()
     }
 
     func add(tool: Tool) {
@@ -243,7 +235,7 @@ final class AgentLoadedViewModel {
             self.steps.move(fromOffsets: from, toOffset: to)
         }
 
-        self.notifyStepsChanged()
+        self.updateAgent(steps: self.steps)
     }
 
     func removeSteps(at offsets: IndexSet) {
@@ -251,7 +243,7 @@ final class AgentLoadedViewModel {
             self.steps.remove(atOffsets: offsets)
         }
 
-        self.notifyStepsChanged()
+        self.updateAgent(steps: self.steps)
     }
 
     func updateAgentHeader(params: AgentHeaderUpdateParams) {
@@ -278,7 +270,7 @@ final class AgentLoadedViewModel {
                              steps: [Agent.Step]? = nil,
                              model: AgentModel? = nil,
                              files: [Agent.File]? = nil) {
-        let request = UpdateRequest(
+        let request = AgentUpdateRequest(
             name: name,
             description: description,
             iconUrl: iconUrl,
@@ -291,57 +283,10 @@ final class AgentLoadedViewModel {
             files: files
         )
 
-        self.updateSubject.send(.merge(request))
+        self.queuedUpdater.enqueue(request)
     }
 
-    private func notifyToolsChanged() {
-        self.updateAgent(tools: self.tools)
-    }
-
-    private func notifyStepsChanged() {
-        self.updateAgent(steps: self.steps)
-    }
-
-    private func notifyFilesChanged() {
-        self.updateAgent(files: self.files)
-    }
-
-    private func setupUpdatesQueue() {
-        self.updateSubject
-            .scan(UpdateRequest()) { accumulated, action in
-                switch action {
-                case .merge(let new):
-                    var merged = accumulated
-                    merged.merge(with: new)
-                    return merged
-                case .reset:
-                    return UpdateRequest()
-                }
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] accumulatedRequest in
-                self?.currentAccumulatedSubject.send(accumulatedRequest)
-            }
-            .store(in: &self.updatesQueueCancellables)
-
-        self.currentAccumulatedSubject
-            .debounce(for: .seconds(2), scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .sink { [weak self] mergedRequest in
-                guard let self = self else {
-                    return
-                }
-
-                if mergedRequest.hasUpdates {
-                    self.performUpdate(request: mergedRequest)
-                    self.updateSubject.send(.reset)
-                }
-            }
-            .store(in: &self.updatesQueueCancellables)
-    }
-
-    private func performUpdate(request: UpdateRequest) {
+    private func performUpdate(request: AgentUpdateRequest) async -> Bool {
         var args: [String: any ConvexEncodable] = ["id": self.agent.id]
 
         if let name = request.name { args["name"] = name }
@@ -354,19 +299,21 @@ final class AgentLoadedViewModel {
         if let files = request.files { args["files"] = files }
 
         guard args.count > 1 else {
-            return
+            return true
         }
 
-        Task {
-            do {
-                try await self.convex.mutation("agents:update", with: args)
+        do {
+            try await self.convex.mutation("agents:update", with: args)
 
-                Logger.agents.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
-            } catch {
-                Logger.agents.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
+            Logger.agents.info("Agent updated successfully with \(args.count - 1, privacy: .public) fields")
 
-                self.alertError = error
-            }
+            return true
+        } catch {
+            Logger.agents.error("Failed to update agent: \(error.localizedDescription, privacy: .public)")
+
+            self.alertError = error
+
+            return false
         }
     }
 

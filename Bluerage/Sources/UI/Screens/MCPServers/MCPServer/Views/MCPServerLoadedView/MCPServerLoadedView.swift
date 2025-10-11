@@ -21,6 +21,9 @@ struct MCPServerLoadedView: View {
             } label: {
                 if self.isLoading {
                     ProgressView()
+                        .tint(UIColor.systemBackground.swiftUI)
+                        .padding(.vertical, 15)
+                        .frame(maxWidth: .infinity)
                 } else {
                     Text("Connect")
                         .font(.system(size: 17, weight: .semibold))

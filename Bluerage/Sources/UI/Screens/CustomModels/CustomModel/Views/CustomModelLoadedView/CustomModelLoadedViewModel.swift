@@ -1,19 +1,22 @@
 import FactoryKit
 import ConvexMobile
 import OSLog
-import Combine
 import SwiftUI
 
 @MainActor
 @Observable
 final class CustomModelLoadedViewModel {
 
-    private struct UpdateRequest: Equatable, Encodable, ConvexEncodable {
+    private struct CustomModelUpdateRequest: UpdateRequest, Encodable, ConvexEncodable {
         var name: String?
         var provider: String?
         var modelId: String?
         var encryptedApiKey: String?
         var baseUrl: String??
+
+        static var empty: CustomModelUpdateRequest {
+            CustomModelUpdateRequest()
+        }
 
         var hasUpdates: Bool {
             return self.name != nil
@@ -23,7 +26,7 @@ final class CustomModelLoadedViewModel {
             || self.baseUrl != nil
         }
 
-        mutating func merge(with other: UpdateRequest) {
+        mutating func merge(with other: CustomModelUpdateRequest) {
             if let otherName = other.name { self.name = otherName }
             if let otherProvider = other.provider { self.provider = otherProvider }
             if let otherModelId = other.modelId { self.modelId = otherModelId }
@@ -32,33 +35,32 @@ final class CustomModelLoadedViewModel {
         }
     }
 
-    private enum UpdateAction {
-        case merge(UpdateRequest)
-        case reset
-    }
-
     var alertError: Error?
 
     let customModel: CustomModel
 
     @ObservationIgnored
-    private var updatesQueueCancellables = Set<AnyCancellable>()
-
-    @ObservationIgnored
     @Injected(\.convex) private var convex
 
     @ObservationIgnored
-    private let updateSubject = CurrentValueSubject<UpdateAction, Never>(.reset)
-
-    @ObservationIgnored
-    private let currentAccumulatedSubject = CurrentValueSubject<UpdateRequest, Never>(UpdateRequest())
+    private let queuedUpdater: QueuedUpdater<CustomModelUpdateRequest>
 
     // MARK: - Initialization
 
     init(customModel: CustomModel) {
         self.customModel = customModel
 
-        self.setupUpdatesQueue()
+        weak var weakSelf: CustomModelLoadedViewModel?
+
+        self.queuedUpdater = QueuedUpdater<CustomModelUpdateRequest> { request in
+            guard let self = weakSelf else {
+                return false
+            }
+
+            return await self.performUpdate(request: request)
+        }
+
+        weakSelf = self
     }
 
     // MARK: - Public Methods
@@ -68,7 +70,7 @@ final class CustomModelLoadedViewModel {
                            modelId: String? = nil,
                            encryptedApiKey: String? = nil,
                            baseUrl: String?? = nil) {
-        let request = UpdateRequest(
+        let request = CustomModelUpdateRequest(
             name: name,
             provider: provider,
             modelId: modelId,
@@ -76,62 +78,16 @@ final class CustomModelLoadedViewModel {
             baseUrl: baseUrl
         )
 
-        self.updateSubject.send(.merge(request))
+        self.queuedUpdater.enqueue(request)
     }
 
     func flush() {
-        var currentRequest = self.currentAccumulatedSubject.value
-        let queueRequest = self.updateSubject.value
-
-        if case .merge(let queueRequest) = queueRequest {
-            currentRequest.merge(with: queueRequest)
-        }
-
-        self.updateSubject.send(.reset)
-
-        if currentRequest.hasUpdates {
-            self.performUpdate(request: currentRequest)
-        }
+        self.queuedUpdater.flush()
     }
 
     // MARK: - Private Methods
 
-    private func setupUpdatesQueue() {
-        self.updateSubject
-            .scan(UpdateRequest()) { accumulated, action in
-                switch action {
-                case .merge(let new):
-                    var merged = accumulated
-                    merged.merge(with: new)
-                    return merged
-                case .reset:
-                    return UpdateRequest()
-                }
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] accumulatedRequest in
-                self?.currentAccumulatedSubject.send(accumulatedRequest)
-            }
-            .store(in: &self.updatesQueueCancellables)
-
-        self.currentAccumulatedSubject
-            .debounce(for: .seconds(2), scheduler: DispatchQueue.main)
-            .removeDuplicates()
-            .sink { [weak self] mergedRequest in
-                guard let self = self else {
-                    return
-                }
-
-                if mergedRequest.hasUpdates {
-                    self.performUpdate(request: mergedRequest)
-                    self.updateSubject.send(.reset)
-                }
-            }
-            .store(in: &self.updatesQueueCancellables)
-    }
-
-    private func performUpdate(request: UpdateRequest) {
+    private func performUpdate(request: CustomModelUpdateRequest) async -> Bool {
         var modelData: [String: any ConvexEncodable] = [:]
 
         if let name = request.name { modelData["name"] = name }
@@ -141,7 +97,7 @@ final class CustomModelLoadedViewModel {
         if let baseUrl = request.baseUrl { modelData["baseUrl"] = baseUrl }
 
         guard !modelData.isEmpty else {
-            return
+            return true
         }
 
         var args: [String: any ConvexEncodable] = [
@@ -152,16 +108,18 @@ final class CustomModelLoadedViewModel {
             args[key] = value
         }
 
-        Task {
-            do {
-                try await self.convex.mutation("customModels:update", with: args)
+        do {
+            try await self.convex.mutation("customModels:update", with: args)
 
-                Logger.customModels.info("Custom model updated successfully with \(modelData.count, privacy: .public) fields")
-            } catch {
-                Logger.customModels.error("Failed to update custom model: \(error.localizedDescription, privacy: .public)")
+            Logger.customModels.info("Custom model updated successfully with \(modelData.count, privacy: .public) fields")
 
-                self.alertError = error
-            }
+            return true
+        } catch {
+            Logger.customModels.error("Failed to update custom model: \(error.localizedDescription, privacy: .public)")
+
+            self.alertError = error
+
+            return false
         }
     }
 

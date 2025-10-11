@@ -7,7 +7,7 @@ extension Container {
     var clerk: Factory<Clerk> {
         self {
             return Clerk.shared
-        }.shared
+        }.singleton
     }
 
 }

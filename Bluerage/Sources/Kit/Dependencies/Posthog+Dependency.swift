@@ -7,7 +7,7 @@ extension Container {
     var postHog: Factory<PostHogSDK> {
         self {
             PostHogSDK.shared
-        }.shared
+        }.singleton
     }
 
 }

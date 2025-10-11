@@ -105,6 +105,7 @@ let project = Project(
         .external(name: "Get"),
         .external(name: "Knock"),
         .external(name: "Queue"),
+        .external(name: "AsyncAlgorithms"),
       ],
       settings: .settings(
         base: .init()

@@ -10,7 +10,7 @@ extension Container {
 
             return ConvexClientWithAuth(deploymentUrl: self.env().CONVEX_DEPLOYMENT_URL,
                                         authProvider: authProvider)
-        }.shared
+        }.singleton
     }
 
 }

@@ -69,8 +69,6 @@ struct AgentLoadedStepsSectionView: View {
             }
         } header: {
             Text(BluerageStrings.agentStepsSectionHeader)
-        } footer: {
-            Text(BluerageStrings.agentSectionFooter)
         }
     }
 

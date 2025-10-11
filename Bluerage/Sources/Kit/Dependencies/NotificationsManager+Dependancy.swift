@@ -8,7 +8,7 @@ extension Container {
     var notificationsManager: Factory<NotificationsManager> {
         self {
             NotificationsManager()
-        }.shared
+        }.singleton
     }
 
 }

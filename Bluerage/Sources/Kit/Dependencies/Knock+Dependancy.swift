@@ -7,7 +7,7 @@ extension Container {
     var knock: Factory<Knock> {
         self {
             return Knock.shared
-        }.shared
+        }.singleton
     }
 
 }

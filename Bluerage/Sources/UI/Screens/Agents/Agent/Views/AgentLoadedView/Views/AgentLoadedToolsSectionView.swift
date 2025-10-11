@@ -39,8 +39,6 @@ struct AgentLoadedToolsSectionView: View {
             }
         } header: {
             Text(BluerageStrings.agentToolsSectionHeader)
-        } footer: {
-            Text(BluerageStrings.agentSectionFooter)
         }
     }
 

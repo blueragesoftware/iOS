@@ -11,7 +11,6 @@
 "agent_new_step_button_title" = "Add a Step";
 "agent_new_file_button_title" = "Add a File";
 "agent_run_button_title" = "Run Agent";
-"agent_section_footer" = "Swipe left to delete";
 "agent_step_placeholder" = "Step";
 "agent_steps_section_header" = "Steps";
 "agent_tools_section_header" = "Tools";
@@ -74,7 +73,7 @@
 "mcp_server_authentication_field_title" = "Access Token / API Key";
 "mcp_server_authentication_placeholder" = "sk-...";
 "mcp_server_configuration_section_title" = "Configuration";
-"mcp_server_authentication_section_title" = "Authentication";
+"mcp_server_authentication_section_title" = "Authentication (Optional)";
 "mcp_server_api_key_footer" = "Your API key will be stored securely on our servers";
 
 // MARK: - Execution

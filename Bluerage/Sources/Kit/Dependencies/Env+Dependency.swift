@@ -7,7 +7,7 @@ extension Container {
     var env: Factory<Env> {
         self {
             Env()
-        }.shared
+        }.singleton
     }
 
 }
