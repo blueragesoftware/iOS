@@ -38,7 +38,7 @@ struct CustomModelsListScreenView: View {
 
     var body: some View {
         self.content
-            .navigationDestination(CustomModelsListDestinations.self)
+            .navigationDestinationAutoReceive(CustomModelsListDestinations.self)
             .safeAreaInset(edge: .bottom) {
                 if self.viewModel.state.main.isLoaded {
                     CreateNewCustomModelButton {

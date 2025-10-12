@@ -19,7 +19,7 @@ struct AgentScreenView: View {
             .onFirstAppear {
                 self.viewModel.connect()
             }
-            .navigationDestination(AgentDestinations.self)
+            .navigationDestinationAutoReceive(AgentDestinations.self)
             .postHogScreenView("AgentScreenView", ["agentId": self.agentId])
     }
 

@@ -31,14 +31,14 @@ final class AuthObserver {
                     }
 
                     if case .authenticated(let id) = authState {
-                        await Knock.shared.signIn(userId: id, userToken: nil)
+                        await self.knock.signIn(userId: id, userToken: nil)
 
                         self.postHog.identify(id, userProperties: nil)
 
                         SentrySDK.setUser(User(userId: id))
                     } else if case .unauthenticated = authState {
                         do {
-                            try await Knock.shared.signOut()
+                            try await self.knock.signOut()
                         } catch {
                             Logger.default.error("Error signing out of knock")
                         }

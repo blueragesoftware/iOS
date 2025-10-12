@@ -9,7 +9,7 @@ final class CustomModelLoadedViewModel {
 
     private struct CustomModelUpdateRequest: UpdateRequest, Encodable, ConvexEncodable {
         var name: String?
-        var provider: String?
+        var provider: ModelProvider?
         var modelId: String?
         var encryptedApiKey: String?
         var baseUrl: String??
@@ -66,7 +66,7 @@ final class CustomModelLoadedViewModel {
     // MARK: - Public Methods
 
     func updateCustomModel(name: String? = nil,
-                           provider: String? = nil,
+                           provider: ModelProvider? = nil,
                            modelId: String? = nil,
                            encryptedApiKey: String? = nil,
                            baseUrl: String?? = nil) {
@@ -91,7 +91,7 @@ final class CustomModelLoadedViewModel {
         var modelData: [String: any ConvexEncodable] = [:]
 
         if let name = request.name { modelData["name"] = name }
-        if let provider = request.provider { modelData["provider"] = provider }
+        if let provider = request.provider { modelData["provider"] = provider.rawValue }
         if let modelId = request.modelId { modelData["modelId"] = modelId }
         if let encryptedApiKey = request.encryptedApiKey { modelData["encryptedApiKey"] = encryptedApiKey }
         if let baseUrl = request.baseUrl { modelData["baseUrl"] = baseUrl }

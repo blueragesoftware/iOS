@@ -25,24 +25,10 @@ struct LoadedCustomModelsListView: View {
                     self.hapticManager.triggerSelectionFeedback()
                     self.navigator.navigate(to: CustomModelsListDestinations.customModel(id: customModel.id))
                 }
-                .padding(.bottom, 28)
-                .padding(.horizontal, 20)
             }
-            .onDelete { offsets in
-                let customModels = self.customModels
-
-                let idsToRemove = offsets.compactMap { offset in
-                    return customModels[safeIndex: offset]?.id
-                }
-
-                self.onRemove(idsToRemove)
-            }
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
         }
-        .listStyle(.plain)
         .scrollIndicators(.hidden)
+        .background(UIColor.systemGroupedBackground.swiftUI)
     }
 
 }

@@ -21,7 +21,7 @@ struct ExecutionsListScreenView: View {
             .background(UIColor.systemGroupedBackground.swiftUI)
             .navigationTitle(BluerageStrings.executionsListTitle)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(ExecutionsListDestinations.self)
+            .navigationDestinationAutoReceive(ExecutionsListDestinations.self)
     }
 
     @ViewBuilder

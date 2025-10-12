@@ -6,7 +6,7 @@ struct CustomModelLoadedView: View {
 
     @State private var name: String
 
-    @State private var provider: String
+    @State private var provider: ModelProvider
 
     @State private var modelId: String
 

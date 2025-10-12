@@ -3,11 +3,11 @@ import SwiftUIIntrospect
 
 struct CustomModelEditSectionView: View {
 
-    typealias CustomModelUpdate = (name: String?, provider: String?, modelId: String?, encryptedApiKey: String?, baseUrl: String??)
+    typealias CustomModelUpdate = (name: String?, provider: ModelProvider?, modelId: String?, encryptedApiKey: String?, baseUrl: String??)
 
     @Binding private var name: String
 
-    @Binding private var provider: String
+    @Binding private var provider: ModelProvider
 
     @Binding private var modelId: String
 
@@ -20,7 +20,7 @@ struct CustomModelEditSectionView: View {
     private let onUpdate: (CustomModelUpdate) -> Void
 
     init(name: Binding<String>,
-         provider: Binding<String>,
+         provider: Binding<ModelProvider>,
          modelId: Binding<String>,
          encryptedApiKey: Binding<String>,
          baseUrl: Binding<String>,
@@ -45,7 +45,8 @@ struct CustomModelEditSectionView: View {
 
             Picker(BluerageStrings.customModelProviderFieldTitle, selection: self.$provider) {
                 Text(BluerageStrings.customModelProviderOpenai)
-                    .tag("openai")
+                    .tag(self.provider)
+
             }
             .onChange(of: self.provider) { _, newValue in
                 self.onUpdate((nil, newValue, nil, nil, nil))

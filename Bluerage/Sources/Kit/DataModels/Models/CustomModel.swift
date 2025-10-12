@@ -18,7 +18,7 @@ struct CustomModel: Identifiable, Codable, Equatable, Hashable {
 
     let name: String
 
-    let provider: String
+    let provider: ModelProvider
 
     let modelId: String
 
