@@ -28,14 +28,13 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "brain.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
-                           fillColor: .gray,
+                           iconBackgroundColor: .gray,
                            type: .navigation(destination: .customModels),
                            actionType: .navigation),
                 SettingRow(title: BluerageStrings.settingsMcpServersTitle,
-                           icon: .system(named: "server.rack",
-                                         fontSize: 15,
-                                         fontWeight: .semibold),
-                           fillColor: .green,
+                           icon: .image(named: BluerageAsset.Assets.mcpIcon.name,
+                                        size: CGSize(width: 19, height: 19)),
+                           iconBackgroundColor: .black,
                            type: .navigation(destination: .mcpServers),
                            actionType: .navigation)
             ]),
@@ -43,7 +42,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsXTitle,
                            icon: .image(named: BluerageAsset.Assets.xIcon.name,
                                         size: CGSize(width: 13, height: 16)),
-                           fillColor: .black,
+                           iconBackgroundColor: .black,
                            type: .default(action: {
                                guard let url = URL(string: "https://x.com/blueragehq") else {
                                    Logger.settings.error("Unable to construct X url")
@@ -57,7 +56,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsThreadsTitle,
                            icon: .image(named: BluerageAsset.Assets.threadsIcon.name,
                                         size: CGSize(width: 16, height: 16)),
-                           fillColor: .black,
+                           iconBackgroundColor: .black,
                            type: .default(action: {
                                guard let url = URL(string: "https://threads.com/blueragehq") else {
                                    Logger.settings.error("Unable to construct threads url")
@@ -71,7 +70,7 @@ final class SettingsScreenViewModel {
                 SettingRow(title: BluerageStrings.settingsDiscordTitle,
                            icon: .image(named: BluerageAsset.Assets.discordIcon.name,
                                         size: CGSize(width: 20, height: 16)),
-                           fillColor: BluerageAsset.Assets.discordColor.swiftUIColor,
+                           iconBackgroundColor: BluerageAsset.Assets.discordColor.swiftUIColor,
                            type: .default(action: {
                                guard let url = URL(string: "https://discord.gg/sCutZ3zd") else {
                                    Logger.settings.error("Unable to construct discord url")
@@ -86,7 +85,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "envelope.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
-                           fillColor: .blue,
+                           iconBackgroundColor: .blue,
                            type: .default(action: {
                                guard let url = URL(string: "mailto:support@bluerage.software") else {
                                    Logger.settings.error("Unable to construct support url")
@@ -103,7 +102,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "book.pages.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
-                           fillColor: .yellow,
+                           iconBackgroundColor: .yellow,
                            type: .default(action: {
                                guard let url = URL(string: UIApplication.openSettingsURLString) else {
                                    Logger.settings.error("Unable to construct settings url")
@@ -120,7 +119,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "figure.walk",
                                          fontSize: 15,
                                          fontWeight: .semibold),
-                           fillColor: .red,
+                           iconBackgroundColor: .red,
                            type: .destructive(action: {
                                guard let self = weakSelf else {
                                    Logger.settings.error("Sign out failure due to self deallocation")
@@ -135,7 +134,7 @@ final class SettingsScreenViewModel {
                            icon: .system(named: "trash.fill",
                                          fontSize: 15,
                                          fontWeight: .semibold),
-                           fillColor: .red,
+                           iconBackgroundColor: .red,
                            type: .destructive(action: {
                                guard let self = weakSelf else {
                                    Logger.settings.error("Delete account failure due to self deallocation")

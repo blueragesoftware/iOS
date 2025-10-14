@@ -2,6 +2,7 @@ import FactoryKit
 import ConvexMobile
 import OSLog
 import Combine
+import SwiftUI
 
 @MainActor
 @Observable
@@ -10,6 +11,8 @@ final class CustomModelsListScreenViewModel {
     struct State {
 
         var main: LoadingViewModelState<[CustomModel]>
+
+        var isCreatingNewModel: Bool = false
 
         var alertError: Error?
 
@@ -54,7 +57,17 @@ final class CustomModelsListScreenViewModel {
     }
 
     func createNewCustomModel() async throws -> CustomModel {
-        try await self.keyedExecutor.executeOperation(for: "customModels/create") {
+        withAnimation {
+            self.state.isCreatingNewModel = true
+        }
+
+        defer {
+            withAnimation {
+                self.state.isCreatingNewModel = false
+            }
+        }
+
+        return try await self.keyedExecutor.executeOperation(for: "customModels/create") {
             try await self.convex.mutation("customModels:create")
         }
     }

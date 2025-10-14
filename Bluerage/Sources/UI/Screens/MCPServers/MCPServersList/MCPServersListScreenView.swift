@@ -6,30 +6,6 @@ import FactoryKit
 
 struct MCPServersListScreenView: View {
 
-    private struct CreateNewMCPServerButton: View {
-
-        private let action: () -> Void
-
-        init(action: @escaping () -> Void) {
-            self.action = action
-        }
-
-        var body: some View {
-            Button {
-                self.action()
-            } label: {
-                Text(BluerageStrings.mcpServersCreateButtonTitle)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(UIColor.systemBackground.swiftUI)
-                    .padding(.vertical, 15)
-                    .frame(maxWidth: .infinity)
-            }
-            .padding(.horizontal, 20)
-            .buttonStyle(.primaryButtonStyle)
-        }
-
-    }
-
     @State private var viewModel = MCPServersListScreenViewModel()
 
     @Injected(\.hapticManager) private var hapticManager
@@ -42,9 +18,11 @@ struct MCPServersListScreenView: View {
             .navigationDestinationAutoReceive(MCPServersListDestinations.self)
             .safeAreaInset(edge: .bottom) {
                 if self.viewModel.state.main.isLoaded {
-                    CreateNewMCPServerButton {
+                    ActionButton(title: BluerageStrings.mcpServersCreateButtonTitle) {
                         self.createNewMCPServer()
                     }
+                    .isLoading(self.viewModel.state.isCreatingNewMCPServer)
+                    .padding(.horizontal, 20)
                 }
             }
             .scrollDisabled(self.viewModel.state.main.isLoading || self.viewModel.state.main.isError)

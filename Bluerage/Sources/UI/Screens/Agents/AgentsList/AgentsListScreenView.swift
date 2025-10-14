@@ -6,30 +6,6 @@ import FactoryKit
 
 struct AgentsListScreenView: View {
 
-    private struct CreateNewAgentButton: View {
-
-        private let action: () -> Void
-
-        init(action: @escaping () -> Void) {
-            self.action = action
-        }
-
-        var body: some View {
-            Button {
-                self.action()
-            } label: {
-                Text(BluerageStrings.agentsListCreateNewAgentButtonTitle)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.primary)
-                    .padding(.vertical, 15)
-                    .frame(maxWidth: .infinity)
-            }
-            .padding(.horizontal, 20)
-            .buttonStyle(.primaryButtonStyle)
-        }
-
-    }
-
     @State private var viewModel = AgentsListScreenViewModel()
 
     @Injected(\.hapticManager) private var hapticManager
@@ -40,9 +16,11 @@ struct AgentsListScreenView: View {
                 .navigationDestinationAutoReceive(AgentListDestinations.self)
                 .safeAreaInset(edge: .bottom) {
                     if self.viewModel.state.main.isLoaded {
-                        CreateNewAgentButton {
+                        ActionButton(title: BluerageStrings.agentsListCreateNewAgentButtonTitle) {
                             self.createNewAgent(with: navigator)
                         }
+                        .isLoading(self.viewModel.state.isCreatingNewAgent)
+                        .padding(.horizontal, 20)
                     }
                 }
                 .scrollDisabled(self.viewModel.state.main.isLoading || self.viewModel.state.main.isError)

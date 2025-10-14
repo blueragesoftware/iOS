@@ -2,6 +2,7 @@ import FactoryKit
 import ConvexMobile
 import OSLog
 import Combine
+import SwiftUI
 
 @MainActor
 @Observable
@@ -12,6 +13,8 @@ final class MCPServersListScreenViewModel {
         var main: LoadingViewModelState<[MCPServer]>
 
         var alertError: Error?
+
+        var isCreatingNewMCPServer = false
 
     }
 
@@ -54,7 +57,17 @@ final class MCPServersListScreenViewModel {
     }
 
     func createNewMCPServer() async throws -> MCPServer {
-        try await self.keyedExecutor.executeOperation(for: "mcpServers/create") {
+        withAnimation {
+            self.state.isCreatingNewMCPServer = true
+        }
+
+        defer {
+            withAnimation {
+                self.state.isCreatingNewMCPServer = false
+            }
+        }
+
+        return try await self.keyedExecutor.executeOperation(for: "mcpServers/create") {
             try await self.convex.mutation("mcpServers:create")
         }
     }

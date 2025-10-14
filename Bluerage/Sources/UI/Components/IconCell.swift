@@ -4,7 +4,9 @@ struct IconCell<Icon: View, TrailingView: View>: View {
 
     let title: String
 
-    let iconFillColor: Color
+    let iconForegroundColor: Color
+
+    let iconBackgroundColor: Color
 
     @ViewBuilder
     let icon: () -> Icon
@@ -15,12 +17,14 @@ struct IconCell<Icon: View, TrailingView: View>: View {
     let action: () -> Void
 
     init(title: String,
-         iconFillColor: Color,
+         iconForegroundColor: Color,
+         iconBackgroundColor: Color,
          @ViewBuilder icon: @escaping () -> Icon,
          @ViewBuilder trailingView: @escaping () -> TrailingView,
          action: @escaping () -> Void) {
         self.icon = icon
-        self.iconFillColor = iconFillColor
+        self.iconForegroundColor = iconForegroundColor
+        self.iconBackgroundColor = iconBackgroundColor
         self.title = title
         self.trailingView = trailingView
         self.action = action
@@ -32,11 +36,11 @@ struct IconCell<Icon: View, TrailingView: View>: View {
         } label: {
             HStack(spacing: 0) {
                 self.icon()
-                    .foregroundStyle(.white)
+                    .foregroundStyle(self.iconForegroundColor)
                     .fixedSize()
                     .background {
                         RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .fill(self.iconFillColor)
+                            .fill(self.iconBackgroundColor)
                             .frame(width: 28, height: 28)
                     }
                     .frame(width: 28, height: 28)

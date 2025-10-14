@@ -2,22 +2,6 @@ import SwiftUI
 
 struct ModelProviderIconFactory {
 
-    @ViewBuilder
-    func styledIcon(for modelProvider: ModelProvider) -> some View {
-        self.image(for: modelProvider)
-            .resizable()
-            .renderingMode(.template)
-            .frame(width: 19, height: 19)
-            .foregroundStyle(self.foregroundColor(for: modelProvider))
-            .fixedSize()
-            .background {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(self.backgroundColor(for: modelProvider))
-                    .frame(width: 28, height: 28)
-            }
-            .frame(width: 28, height: 28)
-    }
-
     func image(for modelProvider: ModelProvider) -> Image {
         switch modelProvider {
         case .openrouter:
@@ -44,7 +28,7 @@ struct ModelProviderIconFactory {
         }
     }
 
-    private func foregroundColor(for modelProvider: ModelProvider) -> Color {
+    func foregroundColor(for modelProvider: ModelProvider) -> Color {
         switch modelProvider {
         case .openrouter:
                 .white
@@ -57,7 +41,7 @@ struct ModelProviderIconFactory {
         }
     }
 
-    private func backgroundColor(for modelProvider: ModelProvider) -> Color {
+    func backgroundColor(for modelProvider: ModelProvider) -> Color {
         switch modelProvider {
         case .openrouter:
                 .gray

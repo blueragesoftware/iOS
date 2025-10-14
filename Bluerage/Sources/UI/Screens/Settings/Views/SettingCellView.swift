@@ -17,7 +17,8 @@ struct SettingCellView: View {
 
     var body: some View {
         IconCell(title: self.row.title,
-                 iconFillColor: self.row.fillColor,
+                 iconForegroundColor: .white,
+                 iconBackgroundColor: self.row.iconBackgroundColor,
                  icon: {
             switch self.row.icon {
             case .image(let named, let size):

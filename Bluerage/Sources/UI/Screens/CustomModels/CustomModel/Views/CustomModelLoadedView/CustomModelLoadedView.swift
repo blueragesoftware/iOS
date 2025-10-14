@@ -59,8 +59,6 @@ struct CustomModelLoadedView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             self.viewModel.flush()
         }
-        .navigationTitle(BluerageStrings.customModelNavigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
     }
 
 }

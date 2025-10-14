@@ -41,9 +41,11 @@ struct CustomModelsListScreenView: View {
             .navigationDestinationAutoReceive(CustomModelsListDestinations.self)
             .safeAreaInset(edge: .bottom) {
                 if self.viewModel.state.main.isLoaded {
-                    CreateNewCustomModelButton {
+                    ActionButton(title: BluerageStrings.customModelsCreateButtonTitle) {
                         self.createNewCustomModel()
                     }
+                    .isLoading(self.viewModel.state.isCreatingNewModel)
+                    .padding(.horizontal, 20)
                 }
             }
             .scrollDisabled(self.viewModel.state.main.isLoading || self.viewModel.state.main.isError)
@@ -57,6 +59,8 @@ struct CustomModelsListScreenView: View {
                 self.viewModel.resetAlertError()
             }
             .postHogScreenView("CustomModelsListScreenView")
+            .navigationTitle(BluerageStrings.customModelNavigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder

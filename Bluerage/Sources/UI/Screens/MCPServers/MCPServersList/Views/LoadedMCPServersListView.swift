@@ -25,8 +25,6 @@ struct LoadedMCPServersListView: View {
                     self.hapticManager.triggerSelectionFeedback()
                     self.navigator.navigate(to: MCPServersListDestinations.mcpServer(id: mcpServer.id))
                 }
-                .padding(.bottom, 28)
-                .padding(.horizontal, 20)
             }
             .onDelete { offsets in
                 let mcpServers = self.mcpServers
@@ -37,12 +35,9 @@ struct LoadedMCPServersListView: View {
 
                 self.onRemove(idsToRemove)
             }
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets())
-            .listRowBackground(Color.clear)
         }
-        .listStyle(.plain)
         .scrollIndicators(.hidden)
+        .background(UIColor.systemGroupedBackground.swiftUI)
     }
 
 }

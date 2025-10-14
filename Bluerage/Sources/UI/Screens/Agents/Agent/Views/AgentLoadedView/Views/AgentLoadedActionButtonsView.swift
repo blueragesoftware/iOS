@@ -24,8 +24,11 @@ struct AgentLoadedActionButtonsView: View {
             }
             .buttonStyle(.borderGradientProminentButtonStyle)
 
-            Button {
+            ActionButton(title: BluerageStrings.agentRunButtonTitle) {
                 self.onRunAgent()
+            }
+            Button {
+
             } label: {
                 Text(BluerageStrings.agentRunButtonTitle)
                     .font(.system(size: 17, weight: .semibold))

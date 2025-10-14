@@ -19,13 +19,16 @@ struct MCPServerCellView: View {
             HStack(spacing: 0) {
                 Text(self.mcpServer.name)
                     .font(.system(size: 16, weight: .semibold))
-                    .multilineTextAlignment(.leading)
-                    .lineLimit(1)
                     .foregroundStyle(.primary)
+                    .padding(.leading, 12)
 
                 Spacer()
 
-                OpenButton(onOpen: self.onOpen)
+                Image(systemName: "chevron.forward")
+                    .renderingMode(.template)
+                    .foregroundStyle(.primary)
+                    .font(.system(size: 13, weight: .semibold))
+                    .fixedSize()
             }
         }
     }

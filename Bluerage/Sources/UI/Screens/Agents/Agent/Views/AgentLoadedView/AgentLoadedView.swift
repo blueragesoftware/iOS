@@ -109,20 +109,39 @@ struct AgentLoadedView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                AgentLoadedActionButtonsView(
-                    onExecutions: {
+                HStack(spacing: 10) {
+                    Button {
                         self.navigator.navigate(to: AgentDestinations.executionsList(
                             agentId: self.viewModel.agent.id)
                         )
-                    },
-                    onRunAgent: {
-                        self.navigator.navigate(to: AgentDestinations.executionsList(
-                            agentId: self.viewModel.agent.id)
-                        )
-
-                        self.viewModel.run()
+                    } label: {
+                        Text(BluerageStrings.agentExecutionsButtonTitle)
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.primary)
+                            .padding(.vertical, 15)
+                            .frame(maxWidth: .infinity)
                     }
-                )
+                    .buttonStyle(.borderGradientProminentButtonStyle)
+
+                    ActionButton(title: BluerageStrings.agentRunButtonTitle) {
+                        Task {
+                            do {
+                                let taskId = try await self.viewModel.createTask()
+
+                                self.navigator.send(
+                                    AgentDestinations.executionsList(agentId: self.viewModel.agent.id),
+                                    ExecutionsListDestinations.execution(taskId: taskId, index: 0)
+                                )
+                            } catch {
+                                Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
+
+                                self.viewModel.alertError = error
+                            }
+                        }
+                    }
+                    .isLoading(self.viewModel.isCreatingNewRunTask)
+                }
+                .padding(.horizontal, 20)
             }
             .ignoresSafeArea(.keyboard)
         }

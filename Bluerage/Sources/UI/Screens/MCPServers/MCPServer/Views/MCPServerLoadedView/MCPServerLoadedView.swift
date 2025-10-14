@@ -4,40 +4,6 @@ import OSLog
 
 struct MCPServerLoadedView: View {
 
-    private struct ConnectButton: View {
-
-        private let isLoading: Bool
-
-        private let action: () -> Void
-
-        init(isLoading: Bool, action: @escaping () -> Void) {
-            self.isLoading = isLoading
-            self.action = action
-        }
-
-        var body: some View {
-            Button {
-                self.action()
-            } label: {
-                if self.isLoading {
-                    ProgressView()
-                        .tint(UIColor.systemBackground.swiftUI)
-                        .padding(.vertical, 15)
-                        .frame(maxWidth: .infinity)
-                } else {
-                    Text("Connect")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(UIColor.systemBackground.swiftUI)
-                        .padding(.vertical, 15)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .padding(.horizontal, 20)
-            .buttonStyle(.primaryButtonStyle)
-        }
-
-    }
-
     @State private var viewModel: MCPServerLoadedViewModel
 
     @State private var name: String
@@ -72,16 +38,17 @@ struct MCPServerLoadedView: View {
         }
         .safeAreaPadding(.bottom, 52)
         .safeAreaInset(edge: .bottom) {
-            ConnectButton(isLoading: self.viewModel.isConnecting) {
+            ActionButton(title: "Connecting") {
                 Task {
                     do {
-                        let res = try await self.viewModel.connect()
+                        let result = try await self.viewModel.connect()
 
-                        if let redirectUrlString = res.redirectUrl,
-                            let redirectUrl = URL(string: redirectUrlString) {
-                            self.navigator.navigate(to: MCPServerScreenViewDestinations.authWebView(
-                                url: redirectUrl
-                            ))
+                        if case .redirect(let redirectUrl) = result {
+                            self.navigator.navigate(
+                                to: MCPServerScreenViewDestinations.authWebView(url: redirectUrl)
+                            )
+                        } else {
+                            self.navigator.pop()
                         }
                     } catch {
                         Logger.mcpServers.error("Error connecting to mcpServer with id: \(self.viewModel.mcpServer.id, privacy: .public), error: \(error.localizedDescription, privacy: .public)")
@@ -90,6 +57,8 @@ struct MCPServerLoadedView: View {
                     }
                 }
             }
+            .isLoading(self.viewModel.isConnecting)
+            .padding(.horizontal, 20)
         }
         .scrollIndicators(.hidden)
         .background(UIColor.systemGroupedBackground.swiftUI)
@@ -103,8 +72,6 @@ struct MCPServerLoadedView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             self.viewModel.flush()
         }
-        .navigationTitle(BluerageStrings.mcpServerNavigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
     }
 
 }

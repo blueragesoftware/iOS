@@ -31,7 +31,7 @@ struct SettingRow: Identifiable, Hashable, Equatable {
 
     let icon: Icon
 
-    let fillColor: Color
+    let iconBackgroundColor: Color
 
     let type: `Type`
 
@@ -39,12 +39,12 @@ struct SettingRow: Identifiable, Hashable, Equatable {
 
     init(title: String,
          icon: Icon,
-         fillColor: Color,
+         iconBackgroundColor: Color,
          type: `Type`,
          actionType: ActionType) {
         self.title = title
         self.icon = icon
-        self.fillColor = fillColor
+        self.iconBackgroundColor = iconBackgroundColor
         self.type = type
         self.actionType = actionType
     }

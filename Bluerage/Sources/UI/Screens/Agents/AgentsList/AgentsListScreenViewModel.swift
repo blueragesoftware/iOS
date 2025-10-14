@@ -2,6 +2,7 @@ import FactoryKit
 import ConvexMobile
 import OSLog
 import Combine
+import SwiftUI
 
 @MainActor
 @Observable
@@ -12,6 +13,8 @@ final class AgentsListScreenViewModel {
         var main: LoadingViewModelState<[Agent]>
 
         var alertError: Error?
+
+        var isCreatingNewAgent: Bool = false
 
     }
 
@@ -53,7 +56,17 @@ final class AgentsListScreenViewModel {
     }
 
     func createNewAgent() async throws -> Agent {
-        try await self.keyedExecutor.executeOperation(for: "agents/create") {
+        withAnimation {
+            self.state.isCreatingNewAgent = true
+        }
+
+        defer {
+            withAnimation {
+                self.state.isCreatingNewAgent = false
+            }
+        }
+
+        return try await self.keyedExecutor.executeOperation(for: "agents/create") {
             try await self.convex.mutation("agents:create")
         }
     }

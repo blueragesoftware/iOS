@@ -27,6 +27,8 @@ struct MCPServerScreenView: View {
             }
             .navigationDestination(MCPServerScreenViewDestinations.self)
             .postHogScreenView("MCPServerScreenView", ["mcpServerId": self.mcpServerId])
+            .navigationTitle(BluerageStrings.mcpServerNavigationTitle)
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder

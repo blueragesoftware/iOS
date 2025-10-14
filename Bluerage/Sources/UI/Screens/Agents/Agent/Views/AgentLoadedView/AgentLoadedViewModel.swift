@@ -78,7 +78,13 @@ final class AgentLoadedViewModel {
         let storageId: String
     }
 
+    private struct CreateTaskResponse: Decodable {
+        let taskId: String
+    }
+
     var alertError: Swift.Error?
+
+    var isCreatingNewRunTask = false
 
     let agent: Agent
 
@@ -135,20 +141,24 @@ final class AgentLoadedViewModel {
         weakSelf = self
     }
 
-    func run() {
-        Task {
-            do {
-                await self.queuedUpdater.flushAsync()
+    func createTask() async throws -> String {
+        withAnimation {
+            self.isCreatingNewRunTask = true
+        }
 
-                try await self.keyedExecutor.executeOperation(for: "agent/tasks/create/\(self.agent.id)") {
-                    try await self.convex.mutation("agent/tasks:create", with: ["agentId": self.agent.id])
-                }
-            } catch {
-                Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
-
-                self.alertError = error
+        defer {
+            withAnimation {
+                self.isCreatingNewRunTask = false
             }
         }
+
+        await self.queuedUpdater.flushAsync()
+
+        let response: CreateTaskResponse = try await self.keyedExecutor.executeOperation(for: "agent/tasks/create/\(self.agent.id)") {
+            try await self.convex.mutation("agent/tasks:create", with: ["agentId": self.agent.id])
+        }
+
+        return response.taskId
     }
 
     func flush() {

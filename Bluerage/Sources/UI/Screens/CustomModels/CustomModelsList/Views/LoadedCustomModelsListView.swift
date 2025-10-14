@@ -26,6 +26,15 @@ struct LoadedCustomModelsListView: View {
                     self.navigator.navigate(to: CustomModelsListDestinations.customModel(id: customModel.id))
                 }
             }
+            .onDelete { offsets in
+                let customModels = self.customModels
+
+                let idsToRemove = offsets.compactMap { offset in
+                    return customModels[safeIndex: offset]?.id
+                }
+
+                self.onRemove(idsToRemove)
+            }
         }
         .scrollIndicators(.hidden)
         .background(UIColor.systemGroupedBackground.swiftUI)

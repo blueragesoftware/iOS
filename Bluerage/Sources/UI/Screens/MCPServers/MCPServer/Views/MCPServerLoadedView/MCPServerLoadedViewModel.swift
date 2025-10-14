@@ -8,9 +8,60 @@ import Foundation
 @Observable
 final class MCPServerLoadedViewModel {
 
-    struct Result: Codable {
-        let status: String
-        let redirectUrl: String?
+    enum Result: Codable {
+
+        private enum CodingKeys: String, CodingKey {
+            case status
+            case redirectUrl
+        }
+
+        private enum Status: String {
+            case authorized
+            case redirect
+            case rediect
+        }
+
+        case authorized
+        case redirect(URL)
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let statusValue = try container.decode(String.self, forKey: .status)
+
+            guard let status = Status(rawValue: statusValue) else {
+                throw DecodingError.dataCorruptedError(forKey: .status,
+                                                       in: container,
+                                                       debugDescription: "Unsupported status: \(statusValue)")
+            }
+
+            switch status {
+            case .authorized:
+                self = .authorized
+            case .redirect, .rediect:
+                let redirectString = try container.decodeIfPresent(String.self, forKey: .redirectUrl)
+                guard let redirectString,
+                      let redirectURL = URL(string: redirectString) else {
+                    throw DecodingError.dataCorruptedError(forKey: .redirectUrl,
+                                                           in: container,
+                                                           debugDescription: "Missing or invalid redirect URL for redirect status")
+                }
+
+                self = .redirect(redirectURL)
+            }
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+
+            switch self {
+            case .authorized:
+                try container.encode(Status.authorized.rawValue, forKey: .status)
+            case .redirect(let url):
+                try container.encode(Status.redirect.rawValue, forKey: .status)
+                try container.encode(url.absoluteString, forKey: .redirectUrl)
+            }
+        }
+
     }
 
     enum Error: LocalizedError {

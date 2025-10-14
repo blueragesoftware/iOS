@@ -117,6 +117,12 @@ Bluerage is currently localized in the following languages:
 - [Swift Introspect](https://github.com/siteline/swiftui-introspect)
 - [Swift Lint](https://github.com/realm/SwiftLint)
 
+## Trademark Disclaimer
+
+All product names, logos, and brands used in this repository are property of their respective owners. Use of these names, logos, and brands does not imply endorsement or affiliation.
+
+Icons and logos used in this project are for illustrative/reference purposes only. Any use of third-party trademarks is intended to comply with fair use principles.
+
 ## Community
 
 - X: [@blueragehq](https://x.com/blueragehq)
