@@ -7,6 +7,19 @@ struct MCPServer: Identifiable, Codable, Equatable, Hashable {
         case connecting
         case disconnected
         case error
+
+        var localized: String {
+            switch self {
+            case .connected:
+                "Connected"
+            case .connecting:
+                "Connecting"
+            case .disconnected:
+                "Disconnected"
+            case .error:
+                "Error"
+            }
+        }
     }
 
     private enum CodingKeys: String, CodingKey {

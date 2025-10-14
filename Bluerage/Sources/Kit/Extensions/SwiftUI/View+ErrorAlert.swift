@@ -53,7 +53,7 @@ extension View {
                     action()
                 }
             } message: { error in
-                Text(error.localizedDescription)
+                Text("\(error)" as String)
             }
         }
     }

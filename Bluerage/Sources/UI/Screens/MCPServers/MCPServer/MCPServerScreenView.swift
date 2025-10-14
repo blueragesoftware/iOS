@@ -21,7 +21,11 @@ struct MCPServerScreenView: View {
             .onNavigationReceive { (oauthResult: MCPOAuthURLHandler.OAuthResult, navigator) in
                 navigator.dismissAnyChildren()
 
-                self.viewModel.handle(oauthResult: oauthResult)
+                Task {
+                    try await self.viewModel.handle(oauthResult: oauthResult)
+
+                    navigator.pop()
+                }
 
                 return .auto
             }

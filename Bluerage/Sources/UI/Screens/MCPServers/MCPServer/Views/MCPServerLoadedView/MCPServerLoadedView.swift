@@ -38,7 +38,7 @@ struct MCPServerLoadedView: View {
         }
         .safeAreaPadding(.bottom, 52)
         .safeAreaInset(edge: .bottom) {
-            ActionButton(title: "Connecting") {
+            ActionButton(title: self.viewModel.mcpServer.status == .connected ? "Reconnect" : "Connect") {
                 Task {
                     do {
                         let result = try await self.viewModel.connect()

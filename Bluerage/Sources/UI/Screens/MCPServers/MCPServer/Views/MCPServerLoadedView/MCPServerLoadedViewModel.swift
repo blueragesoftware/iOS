@@ -66,11 +66,17 @@ final class MCPServerLoadedViewModel {
 
     enum Error: LocalizedError {
         case mcpAuthError(String)
+        case missingCode
+        case serverReturnedRedirectAfterHandledAuth
 
         var errorDescription: String? {
             switch self {
             case .mcpAuthError(let string):
-                return string
+                string
+            case .missingCode:
+                "Auth code is missing"
+            case .serverReturnedRedirectAfterHandledAuth:
+                "Server returned redirect after handled auth"
             }
         }
     }
@@ -154,10 +160,6 @@ final class MCPServerLoadedViewModel {
     func connect() async throws -> Result {
         self.isConnecting = true
 
-        defer {
-            self.isConnecting = false
-        }
-
         await self.queuedUpdater.flushAsync()
 
         let params = [
@@ -165,48 +167,60 @@ final class MCPServerLoadedViewModel {
             "callbackUrl": self.callbackUrl(for: self.mcpServer.id)
         ]
 
-        return try await self.keyedExecutor.executeOperation(for: "mcpServer/connect:withId/\(self.mcpServer.id)") {
-            return try await self.convex.action("mcpServer/connect:withId", with: params)
+        do {
+            return try await self.keyedExecutor.executeOperation(for: "mcpServer/connect:withId/\(self.mcpServer.id)") {
+                return try await self.convex.action("mcpServer/connect:withId", with: params)
+            }
+        } catch {
+            self.isConnecting = false
+
+            throw error
         }
     }
 
-    func handle(oauthResult: MCPOAuthURLHandler.OAuthResult) {
-        Task {
-            self.isConnecting = true
+    func handle(oauthResult: MCPOAuthURLHandler.OAuthResult) async throws {
+        self.isConnecting = true
 
-            defer {
-                self.isConnecting = false
-            }
+        defer {
+            self.isConnecting = false
+        }
 
-            if let error = oauthResult.error {
-                Logger.mcpServers.error("Received an error authenticating with code from mcp server with id \(self.mcpServer.id, privacy: .public): \(error, privacy: .public)")
+        if let error = oauthResult.error {
+            Logger.mcpServers.error("Received an error authenticating with code from mcp server with id \(self.mcpServer.id, privacy: .public): \(error, privacy: .public)")
 
-                self.alertError = Error.mcpAuthError(error)
+            self.alertError = Error.mcpAuthError(error)
 
-                return
-            }
+            throw Error.mcpAuthError(error)
+        }
 
-            guard let code = oauthResult.code else {
-                Logger.mcpServers.error("Didn't receive code from mcp server with id \(self.mcpServer.id, privacy: .public)")
+        guard let code = oauthResult.code else {
+            Logger.mcpServers.error("Didn't receive code from mcp server with id \(self.mcpServer.id, privacy: .public)")
 
-                return
-            }
+            self.alertError = Error.missingCode
 
-            let params = [
-                "id": self.mcpServer.id,
-                "callbackUrl": self.callbackUrl(for: self.mcpServer.id),
-                "oauthCode": code
-            ]
+            throw Error.missingCode
+        }
 
-            do {
-                try await self.keyedExecutor.executeOperation(for: "mcpServer/connect/withId/\(self.mcpServer.id)") {
-                    let _: Result = try await self.convex.action("mcpServer/connect:withId", with: params)
+        let params = [
+            "id": self.mcpServer.id,
+            "callbackUrl": self.callbackUrl(for: self.mcpServer.id),
+            "oauthCode": code
+        ]
+
+        do {
+            try await self.keyedExecutor.executeOperation(for: "mcpServer/connect/withId/\(self.mcpServer.id)") {
+                let result: Result = try await self.convex.action("mcpServer/connect:withId", with: params)
+
+                if case .redirect = result {
+                    throw Error.serverReturnedRedirectAfterHandledAuth
                 }
-            } catch {
-                Logger.mcpServers.error("Error authenticating with code for mcp server with id \(self.mcpServer.id, privacy: .public): \(error.localizedDescription, privacy: .public)")
-
-                self.alertError = error
             }
+        } catch {
+            Logger.mcpServers.error("Error authenticating with code for mcp server with id \(self.mcpServer.id, privacy: .public): \(error.localizedDescription, privacy: .public)")
+
+            self.alertError = error
+
+            throw error
         }
     }
 

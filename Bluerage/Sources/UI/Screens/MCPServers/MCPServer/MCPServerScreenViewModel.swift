@@ -8,10 +8,21 @@ import SwiftUI
 @Observable
 final class MCPServerScreenViewModel {
 
+    private enum Error: LocalizedError {
+        case invalidScreenState
+
+        var errorDescription: String? {
+            switch self {
+            case .invalidScreenState:
+                "Invalid screen state"
+            }
+        }
+    }
+
     enum State: CustomStringConvertible {
         case loading
         case loaded(MCPServerLoadedViewModel)
-        case error(Error)
+        case error(Swift.Error)
 
         var description: String {
             switch self {
@@ -71,14 +82,14 @@ final class MCPServerScreenViewModel {
         }
     }
 
-    func handle(oauthResult: MCPOAuthURLHandler.OAuthResult) {
+    func handle(oauthResult: MCPOAuthURLHandler.OAuthResult) async throws {
         guard case .loaded(let loadedViewModel) = self.state else {
             Logger.mcpServers.error("Unable to handle oauthResult, since view models is in \(self.state, privacy: .public) state")
 
-            return
+            throw Error.invalidScreenState
         }
 
-        loadedViewModel.handle(oauthResult: oauthResult)
+        try await loadedViewModel.handle(oauthResult: oauthResult)
     }
 
 }

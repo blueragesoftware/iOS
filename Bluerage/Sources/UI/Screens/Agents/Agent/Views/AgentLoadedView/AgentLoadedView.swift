@@ -43,37 +43,9 @@ struct AgentLoadedView: View {
                 self.viewModel.removeTools(at: offsets)
             },
                                         onAdd: {
-                let slugs = self.viewModel.tools.map(\.slug)
-
-                let slugsSet = Set(slugs)
-
-                self.navigator.navigate(to: AgentDestinations.toolsSelection(
-                    agentToolsSlugSet: slugsSet,
-                    callback: Callback { [weak viewModel] tool in
-                        viewModel?.add(tool: tool)
-                    })
-                )
+                self.addNewTool()
             }, onSelectTool: { tool in
-                guard tool.status != .active && tool.status != .initializing else {
-                    return
-                }
-
-                Task {
-                    do {
-                        let redirectUrl = try await self.viewModel.connectTool(with: tool.authConfigId)
-
-                        self.navigator.navigate(to: ToolsSelectionDestinations.authWebView(
-                            url: redirectUrl,
-                            callback: Callback { [weak viewModel] _ in
-                                viewModel?.reload()
-                            }
-                        ))
-                    } catch {
-                        Logger.agents.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
-
-                        self.viewModel.alertError = error
-                    }
-                }
+                self.select(tool: tool)
             })
 
             AgentLoadedStepsSectionView(steps: self.viewModel.steps,
@@ -111,9 +83,7 @@ struct AgentLoadedView: View {
 
                 HStack(spacing: 10) {
                     Button {
-                        self.navigator.navigate(to: AgentDestinations.executionsList(
-                            agentId: self.viewModel.agent.id)
-                        )
+                        self.navigator.navigate(to: AgentDestinations.executionsList(agentId: self.viewModel.agent.id))
                     } label: {
                         Text(BluerageStrings.agentExecutionsButtonTitle)
                             .font(.system(size: 17, weight: .semibold))
@@ -124,20 +94,7 @@ struct AgentLoadedView: View {
                     .buttonStyle(.borderGradientProminentButtonStyle)
 
                     ActionButton(title: BluerageStrings.agentRunButtonTitle) {
-                        Task {
-                            do {
-                                let taskId = try await self.viewModel.createTask()
-
-                                self.navigator.send(
-                                    AgentDestinations.executionsList(agentId: self.viewModel.agent.id),
-                                    ExecutionsListDestinations.execution(taskId: taskId, index: 0)
-                                )
-                            } catch {
-                                Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
-
-                                self.viewModel.alertError = error
-                            }
-                        }
+                        self.createTask()
                     }
                     .isLoading(self.viewModel.isCreatingNewRunTask)
                 }
@@ -151,6 +108,59 @@ struct AgentLoadedView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
             self.viewModel.flush()
+        }
+    }
+
+    private func addNewTool() {
+        let slugs = self.viewModel.tools.map(\.slug)
+
+        let slugsSet = Set(slugs)
+
+        self.navigator.navigate(to: AgentDestinations.toolsSelection(
+            agentToolsSlugSet: slugsSet,
+            callback: Callback { [weak viewModel] tool in
+                viewModel?.add(tool: tool)
+            })
+        )
+    }
+
+    private func select(tool: Tool) {
+        guard tool.status != .active && tool.status != .initializing else {
+            return
+        }
+
+        Task {
+            do {
+                let redirectUrl = try await self.viewModel.connectTool(with: tool.authConfigId)
+
+                self.navigator.navigate(to: ToolsSelectionDestinations.authWebView(
+                    url: redirectUrl,
+                    callback: Callback { [weak viewModel] _ in
+                        viewModel?.reload()
+                    }
+                ))
+            } catch {
+                Logger.agents.error("Error connecting tool: \(error.localizedDescription, privacy: .public)")
+
+                self.viewModel.alertError = error
+            }
+        }
+    }
+
+    private func createTask() {
+        Task {
+            do {
+                let taskId = try await self.viewModel.createTask()
+
+                self.navigator.send(
+                    AgentDestinations.executionsList(agentId: self.viewModel.agent.id),
+                    ExecutionsListDestinations.execution(taskId: taskId, index: 0)
+                )
+            } catch {
+                Logger.agents.error("Error running agent: \(error.localizedDescription, privacy: .public)")
+
+                self.viewModel.alertError = error
+            }
         }
     }
 
